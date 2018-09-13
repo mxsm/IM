@@ -22,7 +22,6 @@ public class ProtobufSocketChannelInitializer extends SocketChannelInitializer{
 		        .addLast("frameEncode", new ProtobufVarint32LengthFieldPrepender())
 		        .addLast("encode", new ProtobufEncoder())
 		        .addLast("protobufHandler", new ProtobufServerHandler());
-		
 	}
 
 }

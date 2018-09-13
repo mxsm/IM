@@ -3,6 +3,7 @@ package github.ant.mxsm.netty.channel.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import github.ant.mxsm.protocol.protobuf.Message.MessageProtobuf;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -18,7 +19,10 @@ public class ProtobufServerHandler extends ChannelDuplexHandler {
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.println(msg.getClass());
+		MessageProtobuf message = (MessageProtobuf)msg;
+		
+		System.out.println(message.getCtrlMessageId());
+		ctx.writeAndFlush(message);
 	}
 	
 }

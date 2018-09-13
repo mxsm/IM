@@ -14,7 +14,7 @@ import io.netty.channel.ChannelHandlerContext;
  * 
  * @author mxsm
  * @Date 2018-09-13
- * desc:
+ * desc:停跳处理
  */
 
 public class HeartbeatHandler extends ChannelDuplexHandler{
@@ -23,9 +23,6 @@ public class HeartbeatHandler extends ChannelDuplexHandler{
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		
-		logger.info(msg.getClass().getName());
-		
 		if(msg instanceof ByteBuf) {
 			ByteBuf buf = (ByteBuf)msg;
 			
@@ -44,6 +41,7 @@ public class HeartbeatHandler extends ChannelDuplexHandler{
 				ctx.writeAndFlush(encode.writeBytes( Heartbeat.HEARTBEAT));
 				return;
 			}
+			buf.resetReaderIndex();
 		}
 		super.channelRead(ctx, msg);
 	}

@@ -66,7 +66,7 @@ public class SocketStarter {
 		bootstrap = new ServerBootstrap();
 		
 		if(logger.isInfoEnabled()) {
-			logger.info("Netty start Info port={} bossGroupThread={} workGroupThread ={}",port,bossGroupThread,workGroupThread);
+			logger.info("Netty start Info [port={} bossGroupThread={} workGroupThread ={}]",port,bossGroupThread,workGroupThread);
 		}
 	}
 
@@ -80,6 +80,7 @@ public class SocketStarter {
 		this.bootstrap.childHandler(new ProtobufSocketChannelInitializer());
 		this.bootstrap.option(ChannelOption.SO_BACKLOG, 128);
 		this.bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+		this.bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		ChannelFuture future = this.bootstrap.bind(port).sync();
 		if(logger.isInfoEnabled()) {
 			logger.info("IM Server start succss, bind port={}",this.port);
