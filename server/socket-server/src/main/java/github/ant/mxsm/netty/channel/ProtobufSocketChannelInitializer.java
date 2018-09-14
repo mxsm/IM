@@ -10,18 +10,25 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 
+/**
+ * 
+ * @author mxsm
+ * @Date 2018-09-14
+ * desc:ChannelInitializer
+ */
+
 public class ProtobufSocketChannelInitializer extends SocketChannelInitializer{
 
 	@Override
 	protected void initChannel(SocketChannel channel) throws Exception {
 		
 		ChannelPipeline pipeline = channel.pipeline();
-		pipeline.addLast("heartbeatHandler", new HeartbeatHandler())
-		        .addLast("protobufVarint32FrameDecoder",new ProtobufVarint32FrameDecoder())
-		        .addLast("protobufFrameDecoder", new ProtobufDecoder(Message.MessageProtobuf.getDefaultInstance()))
-		        .addLast("frameEncode", new ProtobufVarint32LengthFieldPrepender())
-		        .addLast("encode", new ProtobufEncoder())
-		        .addLast("protobufHandler", new ProtobufServerHandler());
+		pipeline.addLast("heartbeatHandler", new HeartbeatHandler())//心跳处理
+		        .addLast("protobufVarint32FrameDecoder",new ProtobufVarint32FrameDecoder())//protobuf头部解码
+		        .addLast("protobufFrameDecoder", new ProtobufDecoder(Message.MessageProtobuf.getDefaultInstance()))//protobuf解码
+		        .addLast("frameEncode", new ProtobufVarint32LengthFieldPrepender())//protobuf头部长度编码
+		        .addLast("encode", new ProtobufEncoder())//protobuf消息体编码
+		        .addLast("protobufHandler", new ProtobufServerHandler()); //逻辑处理
 	}
 
 }
