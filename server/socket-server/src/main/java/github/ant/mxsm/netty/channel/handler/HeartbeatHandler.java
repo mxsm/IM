@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import github.ant.mxsm.netty.Heartbeat;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -35,14 +36,14 @@ public class HeartbeatHandler extends ChannelDuplexHandler{
 			buf.readBytes(readHeartBeat);
 			if(Arrays.equals( Heartbeat.HEARTBEAT, readHeartBeat)) {
 				if(logger.isInfoEnabled()) {
-					logger.info("Heart beat ........");
+					logger.info("Recive Heart beat ........");
 				}
-				ByteBuf encode = ctx.alloc().buffer();
-				ctx.writeAndFlush(encode.writeBytes( Heartbeat.HEARTBEAT));
+				ctx.writeAndFlush(Unpooled.copiedBuffer( Heartbeat.HEARTBEAT));
 				return;
 			}
 			buf.resetReaderIndex();
 		}
+		
 		super.channelRead(ctx, msg);
 	}
 	

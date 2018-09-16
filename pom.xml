@@ -11,6 +11,11 @@
 		<module>protocols</module>
 		<module>container</module>
 		<module>server</module>
+		<module>im-core</module>
+		<module>im-container</module>
+		<module>im-protocols</module>
+		<module>im-message-distribute</module>
+		<module>distribute</module>
 	</modules>
 
 	<properties>

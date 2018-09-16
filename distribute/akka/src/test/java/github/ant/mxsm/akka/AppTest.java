@@ -1,4 +1,4 @@
-package github.ant.mxsm.netty;
+package github.ant.mxsm.akka;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
