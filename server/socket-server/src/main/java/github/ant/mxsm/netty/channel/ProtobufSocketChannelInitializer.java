@@ -28,7 +28,7 @@ public class ProtobufSocketChannelInitializer extends SocketChannelInitializer{
 		        .addLast("protobufFrameDecoder", new ProtobufDecoder(Message.MessageProtobuf.getDefaultInstance()))//protobuf解码
 		        .addLast("frameEncode", new ProtobufVarint32LengthFieldPrepender())//protobuf头部长度编码
 		        .addLast("encode", new ProtobufEncoder())//protobuf消息体编码
-		        .addLast("protobufHandler", new ProtobufServerHandler()); //逻辑处理
+		        .addLast("protobufHandler", new ProtobufServerHandler("127.0.0.1:2181",1000)); //逻辑处理
 	}
 
 }

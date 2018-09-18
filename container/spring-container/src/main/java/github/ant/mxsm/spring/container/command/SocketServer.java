@@ -11,9 +11,24 @@ public class SocketServer implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		SocketStarter starter = new SocketStarter();
-		starter.start();
-		
+		Thread thread = new Thread(new Test());
+		thread.start();
 	}
 
+	
+	class Test implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			SocketStarter starter = new SocketStarter();
+			try {
+				starter.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }
