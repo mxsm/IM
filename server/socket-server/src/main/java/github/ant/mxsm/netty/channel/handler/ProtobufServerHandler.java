@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import github.ant.mxsm.protocol.protobuf.Message.MessageProtobuf;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class ProtobufServerHandler extends ChannelDuplexHandler {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		// TODO Auto-generated method stub
-		String path = zooKeeper.create("/user", "user".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		String path = zooKeeper.create("/user", "user".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 		logger.info(path);
 	}
 	
@@ -61,4 +62,16 @@ public class ProtobufServerHandler extends ChannelDuplexHandler {
 		ctx.writeAndFlush(message);
 	}
 
+	@Override
+	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+		System.out.println(msg + "write");
+		super.write(ctx, msg, promise);
+	}
+	
+	@Override
+	public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println( "write");
+		super.channelWritabilityChanged(ctx);
+	}
 }
