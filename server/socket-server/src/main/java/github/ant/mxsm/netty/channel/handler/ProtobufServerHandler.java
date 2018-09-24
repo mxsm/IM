@@ -1,5 +1,12 @@
 package github.ant.mxsm.netty.channel.handler;
 
+import java.io.IOException;
+
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooDefs.Ids;
+import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,6 +14,7 @@ import github.ant.mxsm.protocol.protobuf.Message.MessageProtobuf;
 import github.mxsm.zkclient.ZookeeperClient;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 
 /**
  * 
@@ -16,34 +24,25 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class ProtobufServerHandler extends ChannelDuplexHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProtobufServerHandler.class);
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private ZookeeperClient zkClient;
+	private ZookeeperClient zooKeeper;
 	
-	public ProtobufServerHandler(ZookeeperClient zkClient) {
-		this.zkClient = zkClient;
+	public ProtobufServerHandler(ZookeeperClient zooKeeper) {
+		this.zooKeeper = zooKeeper;
 	}
-	
+
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		
-		if(LOGGER.isInfoEnabled()) {
-			LOGGER.info("channel {} active ",ctx.channel().toString());
-		}
-		
+		// TODO Auto-generated method stub
+		String path = zooKeeper.create("/user", "user".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+		logger.info(path);
 	}
-
+	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		System.out.println(ctx.channel());
-		System.out.println(ctx.channel().close());
-	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		if(LOGGER.isErrorEnabled()) {
-			LOGGER.error(cause.getMessage());
-		}
+		// TODO Auto-generated method stub
+		super.channelInactive(ctx);
 	}
 	
 	@Override
@@ -52,5 +51,18 @@ public class ProtobufServerHandler extends ChannelDuplexHandler {
 
 		System.out.println(message.getCtrlMessageId());
 		ctx.writeAndFlush(message);
+	}
+
+	@Override
+	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+		System.out.println(msg + "write");
+		super.write(ctx, msg, promise);
+	}
+	
+	@Override
+	public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println( "write");
+		super.channelWritabilityChanged(ctx);
 	}
 }

@@ -36,6 +36,7 @@ public class ProtobufSocketChannelInitializer extends SocketChannelInitializer{
 		        .addLast("frameEncode", new ProtobufVarint32LengthFieldPrepender())//protobuf头部长度编码
 		        .addLast("encode", new ProtobufEncoder())//protobuf消息体编码
 		        .addLast("protobufHandler", new ProtobufServerHandler(this.zkClient)); //逻辑处理
+
 	}
 
 }
