@@ -1,9 +1,12 @@
 package github.ant.mxsm.netty.socket.server;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import github.ant.mxsm.netty.channel.ProtobufSocketChannelInitializer;
+import github.mxsm.zkclient.ZookeeperClient;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -33,6 +36,8 @@ public class SocketStarter {
 	private int bossGroupThread;
 	
 	private int workGroupThread;
+	
+	private final ZookeeperClient zkClient = new ZookeeperClient("127.0.0.1:2181",5,TimeUnit.SECONDS);
 	
 	private EventLoopGroup bossGroup;
 	
@@ -77,7 +82,7 @@ public class SocketStarter {
 		
 		this.bootstrap.group(this.bossGroup, this.workGroup);
 		this.bootstrap.channel(NioServerSocketChannel.class);
-		this.bootstrap.childHandler(new ProtobufSocketChannelInitializer());
+		this.bootstrap.childHandler(new ProtobufSocketChannelInitializer(zkClient));
 		this.bootstrap.option(ChannelOption.SO_BACKLOG, 128);
 		this.bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 		this.bootstrap.childOption(ChannelOption.TCP_NODELAY, true);

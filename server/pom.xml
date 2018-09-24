@@ -21,5 +21,11 @@
 			<version>${slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.github.mxsm.zookeeper</groupId>
+			<artifactId>zkClient</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 </project>
