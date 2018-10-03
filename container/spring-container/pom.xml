@@ -31,16 +31,16 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-logging</artifactId>
-		</dependency>
-		
-		<dependency>
 			<groupId>github.ant.mxsm</groupId>
 			<artifactId>socket-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.mxsm</groupId>
+			<artifactId>zkclient-spring-boot-starter</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

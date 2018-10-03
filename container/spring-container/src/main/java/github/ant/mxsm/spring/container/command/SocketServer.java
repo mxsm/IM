@@ -1,34 +1,26 @@
 package github.ant.mxsm.spring.container.command;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import github.ant.mxsm.netty.socket.server.SocketStarter;
+import github.mxsm.zkclient.ZookeeperClient;
 
 @Component
 public class SocketServer implements CommandLineRunner{
 
+	@Autowired
+	private ZookeeperClient zkClient;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		
-		Thread thread = new Thread(new Test());
-		thread.start();
+		SocketStarter starter = new SocketStarter(zkClient);
+		starter.start();
 	}
 
 	
-	class Test implements Runnable{
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			SocketStarter starter = new SocketStarter();
-			try {
-				starter.start();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-	}
+	
 }

@@ -2,11 +2,14 @@ package github.ant.mxsm.netty.socket.server;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import github.ant.mxsm.netty.channel.ProtobufSocketChannelInitializer;
+import github.ant.mxsm.protocol.protobuf.Message.MessageProtobuf;
 import github.mxsm.zkclient.ZookeeperClient;
+import github.mxsm.zkclient.serializer.ProtobufSerializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -31,13 +34,17 @@ public class SocketStarter {
 	
 	private static final int DEFAULT_WORKGROUPTHREAD = 16;
 	
+	private static final TimeUnit DEFAULT_TIMEUNIT = TimeUnit.SECONDS;
+	
+	private static final long DEFAULT_CONNECTIONTIMEOUT = 60;
+	
 	private int port;
 	
 	private int bossGroupThread;
 	
 	private int workGroupThread;
 	
-	private final ZookeeperClient zkClient = new ZookeeperClient("127.0.0.1:2181",5,TimeUnit.SECONDS);
+	private ZookeeperClient zkClient;
 	
 	private EventLoopGroup bossGroup;
 	
@@ -45,17 +52,40 @@ public class SocketStarter {
 	
 	private ServerBootstrap bootstrap;
 	
-	public SocketStarter() {
-		this(DEFAULT_PORT, DEFAULT_BOSSGROUPTHREAD, DEFAULT_WORKGROUPTHREAD);
+	private String zookeeperServers;
+	
+	private long connectionTimeout;
+	
+	private TimeUnit connectionTimeoutTimeUnit;
+	
+	public SocketStarter(ZookeeperClient zkClient) {
+		this(DEFAULT_PORT, DEFAULT_BOSSGROUPTHREAD, DEFAULT_WORKGROUPTHREAD,zkClient,DEFAULT_CONNECTIONTIMEOUT,DEFAULT_TIMEUNIT);
 	}
 	
-	public SocketStarter(final int port, final int bossGroupThread, final int workGroupThread) {
+	public SocketStarter(String zookeeperServers) {
+		this(DEFAULT_PORT, DEFAULT_BOSSGROUPTHREAD, DEFAULT_WORKGROUPTHREAD,zookeeperServers,DEFAULT_CONNECTIONTIMEOUT,DEFAULT_TIMEUNIT);
+	}
+	
+	public SocketStarter(final int port, final int bossGroupThread, final int workGroupThread,final String zookeeperServers,long connectionTimeout, TimeUnit connectionTimeoutTimeUnit) {
 		this.port = port;
 		this.bossGroupThread = bossGroupThread;
 		this.workGroupThread = workGroupThread;
+		this.zookeeperServers = zookeeperServers;
+		this.connectionTimeout = connectionTimeout;
+		this.connectionTimeoutTimeUnit = connectionTimeoutTimeUnit;
 		init();
 	}
 
+	public SocketStarter(final int port, final int bossGroupThread, final int workGroupThread,final ZookeeperClient zkClient,long connectionTimeout, TimeUnit connectionTimeoutTimeUnit) {
+		this.port = port;
+		this.bossGroupThread = bossGroupThread;
+		this.workGroupThread = workGroupThread;
+		this.zkClient = zkClient;
+		this.connectionTimeout = connectionTimeout;
+		this.connectionTimeoutTimeUnit = connectionTimeoutTimeUnit;
+		init();
+	}
+	
 	public void init() {
 		if(bossGroupThread == 0) {
 			bossGroupThread = DEFAULT_BOSSGROUPTHREAD;
@@ -68,10 +98,28 @@ public class SocketStarter {
 		if(port == 0) {
 			port = DEFAULT_PORT;
 		}
+		if(StringUtils.isBlank(zookeeperServers) && zkClient == null) {
+			throw new IllegalArgumentException("zookeeperServers is null");
+		}
+		if(connectionTimeout <= 0) {
+			connectionTimeout = DEFAULT_CONNECTIONTIMEOUT;
+		}
+		if(connectionTimeoutTimeUnit == null) {
+			connectionTimeoutTimeUnit = DEFAULT_TIMEUNIT;
+		}
+		
 		bootstrap = new ServerBootstrap();
+		if(zkClient == null) {
+			zkClient = new ZookeeperClient(zookeeperServers, connectionTimeout, connectionTimeoutTimeUnit);
+		}
+		zkClient.setZkSerializer(new ProtobufSerializer<>(MessageProtobuf.getDefaultInstance()));
 		
 		if(logger.isInfoEnabled()) {
 			logger.info("Netty start Info [port={} bossGroupThread={} workGroupThread ={}]",port,bossGroupThread,workGroupThread);
+		}
+		
+		if(logger.isInfoEnabled()) {
+			logger.info("zookeeper client start Info [zookeeperServers={} connectionTimeout={} connectionTimeoutTimeUnit ={}]",zookeeperServers,connectionTimeout,connectionTimeoutTimeUnit);
 		}
 	}
 
