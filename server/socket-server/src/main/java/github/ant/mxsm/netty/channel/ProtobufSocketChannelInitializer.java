@@ -30,13 +30,11 @@ public class ProtobufSocketChannelInitializer extends SocketChannelInitializer{
 	protected void initChannel(SocketChannel channel) throws Exception {
 		
 		ChannelPipeline pipeline = channel.pipeline();
-		pipeline.addLast("heartbeatHandler", new HeartbeatHandler())//心跳处理
-		        .addLast("protobufVarint32FrameDecoder",new ProtobufVarint32FrameDecoder())//protobuf头部解码
+		pipeline.addLast("protobufVarint32FrameDecoder",new HeartbeatHandler())//protobuf头部解码和心跳的处理
 		        .addLast("protobufFrameDecoder", new ProtobufDecoder(Message.MessageProtobuf.getDefaultInstance()))//protobuf解码
 		        .addLast("frameEncode", new ProtobufVarint32LengthFieldPrepender())//protobuf头部长度编码
 		        .addLast("encode", new ProtobufEncoder())//protobuf消息体编码
 		        .addLast("protobufHandler", new ProtobufServerHandler(this.zkClient)); //逻辑处理
-
 	}
 
 }

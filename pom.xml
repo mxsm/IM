@@ -11,11 +11,9 @@
 		<module>protocols</module>
 		<module>container</module>
 		<module>server</module>
-		<module>im-core</module>
-		<module>im-container</module>
-		<module>im-protocols</module>
-		<module>im-message-distribute</module>
 		<module>distribute</module>
+        <module>common</module>
+		<module>core</module>
 	</modules>
 
 	<properties>
@@ -23,6 +21,7 @@
 		<junit.version>4.12</junit.version>
 		<logger.logback.version>1.2.3</logger.logback.version>
 		<slf4j.version>1.8.0-beta2</slf4j.version>
+		<jetcd.version>0.3.7</jetcd.version>
 	</properties>
 
 	<dependencies>
@@ -44,6 +43,54 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.github.mxsm</groupId>
+				<artifactId>jetcd-core</artifactId>
+				<version>${jetcd.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>github.ant.mxsm</groupId>
+				<artifactId>container</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>github.ant.mxsm</groupId>
+				<artifactId>core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>github.ant.mxsm</groupId>
+				<artifactId>distribute</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>github.ant.mxsm</groupId>
+				<artifactId>protocols</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>github.ant.mxsm</groupId>
+				<artifactId>protobuf</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>github.ant.mxsm</groupId>
+				<artifactId>server</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

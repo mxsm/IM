@@ -41,7 +41,8 @@ public class SocketStarterTest {
 		b.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			public void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS)).addLast(new HearBeatHandler())
+				ch.pipeline()
+						.addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS)).addLast(new HearBeatHandler())
 						.addLast(new ProtobufVarint32FrameDecoder())
 						.addLast("protobufFrameDecoder",
 								new ProtobufDecoder(Message.MessageProtobuf.getDefaultInstance()))
@@ -60,8 +61,8 @@ public class SocketStarterTest {
 		 * f.channel().writeAndFlush(MessageProtobuf.newBuilder().setCtrlMessageId(i+"")
 		 * .build()); }
 		 */
-		f.channel().writeAndFlush(MessageProtobuf.newBuilder().setCtrlMessageId("uuuu").build());
-		f.channel().closeFuture().sync();
+		//f.channel().writeAndFlush(MessageProtobuf.newBuilder().setCtrlMessageId("uuuu").build());
+		//f.channel().closeFuture().sync();
 	}
 
 	class ProtobufVarint32LengthFieldPrepender1 extends ProtobufVarint32LengthFieldPrepender {
@@ -131,7 +132,7 @@ public class SocketStarterTest {
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			MessageProtobuf message = (MessageProtobuf) msg;
-			System.out.println(message.getCtrlMessageId());
+			//System.out.println(message.getCtrlMessageId());
 		}
 
 		@Override

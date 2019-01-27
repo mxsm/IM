@@ -6,17 +6,23 @@ option java_package = "github.ant.mxsm.protocol.protobuf";
 option java_outer_classname = "Message";
 
 message MessageProtobuf{
-	
-	 string protocol = 1 ; //协议
-	 string version = 2 ; //协议版本号
-	 string sender = 3; //消息发送者
-	 string receiver = 4; //消息接收者
-	 string messageType = 5; //消息类型
-	 string contentType = 6; //参照http content-type类型
-	 string messageUnique = 7; //消息唯一值
-	 int64 messageTime = 8; //消息的创建时间
-	 bytes payload = 9;//消息体
-	 string terminalType = 10; //发送消息的终端
-	 string deviceToken = 11; //发送消息的终端设备号
-	 string authToken = 12; //鉴权token
+
+	 Header header = 1;
+	 message Header{
+		 string protocol = 1; //协议
+		 string version = 2; //协议版本号
+		 string sender = 3; //消息发送者
+		 string receiver = 4; //消息接收者
+		 string messageType = 5; //消息类型
+		 string contentType = 6; //参照http content-type类型
+		 string terminalType = 7; //发送消息的终端
+		 string deviceToken = 8; //发送消息的终端设备号
+	 }
+	 Auth auth = 2;
+	 message Auth{
+		 string token = 1;
+	 }
+	 string messageUnique = 3; //消息唯一值
+	 int64 messageTime = 4; //消息的创建时间
+	 bytes payload = 5;//消息体
 }

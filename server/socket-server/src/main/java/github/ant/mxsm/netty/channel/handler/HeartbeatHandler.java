@@ -1,7 +1,10 @@
 package github.ant.mxsm.netty.channel.handler;
 
 import java.util.Arrays;
+import java.util.List;
 
+import io.netty.channel.Channel;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,15 +21,15 @@ import io.netty.channel.ChannelHandlerContext;
  * desc:停跳处理
  */
 
-public class HeartbeatHandler extends ChannelDuplexHandler{
+public class HeartbeatHandler extends ProtobufVarint32FrameDecoder {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Override
+	/*@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		if(msg instanceof ByteBuf) {
 			ByteBuf buf = (ByteBuf)msg;
-			
+
 			buf.markReaderIndex();
 			int length = buf.readableBytes();
 			if(length < Heartbeat.HEARTBEAT.length) {
@@ -43,8 +46,31 @@ public class HeartbeatHandler extends ChannelDuplexHandler{
 			}
 			buf.resetReaderIndex();
 		}
-		
+
 		super.channelRead(ctx, msg);
+	}*/
+
+	@Override
+	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+		in.markReaderIndex();
+		int length = in.readableBytes();
+		if(length < Heartbeat.HEARTBEAT.length){
+			return;
+		}
+		byte[] readHeartBeat = new byte[ Heartbeat.HEARTBEAT.length];
+		in.readBytes(readHeartBeat);
+		if(Arrays.equals(readHeartBeat, Heartbeat.HEARTBEAT)){
+			if(logger.isInfoEnabled()) {
+				logger.info("Recive Heart beat ........");
+			}
+			Channel channel = ctx.channel();
+			if(channel != null && channel.isWritable()){
+				//ctx.writeAndFlush(Unpooled.copiedBuffer( Heartbeat.HEARTBEAT));
+				out.add(new Heartbeat());
+			}
+		}else{
+			in.resetReaderIndex();
+		}
+		super.decode(ctx, in, out);
 	}
-	
 }

@@ -1,5 +1,6 @@
 package github.ant.mxsm.netty.channel.handler;
 
+import github.ant.mxsm.netty.Heartbeat;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.slf4j.Logger;
@@ -28,8 +29,7 @@ public class ProtobufServerHandler extends ChannelDuplexHandler {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		/*String path = zkClient.create("/user", "user".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-		logger.info(path);*/
+
 	}
 
 	@Override
@@ -39,12 +39,19 @@ public class ProtobufServerHandler extends ChannelDuplexHandler {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+		//处理心跳
+		if(msg instanceof Heartbeat){
+			ctx.writeAndFlush(Heartbeat.HEARTBEAT);
+			return;
+		}
+		//处理Message
 		MessageProtobuf message = (MessageProtobuf) msg;
 
 		zkClient.createEphemeral("/user", message);
 		
 		MessageProtobuf messagea = zkClient.readData("/user");
-		System.out.println(messagea.getCtrlMessageId());
+
 		ctx.writeAndFlush(messagea);
 	}
 
