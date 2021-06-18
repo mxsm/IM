@@ -1,98 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>github.ant.mxsm</groupId>
-	<artifactId>im</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<modules>
-		<module>protocols</module>
-		<module>container</module>
-		<module>server</module>
-		<module>distribute</module>
-        <module>common</module>
-		<module>core</module>
-	</modules>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<properties>
-		<netty.version>4.1.29.Final</netty.version>
-		<junit.version>4.12</junit.version>
-		<logger.logback.version>1.2.3</logger.logback.version>
-		<slf4j.version>1.8.0-beta2</slf4j.version>
-		<jetcd.version>0.3.7</jetcd.version>
-	</properties>
+  <modelVersion>4.0.0</modelVersion>
 
-	<dependencies>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-		</dependency>
-	</dependencies>
+  <groupId>com.github.mxsm</groupId>
+  <artifactId>im-all</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.netty</groupId>
-				<artifactId>netty-all</artifactId>
-				<version>${netty.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.github.mxsm</groupId>
-				<artifactId>jetcd-core</artifactId>
-				<version>${jetcd.version}</version>
-			</dependency>
 
-			<dependency>
-				<groupId>github.ant.mxsm</groupId>
-				<artifactId>container</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+  <modules>
+    <module>register</module>
+    <module>remoting</module>
+  </modules>
 
-			<dependency>
-				<groupId>github.ant.mxsm</groupId>
-				<artifactId>core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <netty.version>4.1.65.Final</netty.version>
+    <junit.version>4.12</junit.version>
+    <logger.logback.version>1.2.3</logger.logback.version>
+    <slf4j.version>1.8.0-beta2</slf4j.version>
+  </properties>
 
-			<dependency>
-				<groupId>github.ant.mxsm</groupId>
-				<artifactId>distribute</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+   <dependencies>
+     <dependency>
+       <groupId>junit</groupId>
+       <artifactId>junit</artifactId>
+       <version>${junit.version}</version>
+       <scope>test</scope>
+     </dependency>
+   </dependencies>
 
-			<dependency>
-				<groupId>github.ant.mxsm</groupId>
-				<artifactId>protocols</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>register</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>github.ant.mxsm</groupId>
-				<artifactId>protobuf</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>remoting</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>github.ant.mxsm</groupId>
-				<artifactId>server</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-				<scope>provided</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>
