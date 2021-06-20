@@ -3,6 +3,7 @@ package com.github.mxsm.remoting;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
+import com.github.mxsm.remoting.netty.NettyRequestProcessor;
 import com.github.mxsm.remoting.protocol.RequestRemotingCommand;
 import com.github.mxsm.remoting.protocol.ResponseRemotingCommand;
 import io.netty.channel.Channel;
@@ -57,4 +58,10 @@ public interface RemotingServer extends RemotingService {
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException,
         RemotingSendRequestException;
 
+
+    /**
+     * 注册请求处理器
+     * @param requestProcessor
+     */
+    void registerProcessor(final NettyRequestProcessor requestProcessor);
 }

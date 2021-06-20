@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package com.github.mxsm.protocol.protobuf;
+
+option java_package = "com.github.mxsm.protocol.protobuf";
+//option java_outer_classname = "AntMessageProtobuf";
+option java_multiple_files = true;
+
+message RemotingCommand{
+
+}

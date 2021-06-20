@@ -2,7 +2,7 @@
 IM 基于Netty的即时通讯
 
 ![](https://github.com/mxsm/picture/blob/main/project/%E8%81%8A%E5%A4%A9%E5%B7%A5%E5%85%B7.png?raw=true)
-
+消息的转发模块叫鹊桥(取自中国航天探月工程的鹊桥中继卫星)
 
 ### 工程目录结构说明
 - **common**    包含了工程的通用工具类
