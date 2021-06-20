@@ -1,7 +1,6 @@
 package com.github.mxsm.remoting.netty;
 
-import com.github.mxsm.remoting.protocol.RequestRemotingCommand;
-import com.github.mxsm.remoting.protocol.ResponseRemotingCommand;
+import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -11,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public interface NettyRequestProcessor {
 
-    ResponseRemotingCommand processRequest(ChannelHandlerContext ctx, RequestRemotingCommand request)
+    RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request)
         throws Exception;
 
 }

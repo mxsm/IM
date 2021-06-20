@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.netty;
 
 import com.github.mxsm.common.thread.NamedThreadFactory;
+import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingServer;
@@ -8,8 +9,6 @@ import com.github.mxsm.remoting.common.RemotingUtils;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
-import com.github.mxsm.remoting.protocol.RequestRemotingCommand;
-import com.github.mxsm.remoting.protocol.ResponseRemotingCommand;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -21,7 +20,6 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.net.InetSocketAddress;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +80,7 @@ public class NettyRemotingServer implements RemotingServer {
      * @throws RemotingTimeoutException
      */
     @Override
-    public ResponseRemotingCommand invokeSync(Channel channel, RequestRemotingCommand request,
+    public RemotingCommand invokeSync(Channel channel, RemotingCommand request,
         long timeoutMillis) throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException {
         return null;
     }
@@ -100,7 +98,7 @@ public class NettyRemotingServer implements RemotingServer {
      * @throws RemotingSendRequestException
      */
     @Override
-    public void invokeAsync(Channel channel, RequestRemotingCommand request, long timeoutMillis,
+    public void invokeAsync(Channel channel, RemotingCommand request, long timeoutMillis,
         InvokeCallback invokeCallback)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
 
@@ -118,7 +116,7 @@ public class NettyRemotingServer implements RemotingServer {
      * @throws RemotingSendRequestException
      */
     @Override
-    public void invokeOneway(Channel channel, RequestRemotingCommand request, long timeoutMillis)
+    public void invokeOneway(Channel channel, RemotingCommand request, long timeoutMillis)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
 
     }

@@ -1,11 +1,10 @@
 package com.github.mxsm.remoting;
 
+import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.exception.RemotingConnectException;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
-import com.github.mxsm.remoting.protocol.RequestRemotingCommand;
-import com.github.mxsm.remoting.protocol.ResponseRemotingCommand;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public interface RemotingClient extends RemotingService {
      * @throws RemotingSendRequestException
      * @throws RemotingTimeoutException
      */
-    ResponseRemotingCommand invokeSync(final String addr, final RequestRemotingCommand request,
+    RemotingCommand invokeSync(final String addr, final RemotingCommand request,
         final long timeoutMillis) throws InterruptedException, RemotingConnectException,
         RemotingSendRequestException, RemotingTimeoutException;
 
@@ -48,7 +47,7 @@ public interface RemotingClient extends RemotingService {
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
-    void invokeAsync(final String addr, final RequestRemotingCommand request, final long timeoutMillis,
+    void invokeAsync(final String addr, final RemotingCommand request, final long timeoutMillis,
         final InvokeCallback invokeCallback) throws InterruptedException, RemotingConnectException,
         RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException;
 
@@ -63,7 +62,7 @@ public interface RemotingClient extends RemotingService {
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
-    void invokeOneway(final String addr, final RequestRemotingCommand request, final long timeoutMillis)
+    void invokeOneway(final String addr, final RemotingCommand request, final long timeoutMillis)
         throws InterruptedException, RemotingConnectException, RemotingTooMuchRequestException,
         RemotingTimeoutException, RemotingSendRequestException;
 

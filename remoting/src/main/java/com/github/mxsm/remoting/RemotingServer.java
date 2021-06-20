@@ -1,11 +1,10 @@
 package com.github.mxsm.remoting;
 
+import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.NettyRequestProcessor;
-import com.github.mxsm.remoting.protocol.RequestRemotingCommand;
-import com.github.mxsm.remoting.protocol.ResponseRemotingCommand;
 import io.netty.channel.Channel;
 
 /**
@@ -25,7 +24,7 @@ public interface RemotingServer extends RemotingService {
      * @throws RemotingSendRequestException
      * @throws RemotingTimeoutException
      */
-    ResponseRemotingCommand invokeSync(final Channel channel, final RequestRemotingCommand request,
+    RemotingCommand invokeSync(final Channel channel, final RemotingCommand request,
         final long timeoutMillis) throws InterruptedException, RemotingSendRequestException,
         RemotingTimeoutException;
 
@@ -40,7 +39,7 @@ public interface RemotingServer extends RemotingService {
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
-    void invokeAsync(final Channel channel, final RequestRemotingCommand request, final long timeoutMillis,
+    void invokeAsync(final Channel channel, final RemotingCommand request, final long timeoutMillis,
         final InvokeCallback invokeCallback) throws InterruptedException,
         RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException;
 
@@ -54,7 +53,7 @@ public interface RemotingServer extends RemotingService {
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
-    void invokeOneway(final Channel channel, final RequestRemotingCommand request, final long timeoutMillis)
+    void invokeOneway(final Channel channel, final RemotingCommand request, final long timeoutMillis)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException,
         RemotingSendRequestException;
 

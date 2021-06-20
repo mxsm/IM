@@ -6,4 +6,23 @@ package com.github.mxsm.protocol.protobuf;
 public interface RemotingCommandOrBuilder extends
     // @@protoc_insertion_point(interface_extends:com.github.mxsm.protocol.protobuf.RemotingCommand)
     com.google.protobuf.MessageOrBuilder {
+
+  /**
+   * <pre>
+   *命令类型
+   * </pre>
+   *
+   * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+   * @return The enum numeric value on the wire for commandType.
+   */
+  int getCommandTypeValue();
+  /**
+   * <pre>
+   *命令类型
+   * </pre>
+   *
+   * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+   * @return The commandType.
+   */
+  com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType();
 }

@@ -43,6 +43,7 @@
         <artifactId>protobuf-maven-plugin</artifactId>
         <version>0.6.1</version>
         <configuration>
+          <protoSourceRoot>${basedir}/src/main/resources</protoSourceRoot>
           <protocArtifact>com.google.protobuf:protoc:3.17.3:exe:${os.detected.classifier}</protocArtifact>
           <outputDirectory>src/main/java</outputDirectory>
           <clearOutputDirectory>true</clearOutputDirectory>

@@ -16,6 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private RemotingCommand() {
+    commandType_ = 0;
   }
 
   @java.lang.Override
@@ -48,6 +49,12 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
+          case 8: {
+            int rawValue = input.readEnum();
+
+            commandType_ = rawValue;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -80,6 +87,33 @@ private static final long serialVersionUID = 0L;
             com.github.mxsm.protocol.protobuf.RemotingCommand.class, com.github.mxsm.protocol.protobuf.RemotingCommand.Builder.class);
   }
 
+  public static final int COMMANDTYPE_FIELD_NUMBER = 1;
+  private int commandType_;
+  /**
+   * <pre>
+   *命令类型
+   * </pre>
+   *
+   * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+   * @return The enum numeric value on the wire for commandType.
+   */
+  @java.lang.Override public int getCommandTypeValue() {
+    return commandType_;
+  }
+  /**
+   * <pre>
+   *命令类型
+   * </pre>
+   *
+   * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+   * @return The commandType.
+   */
+  @java.lang.Override public com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType() {
+    @SuppressWarnings("deprecation")
+    com.github.mxsm.protocol.protobuf.RemotingCommandType result = com.github.mxsm.protocol.protobuf.RemotingCommandType.valueOf(commandType_);
+    return result == null ? com.github.mxsm.protocol.protobuf.RemotingCommandType.UNRECOGNIZED : result;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -94,6 +128,9 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST_COMMAND.getNumber()) {
+      output.writeEnum(1, commandType_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -103,6 +140,10 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST_COMMAND.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, commandType_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -118,6 +159,7 @@ private static final long serialVersionUID = 0L;
     }
     com.github.mxsm.protocol.protobuf.RemotingCommand other = (com.github.mxsm.protocol.protobuf.RemotingCommand) obj;
 
+    if (commandType_ != other.commandType_) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -129,6 +171,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + COMMANDTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + commandType_;
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -262,6 +306,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      commandType_ = 0;
+
       return this;
     }
 
@@ -288,6 +334,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.github.mxsm.protocol.protobuf.RemotingCommand buildPartial() {
       com.github.mxsm.protocol.protobuf.RemotingCommand result = new com.github.mxsm.protocol.protobuf.RemotingCommand(this);
+      result.commandType_ = commandType_;
       onBuilt();
       return result;
     }
@@ -336,6 +383,9 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.github.mxsm.protocol.protobuf.RemotingCommand other) {
       if (other == com.github.mxsm.protocol.protobuf.RemotingCommand.getDefaultInstance()) return this;
+      if (other.commandType_ != 0) {
+        setCommandTypeValue(other.getCommandTypeValue());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -362,6 +412,80 @@ private static final long serialVersionUID = 0L;
           mergeFrom(parsedMessage);
         }
       }
+      return this;
+    }
+
+    private int commandType_ = 0;
+    /**
+     * <pre>
+     *命令类型
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+     * @return The enum numeric value on the wire for commandType.
+     */
+    @java.lang.Override public int getCommandTypeValue() {
+      return commandType_;
+    }
+    /**
+     * <pre>
+     *命令类型
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+     * @param value The enum numeric value on the wire for commandType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCommandTypeValue(int value) {
+      
+      commandType_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *命令类型
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+     * @return The commandType.
+     */
+    @java.lang.Override
+    public com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType() {
+      @SuppressWarnings("deprecation")
+      com.github.mxsm.protocol.protobuf.RemotingCommandType result = com.github.mxsm.protocol.protobuf.RemotingCommandType.valueOf(commandType_);
+      return result == null ? com.github.mxsm.protocol.protobuf.RemotingCommandType.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     *命令类型
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+     * @param value The commandType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCommandType(com.github.mxsm.protocol.protobuf.RemotingCommandType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      commandType_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *命令类型
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCommandType() {
+      
+      commandType_ = 0;
+      onChanged();
       return this;
     }
     @java.lang.Override
