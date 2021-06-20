@@ -7,7 +7,8 @@ group: edge
 
 language: java
 jdk:
-  - openjdk11
+  - oraclejdk8
+  - oraclejdk11
 
 cache:
   directories:
@@ -19,9 +20,6 @@ branches:
   only:
     - develop
     - master
-
-before_script:
-  - rm -rf $HOME/.m2/repository/org/glassfish/javax.el/3.0.1-b08
 
 script:
   - mvn clean
