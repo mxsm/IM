@@ -24,7 +24,8 @@ before_script:
   - rm -rf $HOME/.m2/repository/org/glassfish/javax.el/3.0.1-b08
 
 script:
-  - ./mvnw clean package
+  - mvn clean
+  - mvn package
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
