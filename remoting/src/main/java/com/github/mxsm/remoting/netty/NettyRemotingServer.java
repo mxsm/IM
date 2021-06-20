@@ -9,6 +9,9 @@ import com.github.mxsm.remoting.common.RemotingUtils;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
+import com.github.mxsm.remoting.netty.handler.NettyConnectManageHandler;
+import com.github.mxsm.remoting.netty.handler.NettyServerHandler;
+import com.github.mxsm.remoting.netty.handler.ServerHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -44,6 +47,10 @@ public class NettyRemotingServer implements RemotingServer {
     private final ChannelEventListener channelEventListener;
 
     private int bindPort;
+
+    private NettyConnectManageHandler nettyConnectManageHandler;
+
+    private NettyServerHandler nettyServerHandler;
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
@@ -146,7 +153,7 @@ public class NettyRemotingServer implements RemotingServer {
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new ServerHandlerInitializer());
+            .childHandler(new ServerHandlerInitializer(nettyConnectManageHandler,null,RemotingCommand.getDefaultInstance(),nettyServerConfig,nettyServerHandler));
 
         try {
             ChannelFuture sync = this.serverBootstrap.bind().sync();

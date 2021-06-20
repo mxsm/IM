@@ -5,9 +5,9 @@ option java_package = "com.github.mxsm.protocol.protobuf";
 option java_multiple_files = true;
 
 enum RemotingCommandType{
-    //请求命令
-    REQUEST_COMMAND = 0;
+    //连接
+    CONNECT = 0;
 
     //返回命令
-    RESPONSE_COMMAND = 1;
+    HEART_BEAT = 1;
 }

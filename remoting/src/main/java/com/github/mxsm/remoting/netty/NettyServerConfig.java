@@ -17,6 +17,8 @@ public class NettyServerConfig implements Cloneable {
 
     private int serverSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
 
+    private int serverChannelMaxIdleTimeSeconds = 30;
+
     public boolean isUseEpollNativeSelector() {
         return useEpollNativeSelector;
     }
@@ -51,5 +53,13 @@ public class NettyServerConfig implements Cloneable {
 
     public void setBindPort(int bindPort) {
         this.bindPort = bindPort;
+    }
+
+    public int getServerChannelMaxIdleTimeSeconds() {
+        return serverChannelMaxIdleTimeSeconds;
+    }
+
+    public void setServerChannelMaxIdleTimeSeconds(int serverChannelMaxIdleTimeSeconds) {
+        this.serverChannelMaxIdleTimeSeconds = serverChannelMaxIdleTimeSeconds;
     }
 }
