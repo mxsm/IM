@@ -159,9 +159,6 @@
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
-        <configuration>
-          <repoToken>1PYqBCzFpm12B7nOuHqpUBgbGP1rfbGhF</repoToken>
-        </configuration>
         <dependencies>
           <!-- Explicit dep on jaxb-api to avoid problems with
             JDK9 and later, until a new version of
