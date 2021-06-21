@@ -25,8 +25,8 @@ script:
   - mvn package
 
 after_success:
-  - mvn clean coveralls:report
-  - mvn clean test jacoco:report
+  - mvn test jacoco:report
+  - mvn coveralls:report
   - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
