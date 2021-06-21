@@ -7,7 +7,6 @@ group: edge
 
 language: java
 jdk:
-  - oraclejdk8
   - oraclejdk11
 
 cache:
@@ -26,7 +25,7 @@ script:
   - mvn package
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn clean coveralls:report
   - mvn clean test jacoco:report
   - bash <(curl -s https://codecov.io/bash)
 
