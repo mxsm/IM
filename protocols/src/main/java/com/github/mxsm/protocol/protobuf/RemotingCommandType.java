@@ -10,39 +10,39 @@ public enum RemotingCommandType
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
    * <pre>
-   *请求命令
+   *连接
    * </pre>
    *
-   * <code>REQUEST_COMMAND = 0;</code>
+   * <code>CONNECT = 0;</code>
    */
-  REQUEST_COMMAND(0),
+  CONNECT(0),
   /**
    * <pre>
    *返回命令
    * </pre>
    *
-   * <code>RESPONSE_COMMAND = 1;</code>
+   * <code>HEART_BEAT = 1;</code>
    */
-  RESPONSE_COMMAND(1),
+  HEART_BEAT(1),
   UNRECOGNIZED(-1),
   ;
 
   /**
    * <pre>
-   *请求命令
+   *连接
    * </pre>
    *
-   * <code>REQUEST_COMMAND = 0;</code>
+   * <code>CONNECT = 0;</code>
    */
-  public static final int REQUEST_COMMAND_VALUE = 0;
+  public static final int CONNECT_VALUE = 0;
   /**
    * <pre>
    *返回命令
    * </pre>
    *
-   * <code>RESPONSE_COMMAND = 1;</code>
+   * <code>HEART_BEAT = 1;</code>
    */
-  public static final int RESPONSE_COMMAND_VALUE = 1;
+  public static final int HEART_BEAT_VALUE = 1;
 
 
   public final int getNumber() {
@@ -69,8 +69,8 @@ public enum RemotingCommandType
    */
   public static RemotingCommandType forNumber(int value) {
     switch (value) {
-      case 0: return REQUEST_COMMAND;
-      case 1: return RESPONSE_COMMAND;
+      case 0: return CONNECT;
+      case 1: return HEART_BEAT;
       default: return null;
     }
   }

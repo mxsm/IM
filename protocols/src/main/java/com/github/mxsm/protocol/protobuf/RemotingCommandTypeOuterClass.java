@@ -24,10 +24,10 @@ public final class RemotingCommandTypeOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\031RemotingCommandType.proto\022!com.github." +
-      "mxsm.protocol.protobuf*@\n\023RemotingComman" +
-      "dType\022\023\n\017REQUEST_COMMAND\020\000\022\024\n\020RESPONSE_C" +
-      "OMMAND\020\001B%\n!com.github.mxsm.protocol.pro" +
-      "tobufP\001b\006proto3"
+      "mxsm.protocol.protobuf*2\n\023RemotingComman" +
+      "dType\022\013\n\007CONNECT\020\000\022\016\n\nHEART_BEAT\020\001B%\n!co" +
+      "m.github.mxsm.protocol.protobufP\001b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

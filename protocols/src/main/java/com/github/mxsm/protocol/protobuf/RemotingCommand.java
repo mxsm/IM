@@ -128,7 +128,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST_COMMAND.getNumber()) {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.CONNECT.getNumber()) {
       output.writeEnum(1, commandType_);
     }
     unknownFields.writeTo(output);
@@ -140,7 +140,7 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST_COMMAND.getNumber()) {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.CONNECT.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, commandType_);
     }
