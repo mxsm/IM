@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.github.mxsm.protocol.protobuf;
+
+option java_package = "com.github.mxsm.protocol.protobuf";
+
+option java_multiple_files = true;
+
+message MessageHeader{
+
+  //源IP
+  int64 sourceAddress = 1;
+
+  //请求的远程IP地址
+  int64 remoteAddress = 2;
+
+
+}
