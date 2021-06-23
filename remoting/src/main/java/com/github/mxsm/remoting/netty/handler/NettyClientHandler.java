@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
  * @Since 0.1
  */
 @Sharable
-public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingCommand> {
+public class NettyClientHandler extends SimpleChannelInboundHandler<RemotingCommand> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NettyClientHandler.class);
 
     /**
      * Is called for each message of type {@link I}.

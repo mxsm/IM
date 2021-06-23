@@ -3,6 +3,7 @@ package com.github.mxsm.remoting.netty.handler;
 import com.github.mxsm.remoting.ChannelEventListener;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/20
  * @Since 0.1
  */
+@Sharable
 public class NettyConnectManageHandler extends ChannelDuplexHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyConnectManageHandler.class.getSimpleName());
@@ -132,5 +134,13 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
             Channel channel = ctx.channel();
             channelEventListener.onUserEventTriggered(channel, evt);
         }
+    }
+
+    public ChannelEventListener getChannelEventListener() {
+        return channelEventListener;
+    }
+
+    public void setChannelEventListener(ChannelEventListener channelEventListener) {
+        this.channelEventListener = channelEventListener;
     }
 }

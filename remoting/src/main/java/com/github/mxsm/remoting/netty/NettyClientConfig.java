@@ -7,4 +7,43 @@ package com.github.mxsm.remoting.netty;
  */
 public class NettyClientConfig {
 
+    private int clientSocketSndBufSize = NettySystemConfig.socketSndbufSize;
+
+    private int clientSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
+
+    private int connectTimeoutMillis = 3000;
+
+    private int clientWorkerThreads = 4;
+
+    public int getClientSocketSndBufSize() {
+        return clientSocketSndBufSize;
+    }
+
+    public void setClientSocketSndBufSize(int clientSocketSndBufSize) {
+        this.clientSocketSndBufSize = clientSocketSndBufSize;
+    }
+
+    public int getClientSocketRcvBufSize() {
+        return clientSocketRcvBufSize;
+    }
+
+    public void setClientSocketRcvBufSize(int clientSocketRcvBufSize) {
+        this.clientSocketRcvBufSize = clientSocketRcvBufSize;
+    }
+
+    public int getConnectTimeoutMillis() {
+        return connectTimeoutMillis;
+    }
+
+    public void setConnectTimeoutMillis(int connectTimeoutMillis) {
+        this.connectTimeoutMillis = connectTimeoutMillis;
+    }
+
+    public int getClientWorkerThreads() {
+        return clientWorkerThreads;
+    }
+
+    public void setClientWorkerThreads(int clientWorkerThreads) {
+        this.clientWorkerThreads = clientWorkerThreads;
+    }
 }

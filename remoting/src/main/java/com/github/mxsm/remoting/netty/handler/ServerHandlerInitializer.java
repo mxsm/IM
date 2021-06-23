@@ -2,6 +2,7 @@ package com.github.mxsm.remoting.netty.handler;
 
 import com.github.mxsm.common.AnnotationUtils;
 import com.github.mxsm.common.annotation.NotNull;
+import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
 import com.google.protobuf.MessageLite;
 import io.netty.channel.Channel;
@@ -13,6 +14,7 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
  * @author mxsm
@@ -25,21 +27,22 @@ public class ServerHandlerInitializer extends ChannelInitializer {
     private final NettyConnectManageHandler nettyConnectManageHandler;
 
     @NotNull
-    private final DefaultEventLoopGroup defaultEventLoopGroup;
+    private final EventExecutorGroup eventExecutorGroup;
 
     @NotNull
-    private final MessageLite lite;
+    private final MessageLite lite = RemotingCommand.getDefaultInstance();
 
     private final NettyServerConfig nettyServerConfig;
 
     private final NettyServerHandler nettyServerHandler;
 
+    private final ProtobufEncoder protobufEncoder = new ProtobufEncoder();
+
     public ServerHandlerInitializer(
-        final NettyConnectManageHandler nettyConnectManageHandler, final DefaultEventLoopGroup defaultEventLoopGroup,
-        final MessageLite lite, final NettyServerConfig nettyServerConfig, final NettyServerHandler nettyServerHandler) {
+        final NettyConnectManageHandler nettyConnectManageHandler, final EventExecutorGroup eventExecutorGroup,
+        final NettyServerConfig nettyServerConfig, final NettyServerHandler nettyServerHandler) {
         this.nettyConnectManageHandler = nettyConnectManageHandler;
-        this.defaultEventLoopGroup = defaultEventLoopGroup;
-        this.lite = lite;
+        this.eventExecutorGroup = eventExecutorGroup;
         this.nettyServerConfig = nettyServerConfig;
         this.nettyServerHandler = nettyServerHandler;
     }
@@ -59,12 +62,12 @@ public class ServerHandlerInitializer extends ChannelInitializer {
         AnnotationUtils.validatorNotNull(this);
 
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast(new ProtobufVarint32FrameDecoder());
-        pipeline.addLast(new ProtobufEncoder());
-        pipeline.addLast(new ProtobufDecoder(lite));
-        pipeline.addLast(new IdleStateHandler(0, 0, nettyServerConfig.getServerChannelMaxIdleTimeSeconds()));
-        pipeline.addLast(nettyConnectManageHandler);
-        pipeline.addLast(new NettyServerHandler());
+        pipeline.addLast(eventExecutorGroup,"protobufVarint32FrameDecoder",new ProtobufVarint32FrameDecoder());
+        pipeline.addLast(eventExecutorGroup,"protobufDecoder",new ProtobufDecoder(lite));
+        pipeline.addLast(eventExecutorGroup,"protobufEncoder",protobufEncoder);
+        pipeline.addLast(eventExecutorGroup,"idleStateHandler",new IdleStateHandler(0, 0, nettyServerConfig.getServerChannelMaxIdleTimeSeconds()));
+        pipeline.addLast(eventExecutorGroup,"nettyConnectManageHandler",nettyConnectManageHandler);
+        pipeline.addLast(eventExecutorGroup,"nettyServerHandler",nettyServerHandler);
 
     }
 }

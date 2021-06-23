@@ -22,6 +22,8 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 import java.net.InetSocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,8 @@ public class NettyRemotingServer implements RemotingServer {
     private final EventLoopGroup selectorEventLoopGroup;
 
     private final ChannelEventListener channelEventListener;
+
+    private final EventExecutorGroup eventExecutorGroup;
 
     private int bindPort;
 
@@ -72,6 +76,10 @@ public class NettyRemotingServer implements RemotingServer {
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
                 new NamedThreadFactory("NettyNIOSelector"));
         }
+        eventExecutorGroup = new DefaultEventExecutorGroup(nettyServerConfig.getServerWorkerThreads(),
+            new NamedThreadFactory("eventExecutorThread"));
+
+        nettyConnectManageHandler = new NettyConnectManageHandler(this.channelEventListener);
     }
 
 
@@ -144,8 +152,10 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void start() {
 
+        nettyServerHandler = new NettyServerHandler();
+
         this.serverBootstrap.group(this.bossEventLoopGroup, this.selectorEventLoopGroup)
-            .channel(useEpoll()? EpollServerSocketChannel.class: NioServerSocketChannel.class)
+            .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 1024)
             .option(ChannelOption.SO_REUSEADDR, true)
             .childOption(ChannelOption.SO_KEEPALIVE, false)
@@ -153,13 +163,15 @@ public class NettyRemotingServer implements RemotingServer {
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new ServerHandlerInitializer(nettyConnectManageHandler,null,RemotingCommand.getDefaultInstance(),nettyServerConfig,nettyServerHandler));
+            .childHandler(new ServerHandlerInitializer(nettyConnectManageHandler, eventExecutorGroup, nettyServerConfig,
+                nettyServerHandler));
 
         try {
             ChannelFuture sync = this.serverBootstrap.bind().sync();
-            InetSocketAddress address = (InetSocketAddress)sync.channel().localAddress();
+            InetSocketAddress address = (InetSocketAddress) sync.channel().localAddress();
             bindPort = address.getPort();
-            LOGGER.info(">>>>>>>>>>NettyRemotingServer-[{}:{}]启动完成<<<<<<<<<<<<",address.getAddress().getHostAddress(),bindPort);
+            LOGGER.info(">>>>>>>>>>NettyRemotingServer-[{}:{}]启动完成<<<<<<<<<<<<", address.getAddress().getHostAddress(),
+                bindPort);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

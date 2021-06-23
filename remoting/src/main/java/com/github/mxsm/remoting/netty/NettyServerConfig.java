@@ -9,6 +9,8 @@ public class NettyServerConfig implements Cloneable {
 
     private int bindPort = 9998;
 
+    private int serverWorkerThreads = 8;
+
     private boolean useEpollNativeSelector = false;
 
     private int serverSelectorThreads = 3;
@@ -61,5 +63,13 @@ public class NettyServerConfig implements Cloneable {
 
     public void setServerChannelMaxIdleTimeSeconds(int serverChannelMaxIdleTimeSeconds) {
         this.serverChannelMaxIdleTimeSeconds = serverChannelMaxIdleTimeSeconds;
+    }
+
+    public int getServerWorkerThreads() {
+        return serverWorkerThreads;
+    }
+
+    public void setServerWorkerThreads(int serverWorkerThreads) {
+        this.serverWorkerThreads = serverWorkerThreads;
     }
 }
