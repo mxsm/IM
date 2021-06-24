@@ -15,6 +15,8 @@ public class NettyClientConfig {
 
     private int clientWorkerThreads = 4;
 
+    private int clientChannelMaxIdleTimeSeconds = 120;
+
     public int getClientSocketSndBufSize() {
         return clientSocketSndBufSize;
     }
@@ -45,5 +47,13 @@ public class NettyClientConfig {
 
     public void setClientWorkerThreads(int clientWorkerThreads) {
         this.clientWorkerThreads = clientWorkerThreads;
+    }
+
+    public int getClientChannelMaxIdleTimeSeconds() {
+        return clientChannelMaxIdleTimeSeconds;
+    }
+
+    public void setClientChannelMaxIdleTimeSeconds(int clientChannelMaxIdleTimeSeconds) {
+        this.clientChannelMaxIdleTimeSeconds = clientChannelMaxIdleTimeSeconds;
     }
 }

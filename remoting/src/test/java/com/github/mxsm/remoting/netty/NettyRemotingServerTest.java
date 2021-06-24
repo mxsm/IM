@@ -1,5 +1,6 @@
 package com.github.mxsm.remoting.netty;
 
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +34,11 @@ class NettyRemotingServerTest {
             started = false;
         }
         Assertions.assertTrue(started);
+        try {
+            TimeUnit.MINUTES.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

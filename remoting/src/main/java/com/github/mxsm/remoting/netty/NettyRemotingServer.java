@@ -9,9 +9,9 @@ import com.github.mxsm.remoting.common.RemotingUtils;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
-import com.github.mxsm.remoting.netty.handler.NettyConnectManageHandler;
+import com.github.mxsm.remoting.netty.handler.NettyServerConnectManageHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerHandler;
-import com.github.mxsm.remoting.netty.handler.ServerHandlerInitializer;
+import com.github.mxsm.remoting.netty.handler.NettyServerHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -52,7 +52,7 @@ public class NettyRemotingServer implements RemotingServer {
 
     private int bindPort;
 
-    private NettyConnectManageHandler nettyConnectManageHandler;
+    private NettyServerConnectManageHandler nettyServerConnectManageHandler;
 
     private NettyServerHandler nettyServerHandler;
 
@@ -79,7 +79,7 @@ public class NettyRemotingServer implements RemotingServer {
         eventExecutorGroup = new DefaultEventExecutorGroup(nettyServerConfig.getServerWorkerThreads(),
             new NamedThreadFactory("eventExecutorThread"));
 
-        nettyConnectManageHandler = new NettyConnectManageHandler(this.channelEventListener);
+        nettyServerConnectManageHandler = new NettyServerConnectManageHandler(this.channelEventListener);
     }
 
 
@@ -163,7 +163,7 @@ public class NettyRemotingServer implements RemotingServer {
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new ServerHandlerInitializer(nettyConnectManageHandler, eventExecutorGroup, nettyServerConfig,
+            .childHandler(new NettyServerHandlerInitializer(nettyServerConnectManageHandler, eventExecutorGroup, nettyServerConfig,
                 nettyServerHandler));
 
         try {

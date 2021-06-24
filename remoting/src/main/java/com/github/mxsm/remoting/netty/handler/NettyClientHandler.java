@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/20
  * @Since 0.1
  */
-@Sharable
 public class NettyClientHandler extends SimpleChannelInboundHandler<RemotingCommand> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyClientHandler.class);

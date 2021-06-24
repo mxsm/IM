@@ -9,10 +9,10 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.EventExecutorGroup;
 
@@ -21,10 +21,10 @@ import io.netty.util.concurrent.EventExecutorGroup;
  * @Date 2021/6/19
  * @Since
  */
-public class ServerHandlerInitializer extends ChannelInitializer {
+public class NettyServerHandlerInitializer extends ChannelInitializer {
 
     @NotNull
-    private final NettyConnectManageHandler nettyConnectManageHandler;
+    private final NettyServerConnectManageHandler nettyServerConnectManageHandler;
 
     @NotNull
     private final EventExecutorGroup eventExecutorGroup;
@@ -38,10 +38,12 @@ public class ServerHandlerInitializer extends ChannelInitializer {
 
     private final ProtobufEncoder protobufEncoder = new ProtobufEncoder();
 
-    public ServerHandlerInitializer(
-        final NettyConnectManageHandler nettyConnectManageHandler, final EventExecutorGroup eventExecutorGroup,
+    private final ProtobufVarint32LengthFieldPrepender fieldPrepender = new ProtobufVarint32LengthFieldPrepender();
+
+    public NettyServerHandlerInitializer(
+        final NettyServerConnectManageHandler nettyServerConnectManageHandler, final EventExecutorGroup eventExecutorGroup,
         final NettyServerConfig nettyServerConfig, final NettyServerHandler nettyServerHandler) {
-        this.nettyConnectManageHandler = nettyConnectManageHandler;
+        this.nettyServerConnectManageHandler = nettyServerConnectManageHandler;
         this.eventExecutorGroup = eventExecutorGroup;
         this.nettyServerConfig = nettyServerConfig;
         this.nettyServerHandler = nettyServerHandler;
@@ -62,12 +64,13 @@ public class ServerHandlerInitializer extends ChannelInitializer {
         AnnotationUtils.validatorNotNull(this);
 
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast(eventExecutorGroup,"protobufVarint32FrameDecoder",new ProtobufVarint32FrameDecoder());
-        pipeline.addLast(eventExecutorGroup,"protobufDecoder",new ProtobufDecoder(lite));
-        pipeline.addLast(eventExecutorGroup,"protobufEncoder",protobufEncoder);
-        pipeline.addLast(eventExecutorGroup,"idleStateHandler",new IdleStateHandler(0, 0, nettyServerConfig.getServerChannelMaxIdleTimeSeconds()));
-        pipeline.addLast(eventExecutorGroup,"nettyConnectManageHandler",nettyConnectManageHandler);
-        pipeline.addLast(eventExecutorGroup,"nettyServerHandler",nettyServerHandler);
+        pipeline.addLast(eventExecutorGroup,new IdleStateHandler(0, 0, nettyServerConfig.getServerChannelMaxIdleTimeSeconds()));
+        pipeline.addLast(eventExecutorGroup,new ProtobufVarint32FrameDecoder());
+        pipeline.addLast(eventExecutorGroup,new ProtobufDecoder(lite));
+        pipeline.addLast(eventExecutorGroup,fieldPrepender);
+        pipeline.addLast(eventExecutorGroup,protobufEncoder);
+        pipeline.addLast(eventExecutorGroup,nettyServerConnectManageHandler);
+        pipeline.addLast(eventExecutorGroup,nettyServerHandler);
 
     }
 }

@@ -16,17 +16,17 @@ import org.slf4j.LoggerFactory;
  * @Since 0.1
  */
 @Sharable
-public class NettyConnectManageHandler extends ChannelDuplexHandler {
+public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NettyConnectManageHandler.class.getSimpleName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerConnectManageHandler.class.getSimpleName());
 
     private ChannelEventListener channelEventListener;
 
-    public NettyConnectManageHandler() {
+    public NettyServerConnectManageHandler() {
         super();
     }
 
-    public NettyConnectManageHandler(ChannelEventListener channelEventListener) {
+    public NettyServerConnectManageHandler(ChannelEventListener channelEventListener) {
         this.channelEventListener = channelEventListener;
     }
 
@@ -40,8 +40,8 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelRegistered(ctx);
         LOGGER.info("Netty Server channelRegistered");
+        super.channelRegistered(ctx);
         if (channelEventListener != null) {
             Channel channel = ctx.channel();
             channelEventListener.onChannelRegistered(channel.remoteAddress().toString(), channel);
@@ -59,6 +59,7 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        LOGGER.info("Netty Server channelRegistered");
         super.channelUnregistered(ctx);
         if (channelEventListener != null) {
             Channel channel = ctx.channel();
@@ -76,6 +77,7 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        LOGGER.info("Netty Server channelRegistered");
         super.channelActive(ctx);
         if (channelEventListener != null) {
             Channel channel = ctx.channel();
@@ -93,6 +95,7 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        LOGGER.info("Netty Server channelRegistered");
         super.channelInactive(ctx);
         if (channelEventListener != null) {
             Channel channel = ctx.channel();
@@ -111,6 +114,7 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        LOGGER.info("Netty Server channelRegistered");
         super.exceptionCaught(ctx, cause);
         if (channelEventListener != null) {
             Channel channel = ctx.channel();
@@ -129,6 +133,7 @@ public class NettyConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        LOGGER.info("Netty Server channelRegistered");
         super.userEventTriggered(ctx, evt);
         if (channelEventListener != null) {
             Channel channel = ctx.channel();
