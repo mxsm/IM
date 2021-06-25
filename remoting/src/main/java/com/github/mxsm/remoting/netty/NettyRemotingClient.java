@@ -50,7 +50,7 @@ public class NettyRemotingClient implements RemotingClient {
 
     private final EventLoopGroup eventLoopGroupWorker;
 
-    private  EventExecutorGroup eventExecutorGroup;
+    private EventExecutorGroup eventExecutorGroup;
 
     private Lock channelTableLock = new ReentrantLock();
 
@@ -136,8 +136,7 @@ public class NettyRemotingClient implements RemotingClient {
     @Override
     public void invokeOneway(String addr, RemotingCommand request, long timeoutMillis)
         throws InterruptedException, RemotingConnectException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-/*        Channel orElseCreateChannel = getOrElseCreateChannel(addr);
-        orElseCreateChannel.writeAndFlush(request);*/
+
 
     }
 
@@ -156,7 +155,7 @@ public class NettyRemotingClient implements RemotingClient {
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyClientConfig.getConnectTimeoutMillis())
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
-            .handler(new NettyClientHandlerInitializer(channelEventListener,eventExecutorGroup,nettyClientConfig));
+            .handler(new NettyClientHandlerInitializer(channelEventListener, eventExecutorGroup, nettyClientConfig));
 
     }
 
@@ -169,71 +168,58 @@ public class NettyRemotingClient implements RemotingClient {
     }
 
     /**
-     * 根据IP从缓存中获取，如果不存在则创建ChannelWrapper
-     * @param ip
-     * @return
-     */
-    private ChannelWrapper getOrElseCreateChannelWrapper(String ip) throws InterruptedException {
-/*        ChannelWrapper channelWrapper = channelTable.get(ip);
-        if(null != channelWrapper && channelWrapper.isOK()){
-            return channelWrapper;
-        }
-
-        if(channelTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)){
-
-
-
-        }*/
-
-
-
-
-
-        return null;
-    }
-
-    /**
      * 根据IP从缓存中获取，如果不存在则创建Channel
+     *
      * @param ip 带上端口127.0.0.1:8080
      * @return
      */
     private Channel getOrElseCreateChannel(String ip) throws InterruptedException {
 
         ChannelWrapper channelWrapper = this.channelTable.get(ip);
-        if(null != channelWrapper && channelWrapper.isOK()){
+        if (null != channelWrapper && channelWrapper.isOK()) {
             return channelWrapper.getChannel();
         }
 
-        if(this.channelTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)){
+        if (this.channelTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
             try {
                 boolean newCreateChannel;
                 channelWrapper = this.channelTable.get(ip);
-                if(channelWrapper == null){
+                if (channelWrapper == null) {
                     newCreateChannel = true;
-                }else{
-                    if(channelWrapper.isOK()){
+                } else {
+                    if (channelWrapper.isOK()) {
                         return channelWrapper.getChannel();
-                    }else if(!channelWrapper.getChannelFuture().isDone()){
+                    } else if (!channelWrapper.getChannelFuture().isDone()) {
                         newCreateChannel = false;
-                    }else{
+                    } else {
                         this.channelTable.remove(ip);
                         newCreateChannel = true;
                     }
                 }
-                if(newCreateChannel){
+                if (newCreateChannel) {
                     ChannelFuture channelFuture = this.nettyBootstrap.bind(RemotingUtils.ip2SocketAddress(ip));
                     LOGGER.info("createChannel: begin to connect remote host[{}] asynchronously", ip);
-                    channelWrapper =  ChannelWrapper.builder(channelFuture);
+                    channelWrapper = ChannelWrapper.builder(channelFuture);
                     this.channelTable.put(ip, channelWrapper);
-                    return channelWrapper.getChannel();
                 }
             } catch (Exception e) {
                 LOGGER.error("createChannel: create channel exception", e);
             } finally {
                 this.channelTableLock.unlock();
             }
+            if (channelWrapper != null) {
+                ChannelFuture channelFuture = channelWrapper.getChannelFuture();
+                if (channelFuture.await(this.nettyClientConfig.getConnectTimeoutMillis(), TimeUnit.MILLISECONDS)) {
+                    if (channelWrapper.isOK()) {
+                        LOGGER.info("createChannel: connect remote host[{}] success, {}", ip, channelFuture);
+                        return channelWrapper.getChannel();
+                    }
+                } else {
+                    LOGGER.warn("createChannel: connect remote host[{}] timeout {}ms, {}", ip,
+                        this.nettyClientConfig.getConnectTimeoutMillis(), channelFuture);
+                }
+            }
         }
-
         return null;
 
     }

@@ -163,7 +163,8 @@ public class NettyRemotingServer implements RemotingServer {
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new NettyServerHandlerInitializer(nettyServerConnectManageHandler, eventExecutorGroup, nettyServerConfig,
+            .childHandler(new NettyServerHandlerInitializer(nettyServerConnectManageHandler, eventExecutorGroup,
+                nettyServerConfig,
                 nettyServerHandler));
 
         try {
@@ -184,6 +185,9 @@ public class NettyRemotingServer implements RemotingServer {
     public void shutdown() {
         this.bossEventLoopGroup.shutdownGracefully();
         this.selectorEventLoopGroup.shutdownGracefully();
+        if (this.eventExecutorGroup != null) {
+            eventExecutorGroup.shutdownGracefully();
+        }
     }
 
     private boolean useEpoll() {
