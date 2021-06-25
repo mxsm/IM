@@ -25,4 +25,10 @@ public interface RemotingCommandOrBuilder extends
    * @return The commandType.
    */
   com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType();
+
+  /**
+   * <code>int32 requestCode = 2;</code>
+   * @return The requestCode.
+   */
+  int getRequestCode();
 }

@@ -30,10 +30,11 @@ public final class RemotingRequest {
     java.lang.String[] descriptorData = {
       "\n\025RemotingRequest.proto\022!com.github.mxsm" +
       ".protocol.protobuf\032\031RemotingCommandType." +
-      "proto\"^\n\017RemotingCommand\022K\n\013commandType\030" +
+      "proto\"s\n\017RemotingCommand\022K\n\013commandType\030" +
       "\001 \001(\01626.com.github.mxsm.protocol.protobu" +
-      "f.RemotingCommandTypeB%\n!com.github.mxsm" +
-      ".protocol.protobufP\001b\006proto3"
+      "f.RemotingCommandType\022\023\n\013requestCode\030\002 \001" +
+      "(\005B%\n!com.github.mxsm.protocol.protobufP" +
+      "\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -45,7 +46,7 @@ public final class RemotingRequest {
     internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_descriptor,
-        new java.lang.String[] { "CommandType", });
+        new java.lang.String[] { "CommandType", "RequestCode", });
     com.github.mxsm.protocol.protobuf.RemotingCommandTypeOuterClass.getDescriptor();
   }
 

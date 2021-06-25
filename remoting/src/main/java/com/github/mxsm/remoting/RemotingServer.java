@@ -6,6 +6,7 @@ import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.NettyRequestProcessor;
 import io.netty.channel.Channel;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author mxsm
@@ -62,5 +63,6 @@ public interface RemotingServer extends RemotingService {
      * 注册请求处理器
      * @param requestProcessor
      */
-    void registerProcessor(final NettyRequestProcessor requestProcessor);
+    void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
+        final ExecutorService executor);
 }

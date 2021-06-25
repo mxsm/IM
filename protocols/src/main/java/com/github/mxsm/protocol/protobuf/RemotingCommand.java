@@ -55,6 +55,11 @@ private static final long serialVersionUID = 0L;
             commandType_ = rawValue;
             break;
           }
+          case 16: {
+
+            requestCode_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -114,6 +119,17 @@ private static final long serialVersionUID = 0L;
     return result == null ? com.github.mxsm.protocol.protobuf.RemotingCommandType.UNRECOGNIZED : result;
   }
 
+  public static final int REQUESTCODE_FIELD_NUMBER = 2;
+  private int requestCode_;
+  /**
+   * <code>int32 requestCode = 2;</code>
+   * @return The requestCode.
+   */
+  @java.lang.Override
+  public int getRequestCode() {
+    return requestCode_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -128,8 +144,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.CONNECT.getNumber()) {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST.getNumber()) {
       output.writeEnum(1, commandType_);
+    }
+    if (requestCode_ != 0) {
+      output.writeInt32(2, requestCode_);
     }
     unknownFields.writeTo(output);
   }
@@ -140,9 +159,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.CONNECT.getNumber()) {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, commandType_);
+    }
+    if (requestCode_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, requestCode_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -160,6 +183,8 @@ private static final long serialVersionUID = 0L;
     com.github.mxsm.protocol.protobuf.RemotingCommand other = (com.github.mxsm.protocol.protobuf.RemotingCommand) obj;
 
     if (commandType_ != other.commandType_) return false;
+    if (getRequestCode()
+        != other.getRequestCode()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -173,6 +198,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + COMMANDTYPE_FIELD_NUMBER;
     hash = (53 * hash) + commandType_;
+    hash = (37 * hash) + REQUESTCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getRequestCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -308,6 +335,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       commandType_ = 0;
 
+      requestCode_ = 0;
+
       return this;
     }
 
@@ -335,6 +364,7 @@ private static final long serialVersionUID = 0L;
     public com.github.mxsm.protocol.protobuf.RemotingCommand buildPartial() {
       com.github.mxsm.protocol.protobuf.RemotingCommand result = new com.github.mxsm.protocol.protobuf.RemotingCommand(this);
       result.commandType_ = commandType_;
+      result.requestCode_ = requestCode_;
       onBuilt();
       return result;
     }
@@ -385,6 +415,9 @@ private static final long serialVersionUID = 0L;
       if (other == com.github.mxsm.protocol.protobuf.RemotingCommand.getDefaultInstance()) return this;
       if (other.commandType_ != 0) {
         setCommandTypeValue(other.getCommandTypeValue());
+      }
+      if (other.getRequestCode() != 0) {
+        setRequestCode(other.getRequestCode());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -485,6 +518,37 @@ private static final long serialVersionUID = 0L;
     public Builder clearCommandType() {
       
       commandType_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int requestCode_ ;
+    /**
+     * <code>int32 requestCode = 2;</code>
+     * @return The requestCode.
+     */
+    @java.lang.Override
+    public int getRequestCode() {
+      return requestCode_;
+    }
+    /**
+     * <code>int32 requestCode = 2;</code>
+     * @param value The requestCode to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRequestCode(int value) {
+      
+      requestCode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 requestCode = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRequestCode() {
+      
+      requestCode_ = 0;
       onChanged();
       return this;
     }

@@ -25,6 +25,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,8 @@ public class NettyRemotingServer implements RemotingServer {
 
     private NettyServerHandler nettyServerHandler;
 
+    private final NettyRemoting nettyRemoting;
+
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
     }
@@ -65,6 +68,7 @@ public class NettyRemotingServer implements RemotingServer {
 
         this.serverBootstrap = new ServerBootstrap();
         this.channelEventListener = channelEventListener;
+        this.nettyRemoting = new NettyRemoting();
 
         this.nettyServerConfig = nettyServerConfig;
         if (useEpoll()) {
@@ -142,8 +146,9 @@ public class NettyRemotingServer implements RemotingServer {
      * @param requestProcessor
      */
     @Override
-    public void registerProcessor(NettyRequestProcessor requestProcessor) {
-
+    public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
+        final ExecutorService executor){
+        this.nettyRemoting.registerProcessor(requestCode, processor, executor);
     }
 
     /**
@@ -152,7 +157,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void start() {
 
-        nettyServerHandler = new NettyServerHandler();
+        nettyServerHandler = new NettyServerHandler(this.nettyRemoting);
 
         this.serverBootstrap.group(this.bossEventLoopGroup, this.selectorEventLoopGroup)
             .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)

@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.netty.handler;
 
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.remoting.netty.NettyRemoting;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -17,6 +18,13 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingComm
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
 
+    private final NettyRemoting nettyRemoting;
+
+    public NettyServerHandler(final NettyRemoting nettyRemoting){
+        super();
+        this.nettyRemoting = nettyRemoting;
+    }
+
     /**
      * Is called for each message of type {@link I}.
      *
@@ -27,5 +35,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingComm
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
         LOGGER.info("Received RemotingCommand Type: {}", msg.getCommandType());
+        this.nettyRemoting.processMessageReceived(ctx, msg);
     }
 }

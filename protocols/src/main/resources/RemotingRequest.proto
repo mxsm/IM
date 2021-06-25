@@ -13,5 +13,5 @@ message RemotingCommand{
     //命令类型
     RemotingCommandType commandType = 1;
 
-
+    int32 requestCode = 2;
 }
