@@ -56,64 +56,25 @@ class NettyRemotingClientTest {
     @Test
     void invokeOneway() {
 
-        NettyRemotingClient client = new NettyRemotingClient(new NettyClientConfig());
-        client.start();
-       // RemotingCommand build = ;
 
-        try {
-            client.invokeOneway(null, null, 0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (RemotingConnectException e) {
-            e.printStackTrace();
-        } catch (RemotingTooMuchRequestException e) {
-            e.printStackTrace();
-        } catch (RemotingTimeoutException e) {
-            e.printStackTrace();
-        } catch (RemotingSendRequestException e) {
-            e.printStackTrace();
-        }
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-/*        RemotingCommand build = RemotingCommand.newBuilder().setCommandType(RemotingCommandType.CONNECT).build();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        Bootstrap b = new Bootstrap();
-        b.group(workerGroup);
-        b.channel(NioSocketChannel.class);
-        b.option(ChannelOption.SO_KEEPALIVE, true);
-        b.handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            public void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline()
-                    .addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS))
-                    .addLast(new ProtobufVarint32FrameDecoder())
-                    .addLast("protobufFrameDecoder", new ProtobufDecoder(RemotingCommand.getDefaultInstance()))
-                    .addLast(new ProtobufVarint32LengthFieldPrepender())
-                    .addLast(new ProtobufEncoder())
-                    .addLast(new NettyClientHandler());
-            }
-        });
-        try {
-            ChannelFuture f = b.connect("127.0.0.1", 9998).sync();
-            for (int i = 0; i < 100; ++i) {
-                f.channel()
-                    .writeAndFlush(RemotingCommand.newBuilder().setCommandType(RemotingCommandType.CONNECT).build());
-            }
-            f.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
     }
 
     @Test
     void start() {
+
+        NettyRemotingClient client = new NettyRemotingClient(new NettyClientConfig());
+        client.start();
+        client.shutdown();
+
     }
 
     @Test
     void shutdown() {
+
+        NettyRemotingClient client = new NettyRemotingClient(new NettyClientConfig());
+        client.start();
+        client.shutdown();
+
     }
 
 

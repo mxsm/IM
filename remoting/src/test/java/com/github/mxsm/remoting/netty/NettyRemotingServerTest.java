@@ -34,11 +34,6 @@ class NettyRemotingServerTest {
             started = false;
         }
         Assertions.assertTrue(started);
-        try {
-            TimeUnit.MINUTES.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
