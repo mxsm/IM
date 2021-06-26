@@ -17,6 +17,7 @@
     <module>common</module>
     <module>logging</module>
     <module>protocols</module>
+    <module>magpiebridge</module>
   </modules>
 
   <properties>
