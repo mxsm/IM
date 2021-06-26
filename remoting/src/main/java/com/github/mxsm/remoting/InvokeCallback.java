@@ -5,6 +5,8 @@ package com.github.mxsm.remoting;
  * @Date 2021/6/18
  * @Since
  */
-public interface InvokeCallback {
+public interface InvokeCallback<T extends Future> {
+
+    void operationComplete(T future);
 
 }

@@ -9,6 +9,7 @@ import com.github.mxsm.remoting.common.RemotingUtils;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
+import com.github.mxsm.remoting.netty.handler.NettyRemotingHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerConnectManageHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerHandlerInitializer;
@@ -57,7 +58,7 @@ public class NettyRemotingServer implements RemotingServer {
 
     private NettyServerHandler nettyServerHandler;
 
-    private final NettyRemoting nettyRemoting;
+    private final NettyRemotingHandler nettyRemotingHandler;
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
@@ -65,10 +66,11 @@ public class NettyRemotingServer implements RemotingServer {
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig,
         final ChannelEventListener channelEventListener) {
-
+        super();
         this.serverBootstrap = new ServerBootstrap();
         this.channelEventListener = channelEventListener;
-        this.nettyRemoting = new NettyRemoting();
+        this.nettyRemotingHandler = new NettyRemotingHandler(nettyServerConfig.getServerOnewaySemaphoreValue(),
+            nettyServerConfig.getServerAsyncSemaphoreValue());
 
         this.nettyServerConfig = nettyServerConfig;
         if (useEpoll()) {
@@ -101,7 +103,8 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public RemotingCommand invokeSync(Channel channel, RemotingCommand request,
         long timeoutMillis) throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException {
-        return null;
+        return this.nettyRemotingHandler.invokeSyncImpl(channel, request, timeoutMillis);
+
     }
 
     /**
@@ -120,7 +123,7 @@ public class NettyRemotingServer implements RemotingServer {
     public void invokeAsync(Channel channel, RemotingCommand request, long timeoutMillis,
         InvokeCallback invokeCallback)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-
+        this.nettyRemotingHandler.invokeAsyncImpl(channel, request, timeoutMillis,invokeCallback);
     }
 
     /**
@@ -137,7 +140,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void invokeOneway(Channel channel, RemotingCommand request, long timeoutMillis)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-
+        this.nettyRemotingHandler.invokeOnewayImpl(channel, request, timeoutMillis);
     }
 
     /**
@@ -147,8 +150,8 @@ public class NettyRemotingServer implements RemotingServer {
      */
     @Override
     public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
-        final ExecutorService executor){
-        this.nettyRemoting.registerProcessor(requestCode, processor, executor);
+        final ExecutorService executor) {
+        this.nettyRemotingHandler.registerProcessor(requestCode, processor, executor);
     }
 
     /**
@@ -157,7 +160,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void start() {
 
-        nettyServerHandler = new NettyServerHandler(this.nettyRemoting);
+        nettyServerHandler = new NettyServerHandler(this.nettyRemotingHandler);
 
         this.serverBootstrap.group(this.bossEventLoopGroup, this.selectorEventLoopGroup)
             .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
@@ -198,4 +201,5 @@ public class NettyRemotingServer implements RemotingServer {
     private boolean useEpoll() {
         return RemotingUtils.isLinuxPlatform() && nettyServerConfig.isUseEpollNativeSelector() && Epoll.isAvailable();
     }
+
 }

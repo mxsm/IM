@@ -1,7 +1,6 @@
 package com.github.mxsm.remoting.netty.handler;
 
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
-import com.github.mxsm.remoting.netty.NettyRemoting;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -18,9 +17,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingComm
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
 
-    private final NettyRemoting nettyRemoting;
+    private final NettyRemotingHandler nettyRemoting;
 
-    public NettyServerHandler(final NettyRemoting nettyRemoting){
+    public NettyServerHandler(final NettyRemotingHandler nettyRemoting){
         super();
         this.nettyRemoting = nettyRemoting;
     }

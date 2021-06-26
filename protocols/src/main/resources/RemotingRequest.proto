@@ -14,4 +14,8 @@ message RemotingCommand{
     RemotingCommandType commandType = 1;
 
     int32 requestCode = 2;
+
+    bool oneway = 3;
+
+    uint64 commandId = 4;
 }

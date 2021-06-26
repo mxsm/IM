@@ -31,4 +31,16 @@ public interface RemotingCommandOrBuilder extends
    * @return The requestCode.
    */
   int getRequestCode();
+
+  /**
+   * <code>bool oneway = 3;</code>
+   * @return The oneway.
+   */
+  boolean getOneway();
+
+  /**
+   * <code>uint64 commandId = 4;</code>
+   * @return The commandId.
+   */
+  long getCommandId();
 }

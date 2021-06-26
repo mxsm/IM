@@ -21,6 +21,10 @@ public class NettyServerConfig implements Cloneable {
 
     private int serverChannelMaxIdleTimeSeconds = 30;
 
+    private int serverOnewaySemaphoreValue = 256;
+
+    private int serverAsyncSemaphoreValue = 64;
+
     public boolean isUseEpollNativeSelector() {
         return useEpollNativeSelector;
     }
@@ -71,5 +75,21 @@ public class NettyServerConfig implements Cloneable {
 
     public void setServerWorkerThreads(int serverWorkerThreads) {
         this.serverWorkerThreads = serverWorkerThreads;
+    }
+
+    public int getServerOnewaySemaphoreValue() {
+        return serverOnewaySemaphoreValue;
+    }
+
+    public void setServerOnewaySemaphoreValue(int serverOnewaySemaphoreValue) {
+        this.serverOnewaySemaphoreValue = serverOnewaySemaphoreValue;
+    }
+
+    public int getServerAsyncSemaphoreValue() {
+        return serverAsyncSemaphoreValue;
+    }
+
+    public void setServerAsyncSemaphoreValue(int serverAsyncSemaphoreValue) {
+        this.serverAsyncSemaphoreValue = serverAsyncSemaphoreValue;
     }
 }

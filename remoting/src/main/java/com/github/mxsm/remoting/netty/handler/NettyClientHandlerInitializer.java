@@ -30,11 +30,15 @@ public class NettyClientHandlerInitializer extends ChannelInitializer {
 
     private final NettyClientConfig nettyClientConfig;
 
+    private final NettyRemotingHandler nettyRemoting;
+
     public NettyClientHandlerInitializer(final ChannelEventListener channelEventListener,
-        final EventExecutorGroup eventExecutorGroup, final NettyClientConfig nettyClientConfig) {
+        final EventExecutorGroup eventExecutorGroup, final NettyClientConfig nettyClientConfig,
+        final NettyRemotingHandler nettyRemoting) {
         this.channelEventListener = channelEventListener;
         this.eventExecutorGroup = eventExecutorGroup;
         this.nettyClientConfig = nettyClientConfig;
+        this.nettyRemoting = nettyRemoting;
 
     }
 
@@ -50,13 +54,14 @@ public class NettyClientHandlerInitializer extends ChannelInitializer {
     @Override
     protected void initChannel(Channel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast(new IdleStateHandler(0, 0, nettyClientConfig.getClientChannelMaxIdleTimeSeconds()));
-        pipeline.addLast(new ProtobufVarint32FrameDecoder());
-        pipeline.addLast(new ProtobufDecoder(lite));
-        pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
-        pipeline.addLast(new ProtobufEncoder());
+        pipeline.addLast(eventExecutorGroup,
+            new IdleStateHandler(0, 0, nettyClientConfig.getClientChannelMaxIdleTimeSeconds()));
+        pipeline.addLast(eventExecutorGroup, new ProtobufVarint32FrameDecoder());
+        pipeline.addLast(eventExecutorGroup, new ProtobufDecoder(lite));
+        pipeline.addLast(eventExecutorGroup, new ProtobufVarint32LengthFieldPrepender());
+        pipeline.addLast(eventExecutorGroup, new ProtobufEncoder());
 
-        pipeline.addLast(new NettyClientConnectManageHandler());
-        pipeline.addLast(new NettyClientHandler());
+        pipeline.addLast(eventExecutorGroup, new NettyClientConnectManageHandler());
+        pipeline.addLast(eventExecutorGroup, new NettyClientHandler(nettyRemoting));
     }
 }

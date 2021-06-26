@@ -60,6 +60,16 @@ private static final long serialVersionUID = 0L;
             requestCode_ = input.readInt32();
             break;
           }
+          case 24: {
+
+            oneway_ = input.readBool();
+            break;
+          }
+          case 32: {
+
+            commandId_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -130,6 +140,28 @@ private static final long serialVersionUID = 0L;
     return requestCode_;
   }
 
+  public static final int ONEWAY_FIELD_NUMBER = 3;
+  private boolean oneway_;
+  /**
+   * <code>bool oneway = 3;</code>
+   * @return The oneway.
+   */
+  @java.lang.Override
+  public boolean getOneway() {
+    return oneway_;
+  }
+
+  public static final int COMMANDID_FIELD_NUMBER = 4;
+  private long commandId_;
+  /**
+   * <code>uint64 commandId = 4;</code>
+   * @return The commandId.
+   */
+  @java.lang.Override
+  public long getCommandId() {
+    return commandId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -150,6 +182,12 @@ private static final long serialVersionUID = 0L;
     if (requestCode_ != 0) {
       output.writeInt32(2, requestCode_);
     }
+    if (oneway_ != false) {
+      output.writeBool(3, oneway_);
+    }
+    if (commandId_ != 0L) {
+      output.writeUInt64(4, commandId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -166,6 +204,14 @@ private static final long serialVersionUID = 0L;
     if (requestCode_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(2, requestCode_);
+    }
+    if (oneway_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(3, oneway_);
+    }
+    if (commandId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(4, commandId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -185,6 +231,10 @@ private static final long serialVersionUID = 0L;
     if (commandType_ != other.commandType_) return false;
     if (getRequestCode()
         != other.getRequestCode()) return false;
+    if (getOneway()
+        != other.getOneway()) return false;
+    if (getCommandId()
+        != other.getCommandId()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -200,6 +250,12 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + commandType_;
     hash = (37 * hash) + REQUESTCODE_FIELD_NUMBER;
     hash = (53 * hash) + getRequestCode();
+    hash = (37 * hash) + ONEWAY_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getOneway());
+    hash = (37 * hash) + COMMANDID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getCommandId());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -337,6 +393,10 @@ private static final long serialVersionUID = 0L;
 
       requestCode_ = 0;
 
+      oneway_ = false;
+
+      commandId_ = 0L;
+
       return this;
     }
 
@@ -365,6 +425,8 @@ private static final long serialVersionUID = 0L;
       com.github.mxsm.protocol.protobuf.RemotingCommand result = new com.github.mxsm.protocol.protobuf.RemotingCommand(this);
       result.commandType_ = commandType_;
       result.requestCode_ = requestCode_;
+      result.oneway_ = oneway_;
+      result.commandId_ = commandId_;
       onBuilt();
       return result;
     }
@@ -418,6 +480,12 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getRequestCode() != 0) {
         setRequestCode(other.getRequestCode());
+      }
+      if (other.getOneway() != false) {
+        setOneway(other.getOneway());
+      }
+      if (other.getCommandId() != 0L) {
+        setCommandId(other.getCommandId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -549,6 +617,68 @@ private static final long serialVersionUID = 0L;
     public Builder clearRequestCode() {
       
       requestCode_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean oneway_ ;
+    /**
+     * <code>bool oneway = 3;</code>
+     * @return The oneway.
+     */
+    @java.lang.Override
+    public boolean getOneway() {
+      return oneway_;
+    }
+    /**
+     * <code>bool oneway = 3;</code>
+     * @param value The oneway to set.
+     * @return This builder for chaining.
+     */
+    public Builder setOneway(boolean value) {
+      
+      oneway_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool oneway = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearOneway() {
+      
+      oneway_ = false;
+      onChanged();
+      return this;
+    }
+
+    private long commandId_ ;
+    /**
+     * <code>uint64 commandId = 4;</code>
+     * @return The commandId.
+     */
+    @java.lang.Override
+    public long getCommandId() {
+      return commandId_;
+    }
+    /**
+     * <code>uint64 commandId = 4;</code>
+     * @param value The commandId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCommandId(long value) {
+      
+      commandId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 commandId = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCommandId() {
+      
+      commandId_ = 0L;
       onChanged();
       return this;
     }
