@@ -1,6 +1,9 @@
 package github.ant.mxsm.register;
 
 import com.github.mxsm.remoting.netty.NettyServerConfig;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,14 +22,38 @@ public class RegisterBootstrap {
 
     public static void main0(String[] args) {
 
+        RegisterController registerController = createRegisterController(args);
+
+        registerController.initialize();
+        registerController.startup();
+
+        LOGGER.info("----------------Register started-------------------");
+    }
+
+    private static RegisterController createRegisterController(String[] args){
+
+        Options options = createOptions();
+        HelpFormatter helpFormatter = new HelpFormatter();
+        helpFormatter.setWidth(100);
+
+        helpFormatter.printHelp("register", options,true);
+
+
         NettyServerConfig nettyServerConfig = new NettyServerConfig();
         nettyServerConfig.setBindPort(9876);
         RegisterController controller = new RegisterController(nettyServerConfig);
 
-        controller.initialize();
-        controller.startup();
+        return controller;
+    }
 
-        LOGGER.info("----------------Register started-------------------");
+    private static Options createOptions(){
+        Options options = new Options();
+
+        Option helpOption = new Option("h", "help", false, "disable pagination of output");
+        Option portOption = new Option("p", "port", false, "register bind port");
+        Option configFileOption = new Option("c", "config", true, "register config file");
+        options.addOption(helpOption).addOption(portOption).addOption(configFileOption);
+        return options;
     }
 
 }
