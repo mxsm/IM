@@ -1,4 +1,4 @@
-package github.ant.mxsm.register.mananger.register;
+package github.ant.mxsm.register.mananger;
 
 /**
  * @author mxsm

@@ -1,6 +1,4 @@
-package github.ant.mxsm.register.mananger.register;
-
-import static org.junit.jupiter.api.Assertions.*;
+package github.ant.mxsm.register.mananger;
 
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

@@ -60,7 +60,6 @@ public class NettyClientHandlerInitializer extends ChannelInitializer {
         pipeline.addLast(eventExecutorGroup, new ProtobufDecoder(lite));
         pipeline.addLast(eventExecutorGroup, new ProtobufVarint32LengthFieldPrepender());
         pipeline.addLast(eventExecutorGroup, new ProtobufEncoder());
-
         pipeline.addLast(eventExecutorGroup, new NettyClientConnectManageHandler());
         pipeline.addLast(eventExecutorGroup, new NettyClientHandler(nettyRemoting));
     }

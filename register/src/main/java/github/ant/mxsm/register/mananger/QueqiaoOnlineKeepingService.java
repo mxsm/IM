@@ -1,4 +1,4 @@
-package github.ant.mxsm.register.mananger.register;
+package github.ant.mxsm.register.mananger;
 
 import com.github.mxsm.remoting.ChannelEventListener;
 import io.netty.channel.Channel;
