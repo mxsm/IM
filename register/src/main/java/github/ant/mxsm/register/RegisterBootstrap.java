@@ -1,6 +1,10 @@
 package github.ant.mxsm.register;
 
+import com.github.mxsm.common.commandline.CommandlineUtils;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -16,6 +20,8 @@ public class RegisterBootstrap {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterBootstrap.class);
 
+    public static final String CMD_NAME = "register";
+
     public static void main(String[] args) {
         main0(args);
     }
@@ -30,13 +36,22 @@ public class RegisterBootstrap {
         LOGGER.info("----------------Register started-------------------");
     }
 
-    private static RegisterController createRegisterController(String[] args){
+    private static RegisterController createRegisterController(String[] args) {
 
-        Options options = createOptions();
-        HelpFormatter helpFormatter = new HelpFormatter();
-        helpFormatter.setWidth(100);
+        CommandLineParser parser = new DefaultParser();
+        Options options = CommandlineUtils.buildCommandlineOptions();
+        options = createOptions(options);
+        CommandLine cmdLine = CommandlineUtils.parseCmdLine(CMD_NAME, args, options, parser);
 
-        helpFormatter.printHelp("register", options,true);
+        if(cmdLine.hasOption("p")){
+
+        }
+
+        if(cmdLine.hasOption("c")){
+
+        }else {
+            CommandlineUtils.printCommandLineHelp(CMD_NAME,options);
+        }
 
 
         NettyServerConfig nettyServerConfig = new NettyServerConfig();
@@ -46,13 +61,10 @@ public class RegisterBootstrap {
         return controller;
     }
 
-    private static Options createOptions(){
-        Options options = new Options();
-
-        Option helpOption = new Option("h", "help", false, "disable pagination of output");
+    private static Options createOptions(final Options options) {
         Option portOption = new Option("p", "port", false, "register bind port");
         Option configFileOption = new Option("c", "config", true, "register config file");
-        options.addOption(helpOption).addOption(portOption).addOption(configFileOption);
+        options.addOption(portOption).addOption(configFileOption);
         return options;
     }
 

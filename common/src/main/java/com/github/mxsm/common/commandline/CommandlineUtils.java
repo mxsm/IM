@@ -24,6 +24,11 @@ public abstract class CommandlineUtils {
         return options;
     }
 
+    public static Options buildCommandlineOptions() {
+        return buildCommandlineOptions(new Options());
+    }
+
+
     public static CommandLine parseCmdLine(final String appName, String[] args, Options options,
         CommandLineParser parser) {
 
@@ -56,11 +61,22 @@ public abstract class CommandlineUtils {
                 String name = opt.getLongOpt();
                 String value = commandLine.getOptionValue(name);
                 if (value != null) {
-                    properties.setProperty(name, value);
+                    properties.setProperty(name, value.trim());
                 }
             }
         }
         return properties;
     }
 
+    public static int getOptionValue2Int(final CommandLine cmdLine, final String opt) {
+       return Integer.parseInt(cmdLine.getOptionValue(opt).trim());
+    }
+
+    public static long getOptionValue2Long(final CommandLine cmdLine, final String opt) {
+        return Long.parseLong(cmdLine.getOptionValue(opt).trim());
+    }
+
+    public static String getOptionValue(final CommandLine cmdLine, final String opt) {
+        return cmdLine.getOptionValue(opt.trim());
+    }
 }
