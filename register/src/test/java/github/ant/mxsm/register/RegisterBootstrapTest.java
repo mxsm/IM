@@ -1,7 +1,5 @@
 package github.ant.mxsm.register;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -13,11 +11,44 @@ class RegisterBootstrapTest {
 
     @Test
     void main() {
-        RegisterBootstrap.main(null);
+        new Thread(() -> {
+            RegisterBootstrap.main(null);
+        }).start();
+
+    }
+
+    @Test
+    void mainPrintHelp() {
+        new Thread(() -> {
+            String[] args = "-h".split(",");
+            RegisterBootstrap.main(args);
+        }).start();
+
+    }
+
+    @Test
+    void mainCfileNotExists() {
+        new Thread(() -> {
+            String[] args = "-c a".split(",");
+            RegisterBootstrap.main(args);
+        }).start();
+
+    }
+
+    @Test
+    void mainCfileIsEmpty() {
+        new Thread(() -> {
+            String[] args = "-c ".split(",");
+            RegisterBootstrap.main(args);
+        }).start();
+
     }
 
     @Test
     void main0() {
-        //RegisterBootstrap.main0(null);
+        new Thread(() -> {
+            RegisterBootstrap.main0(null);
+        }).start();
+
     }
 }
