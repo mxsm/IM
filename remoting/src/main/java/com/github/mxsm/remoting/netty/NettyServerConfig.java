@@ -9,7 +9,7 @@ public class NettyServerConfig implements Cloneable {
 
     private int bindPort = 9998;
 
-    private int serverWorkerThreads = 8;
+    private int serverWorkerThreads = Runtime.getRuntime().availableProcessors() * 2;
 
     private boolean useEpollNativeSelector = false;
 

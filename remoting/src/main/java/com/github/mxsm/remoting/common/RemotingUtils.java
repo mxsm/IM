@@ -33,5 +33,4 @@ public abstract class RemotingUtils {
     public static boolean isWindowsPlatform() {
         return isWindowsPlatform;
     }
-
 }

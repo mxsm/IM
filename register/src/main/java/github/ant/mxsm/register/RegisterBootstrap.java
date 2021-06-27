@@ -2,6 +2,7 @@ package github.ant.mxsm.register;
 
 import com.github.mxsm.common.MixAll;
 import com.github.mxsm.common.commandline.CommandlineUtils;
+import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
 import java.io.IOException;
 import java.util.Properties;
@@ -38,7 +39,8 @@ public class RegisterBootstrap {
         registerController.initialize();
         registerController.startup();
 
-        LOGGER.info("----------------Register started-------------------");
+        LOGGER.info("----------------Register started [IP={},Port={}]-------------------", NetUtils.getLocalIP(),
+            registerController.getRegisterServerConfig().getBindPort());
     }
 
     private static RegisterController createRegisterController(String[] args) {
@@ -47,7 +49,7 @@ public class RegisterBootstrap {
 
         CommandLineParser parser = new DefaultParser();
         Options options = CommandlineUtils.buildCommandlineOptions();
-        options = createOptions(options);
+        addOptions(options);
         CommandLine cmdLine = CommandlineUtils.parseCmdLine(CMD_NAME, args, options, parser);
 
         if (cmdLine.hasOption("c")) {
@@ -76,11 +78,11 @@ public class RegisterBootstrap {
         return controller;
     }
 
-    private static Options createOptions(final Options options) {
-        Option portOption = new Option("p", "port", false, "register bind port");
+    private static void addOptions(final Options options) {
+        Option portOption = new Option("p", "port", true, "register bind port");
         Option configFileOption = new Option("c", "config", true, "register config file path");
         options.addOption(portOption).addOption(configFileOption);
-        return options;
+
     }
 
 }
