@@ -8,6 +8,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mxsm
@@ -15,6 +17,8 @@ import org.apache.commons.cli.ParseException;
  * @Since 0.1
  */
 public abstract class CommandlineUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandlineUtils.class);
 
     public static Options buildCommandlineOptions(final Options options) {
         Option opt = new Option("h", "help", false, "Print help");
@@ -40,6 +44,7 @@ public abstract class CommandlineUtils {
                 System.exit(0);
             }
         } catch (ParseException e) {
+            LOGGER.error("CommandLine Parse Error",e);
             printCommandLineHelp(appName, options);
             System.exit(1);
         }
