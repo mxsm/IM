@@ -50,6 +50,7 @@ public abstract class CommandlineUtils {
         HelpFormatter hf = new HelpFormatter();
         hf.setWidth(110);
         hf.printHelp(appName, options, true);
+        System.exit(0);
     }
 
     public static Properties commandLine2Properties(final CommandLine commandLine) {
