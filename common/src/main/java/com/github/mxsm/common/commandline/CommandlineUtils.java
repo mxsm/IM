@@ -69,7 +69,7 @@ public abstract class CommandlineUtils {
     }
 
     public static int getOptionValue2Int(final CommandLine cmdLine, final String opt) {
-       return Integer.parseInt(cmdLine.getOptionValue(opt).trim());
+        return Integer.parseInt(cmdLine.getOptionValue(opt).trim());
     }
 
     public static long getOptionValue2Long(final CommandLine cmdLine, final String opt) {
@@ -77,6 +77,6 @@ public abstract class CommandlineUtils {
     }
 
     public static String getOptionValue(final CommandLine cmdLine, final String opt) {
-        return cmdLine.getOptionValue(opt.trim());
+        return cmdLine.getOptionValue(opt) == null ? null : cmdLine.getOptionValue(opt).trim();
     }
 }
