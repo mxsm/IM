@@ -18,6 +18,7 @@
     <module>logging</module>
     <module>protocols</module>
     <module>magpiebridge</module>
+    <module>distribution</module>
   </modules>
 
   <properties>
@@ -136,7 +137,6 @@
 
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
-
     <plugins>
 
       <plugin>
@@ -193,5 +193,14 @@
         <version>2.7</version>
       </plugin>
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>
