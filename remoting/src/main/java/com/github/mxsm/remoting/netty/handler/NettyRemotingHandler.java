@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/25
  * @Since 0.1
  */
-public class NettyRemotingHandler extends AbstractNettyRemoting {
+public class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyRemotingHandler.class);
 
@@ -36,22 +36,8 @@ public class NettyRemotingHandler extends AbstractNettyRemoting {
         super(permitsOneway, permitsAsync);
     }
 
-
-    public void processMessageReceived(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
-        final RemotingCommand cmd = msg;
-        switch (cmd.getCommandType()) {
-            case REQUEST:
-                processRequestCommand(ctx, msg);
-                break;
-            case RESPONSE:
-                processResponseCommand(ctx, msg);
-                break;
-            default:
-                break;
-        }
-    }
-
-    protected void processRequestCommand(final ChannelHandlerContext ctx, final RemotingCommand cmd) {
+    @Override
+    public void processRequestCommand(final ChannelHandlerContext ctx, final RemotingCommand cmd) {
 
         final Pair<NettyRequestProcessor, ExecutorService> matchedPair = processorTable.get(cmd.getRequestCode());
         final Pair<NettyRequestProcessor, ExecutorService> pair = null == matchedPair ? this.defaultRequestProcessor : matchedPair;
@@ -122,7 +108,8 @@ public class NettyRemotingHandler extends AbstractNettyRemoting {
 
     }
 
-    protected void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand cmd) {
+    @Override
+    public void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand cmd) {
         final long commandId = cmd.getCommandId();
         final ResponseFuture responseFuture = responseTable.get(commandId);
         if (responseFuture != null) {

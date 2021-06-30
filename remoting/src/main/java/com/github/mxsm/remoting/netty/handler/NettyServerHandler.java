@@ -17,11 +17,11 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingComm
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
 
-    private final NettyRemotingHandler nettyRemoting;
+    private final RemotingHandler remotingHandler;
 
-    public NettyServerHandler(final NettyRemotingHandler nettyRemoting){
+    public NettyServerHandler(final RemotingHandler remotingHandler){
         super();
-        this.nettyRemoting = nettyRemoting;
+        this.remotingHandler = remotingHandler;
     }
 
     /**
@@ -34,6 +34,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemotingComm
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
         LOGGER.info("Received RemotingCommand Type: {}", msg.getCommandType());
-        this.nettyRemoting.processMessageReceived(ctx, msg);
+        this.remotingHandler.processMessageReceived(ctx, msg);
     }
 }

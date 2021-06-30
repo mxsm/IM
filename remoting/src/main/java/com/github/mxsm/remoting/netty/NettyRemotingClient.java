@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/18
  * @Since 0.1
  */
-public class NettyRemotingClient implements RemotingClient {
+public class NettyRemotingClient extends NettyRemotingHandler implements RemotingClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyRemotingClient.class);
 
@@ -55,8 +55,6 @@ public class NettyRemotingClient implements RemotingClient {
 
     private Lock channelTableLock = new ReentrantLock();
 
-    private final NettyRemotingHandler nettyRemotingHandler;
-
 
 
     /**
@@ -71,11 +69,12 @@ public class NettyRemotingClient implements RemotingClient {
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig,
         final ChannelEventListener channelEventListener) {
+        super(nettyClientConfig.getClientOnewaySemaphoreValue(), nettyClientConfig.getClientAsyncSemaphoreValue());
         this.nettyClientConfig = nettyClientConfig;
         this.channelEventListener = channelEventListener;
         this.nettyBootstrap = new Bootstrap();
         this.eventLoopGroupWorker = new NioEventLoopGroup(1, new NamedThreadFactory("NettyClientSelector"));
-        this.nettyRemotingHandler = new NettyRemotingHandler(nettyClientConfig.getClientOnewaySemaphoreValue(), nettyClientConfig.getClientAsyncSemaphoreValue());
+
     }
 
     /**
@@ -112,7 +111,7 @@ public class NettyRemotingClient implements RemotingClient {
                 if (timeoutMillis < costTime) {
                     throw new RemotingTimeoutException("invokeSync call timeout");
                 }
-                RemotingCommand response = this.nettyRemotingHandler.invokeSyncImpl(channel, request, timeoutMillis - costTime);
+                RemotingCommand response = this.invokeSyncImpl(channel, request, timeoutMillis - costTime);
                 return response;
             } catch (RemotingSendRequestException e) {
                 LOGGER.warn("invokeSync: send request exception, so close the channel[{}]", addr);
@@ -158,7 +157,7 @@ public class NettyRemotingClient implements RemotingClient {
                 if (timeoutMillis < costTime) {
                     throw new RemotingTooMuchRequestException("invokeAsync call timeout");
                 }
-                this.nettyRemotingHandler.invokeAsyncImpl(channel, request, timeoutMillis - costTime, invokeCallback);
+                this.invokeAsyncImpl(channel, request, timeoutMillis - costTime, invokeCallback);
             } catch (RemotingSendRequestException e) {
                 LOGGER.warn("invokeAsync: send request exception, so close the channel[{}]", addr);
                 this.closeChannel(addr, channel);
@@ -189,7 +188,7 @@ public class NettyRemotingClient implements RemotingClient {
         final Channel channel = getOrElseCreateChannel(addr);
         if (channel != null && channel.isActive()) {
             try {
-                this.nettyRemotingHandler.invokeOnewayImpl(channel, request, timeoutMillis);
+                this.invokeOnewayImpl(channel, request, timeoutMillis);
             } catch (RemotingSendRequestException e) {
                 LOGGER.warn("invokeOneway: send request exception, so close the channel[{}]", addr);
                 this.closeChannel(addr, channel);
@@ -217,8 +216,7 @@ public class NettyRemotingClient implements RemotingClient {
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyClientConfig.getConnectTimeoutMillis())
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
-            .handler(new NettyClientHandlerInitializer(channelEventListener, eventExecutorGroup, nettyClientConfig,
-                nettyRemotingHandler));
+            .handler(new NettyClientHandlerInitializer(channelEventListener, eventExecutorGroup, nettyClientConfig, this));
 
     }
 

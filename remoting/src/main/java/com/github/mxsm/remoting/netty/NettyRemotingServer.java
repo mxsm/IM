@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/18
  * @Since 0.1
  */
-public class NettyRemotingServer implements RemotingServer {
+public class NettyRemotingServer extends NettyRemotingHandler implements RemotingServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyRemotingServer.class);
 
@@ -58,19 +58,15 @@ public class NettyRemotingServer implements RemotingServer {
 
     private NettyServerHandler nettyServerHandler;
 
-    private final NettyRemotingHandler nettyRemotingHandler;
-
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
     }
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig,
         final ChannelEventListener channelEventListener) {
-        super();
+        super(nettyServerConfig.getServerOnewaySemaphoreValue(), nettyServerConfig.getServerAsyncSemaphoreValue());
         this.serverBootstrap = new ServerBootstrap();
         this.channelEventListener = channelEventListener;
-        this.nettyRemotingHandler = new NettyRemotingHandler(nettyServerConfig.getServerOnewaySemaphoreValue(),
-            nettyServerConfig.getServerAsyncSemaphoreValue());
 
         this.nettyServerConfig = nettyServerConfig;
         if (useEpoll()) {
@@ -103,7 +99,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public RemotingCommand invokeSync(Channel channel, RemotingCommand request,
         long timeoutMillis) throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException {
-        return this.nettyRemotingHandler.invokeSyncImpl(channel, request, timeoutMillis);
+        return this.invokeSyncImpl(channel, request, timeoutMillis);
 
     }
 
@@ -123,7 +119,7 @@ public class NettyRemotingServer implements RemotingServer {
     public void invokeAsync(Channel channel, RemotingCommand request, long timeoutMillis,
         InvokeCallback invokeCallback)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-        this.nettyRemotingHandler.invokeAsyncImpl(channel, request, timeoutMillis,invokeCallback);
+        this.invokeAsyncImpl(channel, request, timeoutMillis,invokeCallback);
     }
 
     /**
@@ -140,7 +136,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void invokeOneway(Channel channel, RemotingCommand request, long timeoutMillis)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-        this.nettyRemotingHandler.invokeOnewayImpl(channel, request, timeoutMillis);
+        this.invokeOnewayImpl(channel, request, timeoutMillis);
     }
 
     /**
@@ -151,7 +147,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
         final ExecutorService executor) {
-        this.nettyRemotingHandler.registerProcessor(requestCode, processor, executor);
+        this.registerProcessor(requestCode, processor, executor);
     }
 
     /**
@@ -160,7 +156,7 @@ public class NettyRemotingServer implements RemotingServer {
     @Override
     public void start() {
 
-        nettyServerHandler = new NettyServerHandler(this.nettyRemotingHandler);
+        nettyServerHandler = new NettyServerHandler(this);
 
         this.serverBootstrap.group(this.bossEventLoopGroup, this.selectorEventLoopGroup)
             .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)

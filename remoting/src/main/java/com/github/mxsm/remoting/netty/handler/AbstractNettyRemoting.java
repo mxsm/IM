@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/26
  * @Since 0.1
  */
-public abstract class AbstractNettyRemoting {
+public abstract class AbstractNettyRemoting implements RemotingHandler{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNettyRemoting.class);
 
