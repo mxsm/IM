@@ -4,9 +4,19 @@
 [![Coverage Status](https://coveralls.io/repos/github/mxsm/IM/badge.svg?branch=develop)](https://coveralls.io/github/mxsm/IM?branch=develop)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/mxsm/IM.svg)](http://isitmaintained.com/project/mxsm/IM "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/mxsm/IM.svg)](http://isitmaintained.com/project/mxsm/IM "Percentage of issues still open")  
+
+### 模块
+
 IM 基于Netty的即时通讯
 ![](https://github.com/mxsm/picture/blob/main/project/%E8%81%8A%E5%A4%A9%E5%B7%A5%E5%85%B7.png?raw=true)
+
 消息的转发模块叫鹊桥(取自中国航天探月工程的鹊桥中继卫星)
+
+### 线程模型
+
+![](https://github.com/mxsm/picture/blob/main/IM/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B.png?raw=true)
+
+
 
 ### 工程目录结构说明
 - **common**    包含了工程的通用工具类
