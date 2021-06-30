@@ -29,10 +29,22 @@ public abstract class AnnotationUtils {
             return;
         }
 
+        validatorNotNull(NotNull.class, sources);
+        if (null != javaNotNull) {
+            validatorNotNull(javaNotNull, sources);
+        }
+
+    }
+
+    private static void validatorNotNull(final Class<? extends Annotation> annotation, final Object... sources) {
+
+        if (null == sources) {
+            return;
+        }
+
         Arrays.asList(sources).stream().forEach(source -> {
             Set<Field> fieldsAnnotatedWith = ReflectionUtils
-                .getAllFields(source.getClass(), javaNotNull == null ? ReflectionUtils.withAnnotations(NotNull.class)
-                    : ReflectionUtils.withAnnotations(NotNull.class, javaNotNull));
+                .getAllFields(source.getClass(), ReflectionUtils.withAnnotations(annotation));
             if (CollectionUtils.isEmpty(fieldsAnnotatedWith)) {
                 return;
             }
