@@ -1,7 +1,5 @@
 package com.github.mxsm.common.commandline;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -50,7 +48,7 @@ class CommandlineUtilsTest {
 
     @Test
     void printCommandLineHelp() {
-        CommandlineUtils.printCommandLineHelp("AA",options);
+        new Thread(()-> CommandlineUtils.printCommandLineHelp("AA",options)).start();
     }
 
     @Test
