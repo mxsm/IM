@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package com.github.mxsm.protocol.protobuf;
+
+option java_package = "com.github.mxsm.protocol.protobuf";
+
+option java_multiple_files = true;
+
+message RequestHeaders{
+
+  //协议
+  string protocol = 1;
+
+  //协议版本号
+  string version = 2;
+
+  //源IP
+  int64 sourceAddress = 3;
+
+  //请求的远程IP地址
+  int64 remoteAddress = 4;
+
+  //内容类型
+  string contentType = 6;
+
+  //发送消息的终端
+  string terminalType = 7;
+
+  //发送消息的终端设备号
+  string deviceToken = 8;
+
+  //消息发送者
+  string sender = 9;
+
+  //消息接收者
+  string receiver = 10;
+}

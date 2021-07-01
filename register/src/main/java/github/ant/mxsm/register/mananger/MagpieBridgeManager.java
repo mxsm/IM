@@ -12,25 +12,25 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/20
  * @Since 0.1
  */
-public class QueqiaoMananger {
+public class MagpieBridgeManager {
 
-    private static final  Logger LOGGER = LoggerFactory.getLogger(QueqiaoMananger.class);
+    private static final  Logger LOGGER = LoggerFactory.getLogger(MagpieBridgeManager.class);
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     /**
      * 鹊桥名称与信息的Map
      */
-    private Map<String /*鹊桥名称*/,QueQiaoInfo> queqiaoInfoMap = new HashMap<>(128);
+    private Map<String /*鹊桥名称*/, MagpieBridgeInfo> magpieBridgeTable = new HashMap<>(128);
 
     /**
      * 注册鹊桥
      * @param info
      */
-    public void queqiaoRegistry(QueQiaoInfo info){
-        QueQiaoInfo queQiaoInfo = queqiaoInfoMap.putIfAbsent(info.getQueqiaoName(), info);
-        if(queQiaoInfo != null){
-            LOGGER.warn("名称为:{}的鹊桥在鹊桥管理器中存在",info.getQueqiaoName());
+    public void queqiaoRegistry(MagpieBridgeInfo info){
+        MagpieBridgeInfo magpieBridgeInfo = magpieBridgeTable.putIfAbsent(info.getMagpieBridgeName(), info);
+        if(magpieBridgeInfo != null){
+            LOGGER.info("名称为:{}的鹊桥在鹊桥管理器中存在",info.getMagpieBridgeName());
         }
     }
 
@@ -43,12 +43,12 @@ public class QueqiaoMananger {
         try {
             try {
                 readWriteLock.writeLock().lock();
-                queqiaoInfoMap.remove(queqiaoName);
+                magpieBridgeTable.remove(queqiaoName);
             } finally {
                 readWriteLock.writeLock().unlock();
             }
         } catch (Exception e) {
-            LOGGER.error("Remove QueqiaoInfo Error",e);
+            LOGGER.error("Remove MagpieBridgeInfo Error",e);
         }
     }
 

@@ -26,7 +26,11 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
@@ -55,6 +59,12 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
     private Lock channelTableLock = new ReentrantLock();
 
+    private final ExecutorService publicExecutor;
+
+    /**
+     * Invoke the callback methods in this executor when process response.
+     */
+    private ExecutorService callbackExecutor;
 
 
     /**
@@ -74,7 +84,12 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
         this.channelEventListener = channelEventListener;
         this.nettyBootstrap = new Bootstrap();
         this.eventLoopGroupWorker = new NioEventLoopGroup(1, new NamedThreadFactory("NettyClientSelector"));
-
+        int publicThreadNums = nettyClientConfig.getClientCallbackExecutorThreads();
+        if (publicThreadNums <= 0) {
+            publicThreadNums = 4;
+        }
+        this.publicExecutor = Executors
+            .newFixedThreadPool(publicThreadNums, new NamedThreadFactory("NettyClientPublicExecutor"));
     }
 
     /**
@@ -216,7 +231,8 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyClientConfig.getConnectTimeoutMillis())
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
-            .handler(new NettyClientHandlerInitializer(channelEventListener, eventExecutorGroup, nettyClientConfig, this));
+            .handler(
+                new NettyClientHandlerInitializer(channelEventListener, eventExecutorGroup, nettyClientConfig, this));
 
     }
 
@@ -315,4 +331,13 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
     }
 
+    @Override
+    public ExecutorService getCallbackExecutor() {
+        return callbackExecutor != null ? callbackExecutor : publicExecutor;
+    }
+
+    @Override
+    public ChannelEventListener getChannelEventListener() {
+        return this.channelEventListener;
+    }
 }

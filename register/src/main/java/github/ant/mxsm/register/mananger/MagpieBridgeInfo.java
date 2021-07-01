@@ -5,17 +5,17 @@ package github.ant.mxsm.register.mananger;
  * @Date 2021/6/20
  * @Since 0.1
  */
-public class QueQiaoInfo {
+public class MagpieBridgeInfo {
 
     /**
      * 鹊桥名称
      */
-    private String queqiaoName;
+    private String magpieBridgeName;
 
     /**
      * 鹊桥地址 IP:Port
      */
-    private String queqiaoAddress;
+    private String magpieBridgeAddress;
 
     /**
      * 连接注册中心时间
@@ -31,14 +31,6 @@ public class QueQiaoInfo {
      * 鹊桥是否在线,默认不在线
      */
     private volatile boolean online = false;
-
-    public String getQueqiaoName() {
-        return queqiaoName;
-    }
-
-    public void setQueqiaoName(String queqiaoName) {
-        this.queqiaoName = queqiaoName;
-    }
 
     public long getConnRegisterTime() {
         return connRegisterTime;
@@ -64,12 +56,21 @@ public class QueQiaoInfo {
         this.online = online;
     }
 
-    public String getQueqiaoAddress() {
-        return queqiaoAddress;
+
+    public String getMagpieBridgeName() {
+        return magpieBridgeName;
     }
 
-    public void setQueqiaoAddress(String queqiaoAddress) {
-        this.queqiaoAddress = queqiaoAddress;
+    public void setMagpieBridgeName(String magpieBridgeName) {
+        this.magpieBridgeName = magpieBridgeName;
+    }
+
+    public String getMagpieBridgeAddress() {
+        return magpieBridgeAddress;
+    }
+
+    public void setMagpieBridgeAddress(String magpieBridgeAddress) {
+        this.magpieBridgeAddress = magpieBridgeAddress;
     }
 
     @Override
@@ -77,11 +78,11 @@ public class QueQiaoInfo {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof QueQiaoInfo)) {
+        if (!(o instanceof MagpieBridgeInfo)) {
             return false;
         }
 
-        QueQiaoInfo that = (QueQiaoInfo) o;
+        MagpieBridgeInfo that = (MagpieBridgeInfo) o;
 
         if (getConnRegisterTime() != that.getConnRegisterTime()) {
             return false;
@@ -92,16 +93,16 @@ public class QueQiaoInfo {
         if (isOnline() != that.isOnline()) {
             return false;
         }
-        if (!getQueqiaoName().equals(that.getQueqiaoName())) {
+        if (!getMagpieBridgeName().equals(that.getMagpieBridgeName())) {
             return false;
         }
-        return getQueqiaoAddress().equals(that.getQueqiaoAddress());
+        return getMagpieBridgeAddress().equals(that.getMagpieBridgeAddress());
     }
 
     @Override
     public int hashCode() {
-        int result = getQueqiaoName().hashCode();
-        result = 31 * result + getQueqiaoAddress().hashCode();
+        int result = getMagpieBridgeName().hashCode();
+        result = 31 * result + getMagpieBridgeAddress().hashCode();
         result = 31 * result + (int) (getConnRegisterTime() ^ (getConnRegisterTime() >>> 32));
         result = 31 * result + (int) (getLastHeartbeatTime() ^ (getLastHeartbeatTime() >>> 32));
         result = 31 * result + (isOnline() ? 1 : 0);
@@ -110,9 +111,9 @@ public class QueQiaoInfo {
 
     @Override
     public String toString() {
-        return "QueQiaoInfo{" +
-            "queqiaoName='" + queqiaoName + '\'' +
-            ", queqiaoAddress='" + queqiaoAddress + '\'' +
+        return "MagpieBridgeInfo{" +
+            "magpieBridgeName='" + magpieBridgeName + '\'' +
+            ", magpieBridgeAddress='" + magpieBridgeAddress + '\'' +
             ", connRegisterTime=" + connRegisterTime +
             ", lastHeartbeatTime=" + lastHeartbeatTime +
             ", online=" + online +

@@ -16,6 +16,7 @@ import com.github.mxsm.remoting.netty.handler.NettyServerHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
@@ -27,6 +28,9 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +62,8 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     private NettyServerHandler nettyServerHandler;
 
+    private final ExecutorService publicExecutor;
+
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
     }
@@ -67,6 +73,13 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         super(nettyServerConfig.getServerOnewaySemaphoreValue(), nettyServerConfig.getServerAsyncSemaphoreValue());
         this.serverBootstrap = new ServerBootstrap();
         this.channelEventListener = channelEventListener;
+
+        int publicThreadNums = nettyServerConfig.getServerCallbackExecutorThreads();
+        if (publicThreadNums <= 0) {
+            publicThreadNums = 4;
+        }
+
+        this.publicExecutor = Executors.newFixedThreadPool(publicThreadNums, new NamedThreadFactory("NettyServerPublicExecutor"));
 
         this.nettyServerConfig = nettyServerConfig;
         if (useEpoll()) {
@@ -150,6 +163,11 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         this.registerProcessor(requestCode, processor, executor);
     }
 
+    @Override
+    public ChannelEventListener getChannelEventListener() {
+        return this.channelEventListener;
+    }
+
     /**
      * start service
      */
@@ -198,4 +216,13 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         return RemotingUtils.isLinuxPlatform() && nettyServerConfig.isUseEpollNativeSelector() && Epoll.isAvailable();
     }
 
+    @Override
+    public ExecutorService getCallbackExecutor() {
+        return this.publicExecutor;
+    }
+
+    @Override
+    public void processMessageReceived(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
+        super.processMessageReceived(ctx, msg);
+    }
 }

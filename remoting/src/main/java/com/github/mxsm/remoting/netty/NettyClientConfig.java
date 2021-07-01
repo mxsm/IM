@@ -13,7 +13,7 @@ public class NettyClientConfig {
 
     private int connectTimeoutMillis = 3000;
 
-    private int clientWorkerThreads = 4;
+    private int clientWorkerThreads = Runtime.getRuntime().availableProcessors();
 
     private int clientChannelMaxIdleTimeSeconds = 120;
 
@@ -22,6 +22,8 @@ public class NettyClientConfig {
     private int clientAsyncSemaphoreValue = NettySystemConfig.CLIENT_ASYNC_SEMAPHORE_VALUE;
 
     private boolean clientCloseSocketIfTimeout = false;
+
+    private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
 
     public int getClientSocketSndBufSize() {
         return clientSocketSndBufSize;
@@ -85,5 +87,13 @@ public class NettyClientConfig {
 
     public void setClientCloseSocketIfTimeout(boolean clientCloseSocketIfTimeout) {
         this.clientCloseSocketIfTimeout = clientCloseSocketIfTimeout;
+    }
+
+    public int getClientCallbackExecutorThreads() {
+        return clientCallbackExecutorThreads;
+    }
+
+    public void setClientCallbackExecutorThreads(int clientCallbackExecutorThreads) {
+        this.clientCallbackExecutorThreads = clientCallbackExecutorThreads;
     }
 }

@@ -4,6 +4,7 @@ import com.github.mxsm.common.Pair;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.ProtobufUtils;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
+import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.RemotingResponseCallback;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.netty.AsyncNettyRequestProcessor;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/25
  * @Since 0.1
  */
-public class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler{
+public abstract class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyRemotingHandler.class);
 
@@ -68,13 +69,16 @@ public class NettyRemotingHandler extends AbstractNettyRemoting implements Remot
 
                 };
 
+                //异步处理
                 if(pair.getLeft() instanceof AsyncNettyRequestProcessor){
                     AsyncNettyRequestProcessor processor = (AsyncNettyRequestProcessor)pair.getLeft();
                     processor.asyncProcessRequest(ctx, cmd, callback);
-                }else{
+                }else if(pair.getLeft() instanceof NettyRequestProcessor){
                     NettyRequestProcessor processor = pair.getLeft();
                     RemotingCommand response = processor.processRequest(ctx, cmd);
                     callback.callback(response);
+                }else{
+                    //
                 }
             } catch (Exception e) {
                 LOGGER.error("process request exception", e);
@@ -141,8 +145,5 @@ public class NettyRemotingHandler extends AbstractNettyRemoting implements Remot
         this.defaultRequestProcessor = Pair.builder(processor, executor);
     }
 
-    @Override
-    public ExecutorService getCallbackExecutor() {
-        return null;
-    }
+    public abstract ChannelEventListener getChannelEventListener();
 }

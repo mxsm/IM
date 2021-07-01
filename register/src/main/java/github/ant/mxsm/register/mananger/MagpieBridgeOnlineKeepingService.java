@@ -8,12 +8,12 @@ import io.netty.channel.Channel;
  * @Date 2021/6/20
  * @Since 0.1
  */
-public class QueqiaoOnlineKeepingService implements ChannelEventListener {
+public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
 
-    private QueqiaoMananger queqiaoMananger;
+    private MagpieBridgeManager magpieBridgeManager;
 
-    public QueqiaoOnlineKeepingService(QueqiaoMananger queqiaoMananger) {
-        this.queqiaoMananger = queqiaoMananger;
+    public MagpieBridgeOnlineKeepingService(MagpieBridgeManager magpieBridgeManager) {
+        this.magpieBridgeManager = magpieBridgeManager;
     }
 
     /**
@@ -95,5 +95,9 @@ public class QueqiaoOnlineKeepingService implements ChannelEventListener {
     @Override
     public void onUserEventTriggered(Channel channel, Object evt) throws Exception {
 
+    }
+
+    public MagpieBridgeManager getMagpieBridgeManager() {
+        return magpieBridgeManager;
     }
 }

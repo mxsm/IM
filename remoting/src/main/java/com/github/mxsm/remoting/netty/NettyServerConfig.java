@@ -25,6 +25,8 @@ public class NettyServerConfig implements Cloneable {
 
     private int serverAsyncSemaphoreValue = 64;
 
+    private int serverCallbackExecutorThreads = 0;
+
     public boolean isUseEpollNativeSelector() {
         return useEpollNativeSelector;
     }
@@ -91,5 +93,13 @@ public class NettyServerConfig implements Cloneable {
 
     public void setServerAsyncSemaphoreValue(int serverAsyncSemaphoreValue) {
         this.serverAsyncSemaphoreValue = serverAsyncSemaphoreValue;
+    }
+
+    public int getServerCallbackExecutorThreads() {
+        return serverCallbackExecutorThreads;
+    }
+
+    public void setServerCallbackExecutorThreads(int serverCallbackExecutorThreads) {
+        this.serverCallbackExecutorThreads = serverCallbackExecutorThreads;
     }
 }

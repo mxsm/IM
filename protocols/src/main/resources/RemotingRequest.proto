@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "RemotingCommandType.proto";
+import "RequestHeaders.proto";
+import "ResponseHeaders.proto";
 
 package com.github.mxsm.protocol.protobuf;
 
@@ -10,12 +12,29 @@ option java_multiple_files = true;
 
 message RemotingCommand{
 
+    //请求头部
+    RequestHeaders requestHeaders = 1;
+
+    //返回头部
+    ResponseHeaders responseHeaders = 2;
+
     //命令类型
-    RemotingCommandType commandType = 1;
+    RemotingCommandType commandType = 3;
 
-    int32 requestCode = 2;
+    //请求码
+    int32 requestCode = 4;
 
-    bool oneway = 3;
+    int32 payloadCrc32 = 5;
 
-    uint64 commandId = 4;
+    //是否单向
+    bool oneway = 6;
+
+    //命令ID
+    uint64 commandId = 7;
+
+    //创建时间
+    uint64 createTimestamp = 8;
+
+    //消息体
+    bytes payload = 9;
 }
