@@ -48,7 +48,7 @@ public class MagpieBridgeController {
 
         this.magpieBridgeRegisterService.scheduleAtFixedRate(() -> {
 
-   /*         try {
+/*            try {
                 magpieBridgeClient.invokeSync("127.0.0.1:8888", RemotingCommandBuilder.buildRequestCommand(), 10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -58,9 +58,9 @@ public class MagpieBridgeController {
                 e.printStackTrace();
             } catch (RemotingTimeoutException e) {
                 e.printStackTrace();
-            }
+            }*/
 
-        }, 5, 10, TimeUnit.SECONDS);*/
+        }, 5, 10, TimeUnit.SECONDS);
 
     }
 
