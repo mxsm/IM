@@ -6,6 +6,7 @@ import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.common.SemaphoreReleaseWrapper;
 import io.netty.channel.Channel;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author mxsm
@@ -51,7 +52,7 @@ public class ResponseFuture implements Future {
     }
 
     public RemotingCommand wait4Response(final long timeoutMillis) throws InterruptedException {
-        countDownLatch.wait(timeoutMillis);
+        this.countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
         return this.responseCommand;
     }
 
