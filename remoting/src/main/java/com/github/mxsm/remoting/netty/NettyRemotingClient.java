@@ -28,9 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
@@ -65,6 +64,8 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      * Invoke the callback methods in this executor when process response.
      */
     private ExecutorService callbackExecutor;
+
+    private AtomicReference<List<String>> registerAddresses = new AtomicReference<>();
 
 
     /**
@@ -274,7 +275,7 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
                     }
                 }
                 if (newCreateChannel) {
-                    ChannelFuture channelFuture = this.nettyBootstrap.bind(NetUtils.ip2SocketAddress(ip));
+                    ChannelFuture channelFuture = this.nettyBootstrap.connect(NetUtils.ip2SocketAddress(ip));
                     LOGGER.info("createChannel: begin to connect remote host[{}] asynchronously", ip);
                     channelWrapper = ChannelWrapper.builder(channelFuture);
                     this.channelTable.put(ip, channelWrapper);

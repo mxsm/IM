@@ -2,6 +2,7 @@ package github.ant.mxsm.register.processor;
 
 import com.github.mxsm.common.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.common.RequestCode;
 import com.github.mxsm.remoting.netty.AsyncNettyRequestProcessor;
@@ -39,7 +40,6 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
                 return null;
             case RequestCode.MAGPIEBRIDGE_REGISTER:
                 return this.registerMagpieBridge(ctx, request);
-
             default:
                 break;
         }
@@ -58,12 +58,6 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
     }
 
     private RemotingCommand registerMagpieBridge(final ChannelHandlerContext ctx, final RemotingCommand request) {
-
-        if (request.getPayloadCrc32() != 0 && request.getPayloadCrc32() != GeneralUtils
-            .crc32(request.getPayload().toByteArray())) {
-
-        }
-
-        return null;
+        return RemotingCommandBuilder.buildResponseCommand(request.getCommandId());
     }
 }

@@ -39,6 +39,6 @@ public class RequestTaskWrapper implements Runnable{
      */
     @Override
     public void run() {
-
+        task.run();
     }
 }

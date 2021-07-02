@@ -62,7 +62,7 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
-    public void invokeOnewayImpl(final Channel channel, final RemotingCommand request, final long timeoutMillis)
+    protected void invokeOnewayImpl(final Channel channel, final RemotingCommand request, final long timeoutMillis)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
         //设置单向发送
         RemotingCommandBuilder.markOneway(request);
@@ -115,7 +115,7 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      */
-    public void invokeAsyncImpl(final Channel channel, final RemotingCommand request, final long timeoutMillis,
+    protected void invokeAsyncImpl(final Channel channel, final RemotingCommand request, final long timeoutMillis,
         final InvokeCallback invokeCallback)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
         long startTime = System.currentTimeMillis();
@@ -161,7 +161,7 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
 
     }
 
-    public RemotingCommand invokeSyncImpl(final Channel channel, final RemotingCommand request,
+    protected RemotingCommand invokeSyncImpl(final Channel channel, final RemotingCommand request,
         final long timeoutMillis)
         throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException {
 

@@ -19,11 +19,11 @@ class MagpieBridgeManagerTest {
     void setUp() {
         magpieBridgeManager = new MagpieBridgeManager();
         magpieBridgeInfo = new MagpieBridgeInfo();
-        magpieBridgeInfo.setQueqiaoName(UUID.randomUUID().toString());
+        magpieBridgeInfo.setMagpieBridgeName(UUID.randomUUID().toString());
         magpieBridgeInfo.setConnRegisterTime(System.currentTimeMillis());
         magpieBridgeInfo.setLastHeartbeatTime(System.currentTimeMillis());
         magpieBridgeInfo.setOnline(true);
-        magpieBridgeInfo.setQueqiaoAddress("127.0.0.1:7894");
+        magpieBridgeInfo.setMagpieBridgeAddress("127.0.0.1:7894");
     }
 
     @Test
@@ -33,6 +33,6 @@ class MagpieBridgeManagerTest {
 
     @Test
     void removeQueqiaoInfo() {
-        magpieBridgeManager.removeQueqiaoInfo(magpieBridgeInfo.getQueqiaoName());
+        magpieBridgeManager.removeQueqiaoInfo(magpieBridgeInfo.getMagpieBridgeName());
     }
 }

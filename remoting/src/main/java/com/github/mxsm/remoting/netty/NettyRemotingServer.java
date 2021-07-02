@@ -221,8 +221,4 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         return this.publicExecutor;
     }
 
-    @Override
-    public void processMessageReceived(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
-        super.processMessageReceived(ctx, msg);
-    }
 }

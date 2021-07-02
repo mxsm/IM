@@ -57,10 +57,10 @@ public class NettyClientHandlerInitializer extends ChannelInitializer {
         pipeline.addLast(eventExecutorGroup,
             new IdleStateHandler(0, 0, nettyClientConfig.getClientChannelMaxIdleTimeSeconds()));
         pipeline.addLast(eventExecutorGroup, new ProtobufVarint32FrameDecoder());
-        pipeline.addLast(eventExecutorGroup, new ProtobufDecoder(lite));
+        pipeline.addLast(eventExecutorGroup, new ProtobufDecoder(this.lite));
         pipeline.addLast(eventExecutorGroup, new ProtobufVarint32LengthFieldPrepender());
         pipeline.addLast(eventExecutorGroup, new ProtobufEncoder());
-        pipeline.addLast(eventExecutorGroup, new NettyClientConnectManageHandler());
-        pipeline.addLast(eventExecutorGroup, new NettyClientHandler(nettyRemoting));
+        pipeline.addLast(eventExecutorGroup, new NettyClientConnectManageHandler(this.channelEventListener));
+        pipeline.addLast(eventExecutorGroup, new NettyClientHandler(this.nettyRemoting));
     }
 }
