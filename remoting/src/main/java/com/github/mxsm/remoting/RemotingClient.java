@@ -20,6 +20,13 @@ public interface RemotingClient extends RemotingService {
      */
     void updateRegisterAddressList(final List<String> addrs);
 
+
+    /**
+     * 获取注册中心地址
+     * @return
+     */
+    List<String> getRegisterAddressList();
+
     /**
      * 同步执行
      * @param addr 发送地址

@@ -24,4 +24,8 @@ public abstract class GeneralUtils {
         return (int) (crc32.getValue() & 0x7FFFFFFF);
     }
 
+    public static int getAvailableProcessors(){
+        return Runtime.getRuntime().availableProcessors();
+    }
+
 }

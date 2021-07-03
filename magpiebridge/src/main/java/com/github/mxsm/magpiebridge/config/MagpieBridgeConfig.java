@@ -16,6 +16,10 @@ public class MagpieBridgeConfig {
 
     private String magpieBridgeName = UUID.randomUUID().toString();
 
+    private int magpieBridgeId;
+
+    private long magpieBridgeRegisterTimeoutMills = 3000;
+
     public String getRegisterAddress() {
         return registerAddress;
     }
@@ -30,5 +34,21 @@ public class MagpieBridgeConfig {
 
     public void setMagpieBridgeName(String magpieBridgeName) {
         this.magpieBridgeName = magpieBridgeName;
+    }
+
+    public int getMagpieBridgeId() {
+        return magpieBridgeId;
+    }
+
+    public void setMagpieBridgeId(int magpieBridgeId) {
+        this.magpieBridgeId = magpieBridgeId;
+    }
+
+    public long getMagpieBridgeRegisterTimeoutMills() {
+        return magpieBridgeRegisterTimeoutMills;
+    }
+
+    public void setMagpieBridgeRegisterTimeoutMills(long magpieBridgeRegisterTimeoutMills) {
+        this.magpieBridgeRegisterTimeoutMills = magpieBridgeRegisterTimeoutMills;
     }
 }

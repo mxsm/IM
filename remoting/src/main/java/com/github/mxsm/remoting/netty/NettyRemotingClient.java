@@ -23,6 +23,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -32,6 +33,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +62,8 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
     private Lock channelTableLock = new ReentrantLock();
 
+    private Lock channelRegisterTableLock = new ReentrantLock();
+
     private final ExecutorService publicExecutor;
 
     /**
@@ -65,8 +71,9 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      */
     private ExecutorService callbackExecutor;
 
-    private AtomicReference<List<String>> registerAddresses = new AtomicReference<>();
+    private AtomicReference<List<String>> registerAddrs = new AtomicReference<>();
 
+    private final AtomicReference<String> registerAddrsChoosed = new AtomicReference<>();
 
     /**
      * 记录Channel和IP之间的关系
@@ -101,6 +108,40 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     @Override
     public void updateRegisterAddressList(List<String> addrs) {
 
+        List<String> oldRegisterAddrs = registerAddrs.get();
+        boolean needUpdate = false;
+
+        if (CollectionUtils.isNotEmpty(addrs)) {
+
+            if (oldRegisterAddrs == null) {
+                needUpdate = true;
+            }else if(addrs.size() != oldRegisterAddrs.size()){
+                needUpdate = true;
+            }else{
+                for(int index = 0; index < addrs.size() && !needUpdate; ++index){
+                    if(oldRegisterAddrs.contains(addrs.get(index))){
+                        needUpdate = true;
+                    }
+                }
+            }
+            if(needUpdate){
+                Collections.shuffle(addrs);
+                LOGGER.info("name server address updated. new : {} , old: {}", addrs, oldRegisterAddrs);
+                this.registerAddrs.set(addrs);
+            }
+
+        }
+
+    }
+
+    /**
+     * 获取注册中心地址
+     *
+     * @return
+     */
+    @Override
+    public List<String> getRegisterAddressList() {
+        return this.registerAddrs.get();
     }
 
     /**
@@ -246,12 +287,29 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     }
 
     /**
-     * 根据IP从缓存中获取，如果不存在则创建Channel
+     * 根据IP从缓存中获取，如果不存在则创建Channel, IP为空则创建或者获取<br/>
+     * 注册中心的Channel
      *
      * @param ip 带上端口127.0.0.1:8080
      * @return
      */
-    private Channel getOrElseCreateChannel(String ip) throws InterruptedException {
+    private Channel getOrElseCreateChannel(String ip) throws InterruptedException, RemotingConnectException {
+
+        if(StringUtils.isBlank(ip)){
+            return getOrElseCreateRegisterChannel();
+        }
+
+        ChannelWrapper cw = this.channelTable.get(ip);
+        if (cw != null && cw.isOK()) {
+            return cw.getChannel();
+        }
+
+        return createChannel(ip);
+
+    }
+
+    @Nullable
+    private Channel createChannel(String ip) throws InterruptedException {
 
         ChannelWrapper channelWrapper = this.channelTable.get(ip);
         if (null != channelWrapper && channelWrapper.isOK()) {
@@ -299,8 +357,53 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             }
         }
         return null;
-
     }
+
+    private Channel getOrElseCreateRegisterChannel() throws InterruptedException, RemotingConnectException {
+
+        String chooseRegisterAddr = this.registerAddrsChoosed.get();
+        if(null != chooseRegisterAddr){
+            ChannelWrapper channelWrapper = this.channelTable.get(chooseRegisterAddr);
+            if(null != channelWrapper && channelWrapper.isOK()){
+                return channelWrapper.getChannel();
+            }
+        }
+
+        final List<String> addrsList = this.registerAddrs.get();
+
+        if(this.channelRegisterTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)){
+            try {
+                chooseRegisterAddr = this.registerAddrsChoosed.get();
+                if(null != chooseRegisterAddr){
+                    ChannelWrapper channelWrapper = this.channelTable.get(chooseRegisterAddr);
+                    if(null != channelWrapper && channelWrapper.isOK()){
+                        return channelWrapper.getChannel();
+                    }
+                }
+
+                if(CollectionUtils.isNotEmpty(addrsList)){
+                    for (int i = 0; i < addrsList.size(); i++) {
+                        int index = (int)(Math.random() * addrsList.size());
+                        String newAddr = addrsList.get(index);
+                        this.registerAddrsChoosed.set(newAddr);
+                        LOGGER.info("new name server is chosen. NEW: {}. namesrvIndex = {}", newAddr, index);
+                        Channel channelNew = this.createChannel(newAddr);
+                        if (channelNew != null) {
+                            return channelNew;
+                        }
+                    }
+                    throw new RemotingConnectException(addrsList.toString());
+                }
+
+            } finally {
+                this.channelRegisterTableLock.unlock();
+            }
+        }
+
+        return null;
+    }
+
+
 
     private void closeChannel(final String ip, final Channel channel) {
         if (null == channel) {
