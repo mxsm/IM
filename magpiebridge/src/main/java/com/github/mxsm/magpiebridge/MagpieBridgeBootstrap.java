@@ -40,7 +40,7 @@ public class MagpieBridgeBootstrap {
         magpieBridgeController.initialize();
         magpieBridgeController.startup();
 
-        LOGGER.info("----------------MagpieBridge started [IP={},Port={}]-------------------", NetUtils.getLocalIP(),
+        LOGGER.info("----------------MagpieBridge started [IP={},Port={}]-------------------", NetUtils.getLocalAddress(),
             magpieBridgeController.getNettyServerConfig().getBindPort());
 
     }
