@@ -10,11 +10,11 @@ public class MagpieBridgeInfo {
     //名称
     private String magpieBridgeName;
 
-    private String magpieBridgeAddress ;
+    private String magpieBridgeAddress;
 
-    private int magpieBridgeId ;
+    private int magpieBridgeId;
 
-    private long magpieBridgeCreateTimestamp ;
+    private long magpieBridgeCreateTimestamp;
 
     public String getMagpieBridgeName() {
         return magpieBridgeName;

@@ -1,4 +1,5 @@
-package github.ant.mxsm.register;
+
+package com.github.mxsm.register;
 
 import org.junit.jupiter.api.Test;
 

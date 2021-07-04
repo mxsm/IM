@@ -1,11 +1,12 @@
-package github.ant.mxsm.register;
+package com.github.mxsm.register;
 
+import com.github.mxsm.register.processor.DefaultRegisterRequestProcessor;
 import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
-import github.ant.mxsm.register.mananger.MagpieBridgeManager;
-import github.ant.mxsm.register.mananger.MagpieBridgeOnlineKeepingService;
-import github.ant.mxsm.register.processor.DefaultRegisterRequestProcessor;
+import com.github.mxsm.register.config.RegisterConfig;
+import com.github.mxsm.register.mananger.MagpieBridgeManager;
+import com.github.mxsm.register.mananger.MagpieBridgeOnlineKeepingService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ public class RegisterController {
 
     private final NettyServerConfig registerServerConfig;
 
+    private final RegisterConfig registerConfig;
+
     private NettyRemotingServer registerServer;
 
     private ExecutorService executorService;
@@ -30,8 +33,9 @@ public class RegisterController {
 
     private final MagpieBridgeOnlineKeepingService mbOnlineKeepingService;
 
-    public RegisterController(final NettyServerConfig registerServerConfig) {
+    public RegisterController(final NettyServerConfig registerServerConfig,final RegisterConfig registerConfig) {
         this.registerServerConfig = registerServerConfig;
+        this.registerConfig = registerConfig;
         this.magpieBridgeManager = new MagpieBridgeManager();
         this.mbOnlineKeepingService = new MagpieBridgeOnlineKeepingService(this.magpieBridgeManager);
     }
@@ -53,8 +57,12 @@ public class RegisterController {
         return registerServerConfig;
     }
 
+    public RegisterConfig getRegisterConfig() {
+        return registerConfig;
+    }
+
     private void registerProcessor() {
-        this.registerServer.registerDefaultProcessor(new DefaultRegisterRequestProcessor(this.mbOnlineKeepingService),
+        this.registerServer.registerDefaultProcessor(new DefaultRegisterRequestProcessor(this.magpieBridgeManager),
             this.executorService);
         LOGGER.debug("DefaultRegisterRequestProcessor register complete");
     }

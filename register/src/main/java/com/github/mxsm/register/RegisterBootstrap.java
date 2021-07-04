@@ -1,5 +1,6 @@
-package github.ant.mxsm.register;
+package com.github.mxsm.register;
 
+import com.github.mxsm.register.config.RegisterConfig;
 import com.github.mxsm.common.MixAll;
 import com.github.mxsm.common.commandline.CommandlineUtils;
 import com.github.mxsm.remoting.common.NetUtils;
@@ -9,7 +10,6 @@ import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.properties.PropertiesFactory;
@@ -39,13 +39,15 @@ public class RegisterBootstrap {
         registerController.initialize();
         registerController.startup();
 
-        LOGGER.info("----------------Register started [IP={},Port={}]-------------------", NetUtils.getLocalAddress(),
+        LOGGER.info("----------------registration center started [centerName={}},IP={},Port={}]-------------------",
+            registerController.getRegisterConfig().getRegisterName(), NetUtils.getLocalAddress(),
             registerController.getRegisterServerConfig().getBindPort());
     }
 
     private static RegisterController createRegisterController(String[] args) {
 
         NettyServerConfig serverConfig = new NettyServerConfig();
+        RegisterConfig registerConfig = new RegisterConfig();
 
         CommandLineParser parser = new DefaultParser();
         Options options = CommandlineUtils.buildCommandlineOptions();
@@ -61,6 +63,7 @@ public class RegisterBootstrap {
             try {
                 Properties properties = PropertiesFactory.INSTANCE.load(filePath);
                 MixAll.properties2Object(properties, serverConfig);
+                MixAll.properties2Object(properties, registerConfig);
             } catch (IOException e) {
                 LOGGER.error(String.format("Load Register config file [path=%s] Error", filePath), e);
                 CommandlineUtils.printCommandLineHelp(CMD_NAME, options);
@@ -73,7 +76,7 @@ public class RegisterBootstrap {
             int port = CommandlineUtils.getOptionValue2Int(cmdLine, "p");
             serverConfig.setBindPort(port);
         }
-        RegisterController controller = new RegisterController(serverConfig);
+        RegisterController controller = new RegisterController(serverConfig, registerConfig);
 
         return controller;
     }

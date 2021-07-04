@@ -8,8 +8,10 @@ import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,10 +51,12 @@ public class MagpieBridgeController {
 
     public void initialize() {
         this.magpieBridgeServer = new NettyRemotingServer(this.nettyServerConfig);
-        //this.magpieBridgeClient = new NettyRemotingClient(this.nettyClientConfig);
+
+        this.magpieBridgeAPI.updateRegisterAddressList(
+            Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(",")));
 
         //启动定时发送MagpieBridge信息到注册中心
-        //registerAllMagpieBridge();
+        magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 5, 20, TimeUnit.SECONDS);
 
     }
 
@@ -72,7 +76,7 @@ public class MagpieBridgeController {
 
     public void startup() {
         this.magpieBridgeServer.start();
-
+        this.magpieBridgeAPI.start();
     }
 
     public NettyServerConfig getNettyServerConfig() {

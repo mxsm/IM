@@ -48,6 +48,15 @@ public class MagpieBridgeAPI {
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
     }
 
+    public void start(){
+        this.remotingClient.start();
+
+    }
+
+    public void updateRegisterAddressList(final List<String> addrs){
+        this.remotingClient.updateRegisterAddressList(addrs);
+    }
+
     /**
      * 注册所有的
      *

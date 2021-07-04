@@ -1,11 +1,11 @@
-package github.ant.mxsm.register.mananger;
+package com.github.mxsm.register.mananger;
 
 /**
  * @author mxsm
  * @Date 2021/6/20
  * @Since 0.1
  */
-public class MagpieBridgeInfo {
+public class MagpieBridgeLiveInfo {
 
     /**
      * 鹊桥名称
@@ -78,11 +78,11 @@ public class MagpieBridgeInfo {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof MagpieBridgeInfo)) {
+        if (!(o instanceof MagpieBridgeLiveInfo)) {
             return false;
         }
 
-        MagpieBridgeInfo that = (MagpieBridgeInfo) o;
+        MagpieBridgeLiveInfo that = (MagpieBridgeLiveInfo) o;
 
         if (getConnRegisterTime() != that.getConnRegisterTime()) {
             return false;

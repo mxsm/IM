@@ -34,7 +34,6 @@
         <fileSet>
             <includes>
                 <include>conf/**</include>
-                <!--<include>benchmark/*</include>-->
             </includes>
         </fileSet>
 

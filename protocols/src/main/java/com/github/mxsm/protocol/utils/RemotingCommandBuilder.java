@@ -25,10 +25,10 @@ public abstract class RemotingCommandBuilder {
             .setCreateTimestamp(System.currentTimeMillis());
     }
 
-    public static RemotingCommand buildResponseCommand(long commandId) {
+    public static RemotingCommand.Builder buildResponseCommand(long commandId) {
 
         return RemotingCommand.newBuilder().setCommandType(RemotingCommandType.RESPONSE).setCommandId(commandId)
-            .setCreateTimestamp(System.currentTimeMillis()).build();
+            .setCreateTimestamp(System.currentTimeMillis());
     }
 
     public static void markOneway(RemotingCommand command) {
