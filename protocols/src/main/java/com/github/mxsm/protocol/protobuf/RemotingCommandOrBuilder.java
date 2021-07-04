@@ -137,4 +137,24 @@ public interface RemotingCommandOrBuilder extends
    * @return The payload.
    */
   com.google.protobuf.ByteString getPayload();
+
+  /**
+   * <pre>
+   *消息处理后的结果消息--一般为错误消息
+   * </pre>
+   *
+   * <code>string resultMessage = 10;</code>
+   * @return The resultMessage.
+   */
+  java.lang.String getResultMessage();
+  /**
+   * <pre>
+   *消息处理后的结果消息--一般为错误消息
+   * </pre>
+   *
+   * <code>string resultMessage = 10;</code>
+   * @return The bytes for resultMessage.
+   */
+  com.google.protobuf.ByteString
+      getResultMessageBytes();
 }

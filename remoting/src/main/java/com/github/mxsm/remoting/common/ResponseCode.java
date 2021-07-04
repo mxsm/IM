@@ -7,7 +7,7 @@ package com.github.mxsm.remoting.common;
  */
 public abstract class ResponseCode {
 
-    public static final int success = 200;
+    public static final int SUCCESS = 200;
 
     public static final int SYSTEM_ERROR = 500;
 

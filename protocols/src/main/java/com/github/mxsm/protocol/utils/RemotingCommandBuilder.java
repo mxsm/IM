@@ -13,16 +13,16 @@ public abstract class RemotingCommandBuilder {
 
     public static final AtomicLong incrementCmdId = new AtomicLong(0);
 
-    public static RemotingCommand buildRequestCommand() {
+    public static RemotingCommand.Builder buildRequestCommand() {
 
         return RemotingCommand.newBuilder().setCommandType(RemotingCommandType.REQUEST).setCommandId(incrementCmdId.incrementAndGet())
-            .setCreateTimestamp(System.currentTimeMillis()).build();
+            .setCreateTimestamp(System.currentTimeMillis());
     }
 
-    public static RemotingCommand buildResponseCommand() {
+    public static RemotingCommand.Builder buildResponseCommand() {
 
         return RemotingCommand.newBuilder().setCommandType(RemotingCommandType.RESPONSE)
-            .setCreateTimestamp(System.currentTimeMillis()).build();
+            .setCreateTimestamp(System.currentTimeMillis());
     }
 
     public static RemotingCommand buildResponseCommand(long commandId) {

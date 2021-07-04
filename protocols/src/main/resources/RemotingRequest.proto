@@ -40,4 +40,7 @@ message RemotingCommand{
 
     //消息体
     bytes payload = 9;
+
+    //消息处理后的结果消息--一般为错误消息
+    string resultMessage = 10;
 }

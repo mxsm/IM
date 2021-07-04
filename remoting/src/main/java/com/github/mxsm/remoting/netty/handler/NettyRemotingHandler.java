@@ -46,7 +46,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         if(pair == null){
             //TODO build RemotingCommand for response
             String error = " request type " + cmd.getCode() + " not supported";
-            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand();
+            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().build();
             ctx.writeAndFlush(response);
             LOGGER.error(NetUtils.parseChannelRemoteAddr(ctx.channel()) + error);
             return;
@@ -86,7 +86,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                 //处理返回数据
                 if (!ProtobufUtils.isOnewayRequest(cmd)) {
                     //TODO
-                    final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand();
+                    final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().build();
                     ctx.writeAndFlush(response);
                 }
             }
@@ -94,7 +94,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
         if(pair.getLeft().rejectRequest()){
             //TODO
-            final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand();
+            final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().build();
             ctx.writeAndFlush(response);
             return;
         }
@@ -105,7 +105,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         } catch (Exception e) {
             if (!ProtobufUtils.isOnewayRequest(cmd)) {
                 //TODO
-                final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand();
+                final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().build();
                 ctx.writeAndFlush(response);
             }
         }

@@ -4,22 +4,12 @@ import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
-import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.common.NetUtils;
-import com.github.mxsm.remoting.exception.RemotingConnectException;
-import com.github.mxsm.remoting.exception.RemotingSendRequestException;
-import com.github.mxsm.remoting.exception.RemotingTimeoutException;
-import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
-import com.github.mxsm.remoting.netty.NettyRemotingClient;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +65,7 @@ public class MagpieBridgeController {
         mbInfo.setMagpieBridgeName(this.magpieBridgeConfig.getMagpieBridgeName());
         mbInfo.setMagpieBridgeCreateTimestamp(System.currentTimeMillis());
 
-        this.magpieBridgeAPI.registerBrokerAll(mbInfo,this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills());
+        this.magpieBridgeAPI.registerMagpieBridgeAll(mbInfo,this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills());
 
     }
 

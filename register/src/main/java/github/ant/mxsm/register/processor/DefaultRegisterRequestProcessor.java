@@ -1,6 +1,5 @@
 package github.ant.mxsm.register.processor;
 
-import com.github.mxsm.common.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.common.NetUtils;
@@ -38,7 +37,7 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
         switch (request.getCode()) {
             case RequestCode.HEART_BEAT:
                 return null;
-            case RequestCode.MAGPIEBRIDGE_REGISTER:
+            case RequestCode.MAGPIE_BRIDGE_REGISTER:
                 return this.registerMagpieBridge(ctx, request);
             default:
                 break;

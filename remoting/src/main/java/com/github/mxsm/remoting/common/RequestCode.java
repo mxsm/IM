@@ -12,5 +12,5 @@ public abstract class RequestCode {
      */
     public static final int HEART_BEAT = 0;
 
-    public static final int MAGPIEBRIDGE_REGISTER = 1;
+    public static final int MAGPIE_BRIDGE_REGISTER = 1;
 }

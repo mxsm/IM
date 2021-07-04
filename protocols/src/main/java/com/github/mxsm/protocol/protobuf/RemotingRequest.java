@@ -31,7 +31,7 @@ public final class RemotingRequest {
       "\n\025RemotingRequest.proto\022!com.github.mxsm" +
       ".protocol.protobuf\032\031RemotingCommandType." +
       "proto\032\024RequestHeaders.proto\032\025ResponseHea" +
-      "ders.proto\"\347\002\n\017RemotingCommand\022I\n\016reques" +
+      "ders.proto\"\376\002\n\017RemotingCommand\022I\n\016reques" +
       "tHeaders\030\001 \001(\01321.com.github.mxsm.protoco" +
       "l.protobuf.RequestHeaders\022K\n\017responseHea" +
       "ders\030\002 \001(\01322.com.github.mxsm.protocol.pr" +
@@ -40,8 +40,9 @@ public final class RemotingRequest {
       "RemotingCommandType\022\014\n\004code\030\004 \001(\005\022\024\n\014pay" +
       "loadCrc32\030\005 \001(\005\022\016\n\006oneway\030\006 \001(\010\022\021\n\tcomma" +
       "ndId\030\007 \001(\004\022\027\n\017createTimestamp\030\010 \001(\004\022\017\n\007p" +
-      "ayload\030\t \001(\014B%\n!com.github.mxsm.protocol" +
-      ".protobufP\001b\006proto3"
+      "ayload\030\t \001(\014\022\025\n\rresultMessage\030\n \001(\tB%\n!c" +
+      "om.github.mxsm.protocol.protobufP\001b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -55,7 +56,7 @@ public final class RemotingRequest {
     internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_descriptor,
-        new java.lang.String[] { "RequestHeaders", "ResponseHeaders", "CommandType", "Code", "PayloadCrc32", "Oneway", "CommandId", "CreateTimestamp", "Payload", });
+        new java.lang.String[] { "RequestHeaders", "ResponseHeaders", "CommandType", "Code", "PayloadCrc32", "Oneway", "CommandId", "CreateTimestamp", "Payload", "ResultMessage", });
     com.github.mxsm.protocol.protobuf.RemotingCommandTypeOuterClass.getDescriptor();
     com.github.mxsm.protocol.protobuf.RequestHeadersOuterClass.getDescriptor();
     com.github.mxsm.protocol.protobuf.ResponseHeadersOuterClass.getDescriptor();

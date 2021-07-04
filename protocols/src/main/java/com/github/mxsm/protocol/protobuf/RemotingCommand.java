@@ -18,6 +18,7 @@ private static final long serialVersionUID = 0L;
   private RemotingCommand() {
     commandType_ = 0;
     payload_ = com.google.protobuf.ByteString.EMPTY;
+    resultMessage_ = "";
   }
 
   @java.lang.Override
@@ -110,6 +111,12 @@ private static final long serialVersionUID = 0L;
           case 74: {
 
             payload_ = input.readBytes();
+            break;
+          }
+          case 82: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            resultMessage_ = s;
             break;
           }
           default: {
@@ -335,6 +342,52 @@ private static final long serialVersionUID = 0L;
     return payload_;
   }
 
+  public static final int RESULTMESSAGE_FIELD_NUMBER = 10;
+  private volatile java.lang.Object resultMessage_;
+  /**
+   * <pre>
+   *消息处理后的结果消息--一般为错误消息
+   * </pre>
+   *
+   * <code>string resultMessage = 10;</code>
+   * @return The resultMessage.
+   */
+  @java.lang.Override
+  public java.lang.String getResultMessage() {
+    java.lang.Object ref = resultMessage_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      resultMessage_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   *消息处理后的结果消息--一般为错误消息
+   * </pre>
+   *
+   * <code>string resultMessage = 10;</code>
+   * @return The bytes for resultMessage.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getResultMessageBytes() {
+    java.lang.Object ref = resultMessage_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      resultMessage_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -375,6 +428,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!payload_.isEmpty()) {
       output.writeBytes(9, payload_);
+    }
+    if (!getResultMessageBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, resultMessage_);
     }
     unknownFields.writeTo(output);
   }
@@ -421,6 +477,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(9, payload_);
     }
+    if (!getResultMessageBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, resultMessage_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -459,6 +518,8 @@ private static final long serialVersionUID = 0L;
         != other.getCreateTimestamp()) return false;
     if (!getPayload()
         .equals(other.getPayload())) return false;
+    if (!getResultMessage()
+        .equals(other.getResultMessage())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -495,6 +556,8 @@ private static final long serialVersionUID = 0L;
         getCreateTimestamp());
     hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
     hash = (53 * hash) + getPayload().hashCode();
+    hash = (37 * hash) + RESULTMESSAGE_FIELD_NUMBER;
+    hash = (53 * hash) + getResultMessage().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -654,6 +717,8 @@ private static final long serialVersionUID = 0L;
 
       payload_ = com.google.protobuf.ByteString.EMPTY;
 
+      resultMessage_ = "";
+
       return this;
     }
 
@@ -697,6 +762,7 @@ private static final long serialVersionUID = 0L;
       result.commandId_ = commandId_;
       result.createTimestamp_ = createTimestamp_;
       result.payload_ = payload_;
+      result.resultMessage_ = resultMessage_;
       onBuilt();
       return result;
     }
@@ -771,6 +837,10 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getPayload() != com.google.protobuf.ByteString.EMPTY) {
         setPayload(other.getPayload());
+      }
+      if (!other.getResultMessage().isEmpty()) {
+        resultMessage_ = other.resultMessage_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1436,6 +1506,102 @@ private static final long serialVersionUID = 0L;
     public Builder clearPayload() {
       
       payload_ = getDefaultInstance().getPayload();
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object resultMessage_ = "";
+    /**
+     * <pre>
+     *消息处理后的结果消息--一般为错误消息
+     * </pre>
+     *
+     * <code>string resultMessage = 10;</code>
+     * @return The resultMessage.
+     */
+    public java.lang.String getResultMessage() {
+      java.lang.Object ref = resultMessage_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        resultMessage_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     *消息处理后的结果消息--一般为错误消息
+     * </pre>
+     *
+     * <code>string resultMessage = 10;</code>
+     * @return The bytes for resultMessage.
+     */
+    public com.google.protobuf.ByteString
+        getResultMessageBytes() {
+      java.lang.Object ref = resultMessage_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        resultMessage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     *消息处理后的结果消息--一般为错误消息
+     * </pre>
+     *
+     * <code>string resultMessage = 10;</code>
+     * @param value The resultMessage to set.
+     * @return This builder for chaining.
+     */
+    public Builder setResultMessage(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      resultMessage_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *消息处理后的结果消息--一般为错误消息
+     * </pre>
+     *
+     * <code>string resultMessage = 10;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearResultMessage() {
+      
+      resultMessage_ = getDefaultInstance().getResultMessage();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *消息处理后的结果消息--一般为错误消息
+     * </pre>
+     *
+     * <code>string resultMessage = 10;</code>
+     * @param value The bytes for resultMessage to set.
+     * @return This builder for chaining.
+     */
+    public Builder setResultMessageBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      resultMessage_ = value;
       onChanged();
       return this;
     }
