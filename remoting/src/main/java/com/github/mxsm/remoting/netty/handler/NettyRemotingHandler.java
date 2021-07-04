@@ -40,12 +40,12 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
     @Override
     public void processRequestCommand(final ChannelHandlerContext ctx, final RemotingCommand cmd) {
 
-        final Pair<NettyRequestProcessor, ExecutorService> matchedPair = processorTable.get(cmd.getRequestCode());
+        final Pair<NettyRequestProcessor, ExecutorService> matchedPair = processorTable.get(cmd.getCode());
         final Pair<NettyRequestProcessor, ExecutorService> pair = null == matchedPair ? this.defaultRequestProcessor : matchedPair;
 
         if(pair == null){
             //TODO build RemotingCommand for response
-            String error = " request type " + cmd.getRequestCode() + " not supported";
+            String error = " request type " + cmd.getCode() + " not supported";
             final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand();
             ctx.writeAndFlush(response);
             LOGGER.error(NetUtils.parseChannelRemoteAddr(ctx.channel()) + error);

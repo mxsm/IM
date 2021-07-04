@@ -5,6 +5,7 @@ import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.RemotingClient;
 import com.github.mxsm.remoting.common.NetUtils;
+import com.github.mxsm.remoting.common.RequestCode;
 import com.github.mxsm.remoting.exception.RemotingConnectException;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
@@ -62,7 +63,7 @@ public class MagpieBridgeAPI {
             this.bmExecutorService.submit(() -> {
                 try {
                     RemotingCommand registerMbResult = MagpieBridgeAPI.this
-                        .registerBroker(registerAddress, null, timeout,false);
+                        .registerBroker(registerAddress, null, timeout, false);
                     registerMbResultList.add(registerMbResult);
                     LOGGER.info("Register MagpieBridge[{}] SUCCESS", mbInfo.getMagpieBridgeName());
                 } catch (Exception e) {

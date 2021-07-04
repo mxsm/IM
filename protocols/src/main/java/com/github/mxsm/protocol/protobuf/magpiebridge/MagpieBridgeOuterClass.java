@@ -29,11 +29,12 @@ public final class MagpieBridgeOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\022MagpieBridge.proto\022.com.github.mxsm.pr" +
-      "otocol.protobuf.magpiebridge\"]\n\014MagpieBr" +
-      "idge\022\030\n\020magpieBridgeName\030\001 \001(\t\022\033\n\023magpie" +
-      "BridgeAddress\030\002 \001(\t\022\026\n\016magpieBridgeId\030\003 " +
-      "\001(\rB2\n.com.github.mxsm.protocol.protobuf" +
-      ".magpiebridgeP\001b\006proto3"
+      "otocol.protobuf.magpiebridge\"\202\001\n\014MagpieB" +
+      "ridge\022\030\n\020magpieBridgeName\030\001 \001(\t\022\033\n\023magpi" +
+      "eBridgeAddress\030\002 \001(\t\022\026\n\016magpieBridgeId\030\003" +
+      " \001(\r\022#\n\033magpieBridgeCreateTimestamp\030\004 \001(" +
+      "\004B2\n.com.github.mxsm.protocol.protobuf.m" +
+      "agpiebridgeP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -44,7 +45,7 @@ public final class MagpieBridgeOuterClass {
     internal_static_com_github_mxsm_protocol_protobuf_magpiebridge_MagpieBridge_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_github_mxsm_protocol_protobuf_magpiebridge_MagpieBridge_descriptor,
-        new java.lang.String[] { "MagpieBridgeName", "MagpieBridgeAddress", "MagpieBridgeId", });
+        new java.lang.String[] { "MagpieBridgeName", "MagpieBridgeAddress", "MagpieBridgeId", "MagpieBridgeCreateTimestamp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

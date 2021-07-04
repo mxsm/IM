@@ -31,11 +31,11 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws Exception {
 
         if (ctx != null) {
-            LOGGER.debug("receive request from RequestCode[{}] IP[{}]", request.getRequestCode(),
+            LOGGER.debug("receive request from RequestCode[{}] IP[{}]", request.getCode(),
                 NetUtils.parseChannelRemoteAddr(ctx.channel()));
         }
 
-        switch (request.getRequestCode()) {
+        switch (request.getCode()) {
             case RequestCode.HEART_BEAT:
                 return null;
             case RequestCode.MAGPIEBRIDGE_REGISTER:

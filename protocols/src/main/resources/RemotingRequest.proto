@@ -21,8 +21,11 @@ message RemotingCommand{
     //命令类型
     RemotingCommandType commandType = 3;
 
-    //请求码
-    int32 requestCode = 4;
+    /**
+     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
+     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+     */
+    int32 code = 4;
 
     int32 payloadCrc32 = 5;
 

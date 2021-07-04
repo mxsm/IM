@@ -44,4 +44,10 @@ public interface MagpieBridgeOrBuilder extends
    * @return The magpieBridgeId.
    */
   int getMagpieBridgeId();
+
+  /**
+   * <code>uint64 magpieBridgeCreateTimestamp = 4;</code>
+   * @return The magpieBridgeCreateTimestamp.
+   */
+  long getMagpieBridgeCreateTimestamp();
 }

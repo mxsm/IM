@@ -84,7 +84,7 @@ private static final long serialVersionUID = 0L;
           }
           case 32: {
 
-            requestCode_ = input.readInt32();
+            code_ = input.readInt32();
             break;
           }
           case 40: {
@@ -247,19 +247,21 @@ private static final long serialVersionUID = 0L;
     return result == null ? com.github.mxsm.protocol.protobuf.RemotingCommandType.UNRECOGNIZED : result;
   }
 
-  public static final int REQUESTCODE_FIELD_NUMBER = 4;
-  private int requestCode_;
+  public static final int CODE_FIELD_NUMBER = 4;
+  private int code_;
   /**
    * <pre>
-   *请求码
+   **
+   * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
+   * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
    * </pre>
    *
-   * <code>int32 requestCode = 4;</code>
-   * @return The requestCode.
+   * <code>int32 code = 4;</code>
+   * @return The code.
    */
   @java.lang.Override
-  public int getRequestCode() {
-    return requestCode_;
+  public int getCode() {
+    return code_;
   }
 
   public static final int PAYLOADCRC32_FIELD_NUMBER = 5;
@@ -356,8 +358,8 @@ private static final long serialVersionUID = 0L;
     if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST.getNumber()) {
       output.writeEnum(3, commandType_);
     }
-    if (requestCode_ != 0) {
-      output.writeInt32(4, requestCode_);
+    if (code_ != 0) {
+      output.writeInt32(4, code_);
     }
     if (payloadCrc32_ != 0) {
       output.writeInt32(5, payloadCrc32_);
@@ -395,9 +397,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(3, commandType_);
     }
-    if (requestCode_ != 0) {
+    if (code_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, requestCode_);
+        .computeInt32Size(4, code_);
     }
     if (payloadCrc32_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -445,8 +447,8 @@ private static final long serialVersionUID = 0L;
           .equals(other.getResponseHeaders())) return false;
     }
     if (commandType_ != other.commandType_) return false;
-    if (getRequestCode()
-        != other.getRequestCode()) return false;
+    if (getCode()
+        != other.getCode()) return false;
     if (getPayloadCrc32()
         != other.getPayloadCrc32()) return false;
     if (getOneway()
@@ -478,8 +480,8 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + COMMANDTYPE_FIELD_NUMBER;
     hash = (53 * hash) + commandType_;
-    hash = (37 * hash) + REQUESTCODE_FIELD_NUMBER;
-    hash = (53 * hash) + getRequestCode();
+    hash = (37 * hash) + CODE_FIELD_NUMBER;
+    hash = (53 * hash) + getCode();
     hash = (37 * hash) + PAYLOADCRC32_FIELD_NUMBER;
     hash = (53 * hash) + getPayloadCrc32();
     hash = (37 * hash) + ONEWAY_FIELD_NUMBER;
@@ -640,7 +642,7 @@ private static final long serialVersionUID = 0L;
       }
       commandType_ = 0;
 
-      requestCode_ = 0;
+      code_ = 0;
 
       payloadCrc32_ = 0;
 
@@ -689,7 +691,7 @@ private static final long serialVersionUID = 0L;
         result.responseHeaders_ = responseHeadersBuilder_.build();
       }
       result.commandType_ = commandType_;
-      result.requestCode_ = requestCode_;
+      result.code_ = code_;
       result.payloadCrc32_ = payloadCrc32_;
       result.oneway_ = oneway_;
       result.commandId_ = commandId_;
@@ -752,8 +754,8 @@ private static final long serialVersionUID = 0L;
       if (other.commandType_ != 0) {
         setCommandTypeValue(other.getCommandTypeValue());
       }
-      if (other.getRequestCode() != 0) {
-        setRequestCode(other.getRequestCode());
+      if (other.getCode() != 0) {
+        setCode(other.getCode());
       }
       if (other.getPayloadCrc32() != 0) {
         setPayloadCrc32(other.getPayloadCrc32());
@@ -1183,45 +1185,51 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int requestCode_ ;
+    private int code_ ;
     /**
      * <pre>
-     *请求码
+     **
+     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
+     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
      * </pre>
      *
-     * <code>int32 requestCode = 4;</code>
-     * @return The requestCode.
+     * <code>int32 code = 4;</code>
+     * @return The code.
      */
     @java.lang.Override
-    public int getRequestCode() {
-      return requestCode_;
+    public int getCode() {
+      return code_;
     }
     /**
      * <pre>
-     *请求码
+     **
+     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
+     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
      * </pre>
      *
-     * <code>int32 requestCode = 4;</code>
-     * @param value The requestCode to set.
+     * <code>int32 code = 4;</code>
+     * @param value The code to set.
      * @return This builder for chaining.
      */
-    public Builder setRequestCode(int value) {
+    public Builder setCode(int value) {
       
-      requestCode_ = value;
+      code_ = value;
       onChanged();
       return this;
     }
     /**
      * <pre>
-     *请求码
+     **
+     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
+     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
      * </pre>
      *
-     * <code>int32 requestCode = 4;</code>
+     * <code>int32 code = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearRequestCode() {
+    public Builder clearCode() {
       
-      requestCode_ = 0;
+      code_ = 0;
       onChanged();
       return this;
     }

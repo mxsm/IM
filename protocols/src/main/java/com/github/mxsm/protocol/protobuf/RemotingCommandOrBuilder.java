@@ -82,13 +82,15 @@ public interface RemotingCommandOrBuilder extends
 
   /**
    * <pre>
-   *请求码
+   **
+   * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
+   * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
    * </pre>
    *
-   * <code>int32 requestCode = 4;</code>
-   * @return The requestCode.
+   * <code>int32 code = 4;</code>
+   * @return The code.
    */
-  int getRequestCode();
+  int getCode();
 
   /**
    * <code>int32 payloadCrc32 = 5;</code>

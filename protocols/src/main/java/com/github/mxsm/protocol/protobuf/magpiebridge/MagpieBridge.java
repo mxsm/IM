@@ -67,6 +67,11 @@ private static final long serialVersionUID = 0L;
             magpieBridgeId_ = input.readUInt32();
             break;
           }
+          case 32: {
+
+            magpieBridgeCreateTimestamp_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -194,6 +199,17 @@ private static final long serialVersionUID = 0L;
     return magpieBridgeId_;
   }
 
+  public static final int MAGPIEBRIDGECREATETIMESTAMP_FIELD_NUMBER = 4;
+  private long magpieBridgeCreateTimestamp_;
+  /**
+   * <code>uint64 magpieBridgeCreateTimestamp = 4;</code>
+   * @return The magpieBridgeCreateTimestamp.
+   */
+  @java.lang.Override
+  public long getMagpieBridgeCreateTimestamp() {
+    return magpieBridgeCreateTimestamp_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -217,6 +233,9 @@ private static final long serialVersionUID = 0L;
     if (magpieBridgeId_ != 0) {
       output.writeUInt32(3, magpieBridgeId_);
     }
+    if (magpieBridgeCreateTimestamp_ != 0L) {
+      output.writeUInt64(4, magpieBridgeCreateTimestamp_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -235,6 +254,10 @@ private static final long serialVersionUID = 0L;
     if (magpieBridgeId_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(3, magpieBridgeId_);
+    }
+    if (magpieBridgeCreateTimestamp_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(4, magpieBridgeCreateTimestamp_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -257,6 +280,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getMagpieBridgeAddress())) return false;
     if (getMagpieBridgeId()
         != other.getMagpieBridgeId()) return false;
+    if (getMagpieBridgeCreateTimestamp()
+        != other.getMagpieBridgeCreateTimestamp()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -274,6 +299,9 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getMagpieBridgeAddress().hashCode();
     hash = (37 * hash) + MAGPIEBRIDGEID_FIELD_NUMBER;
     hash = (53 * hash) + getMagpieBridgeId();
+    hash = (37 * hash) + MAGPIEBRIDGECREATETIMESTAMP_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getMagpieBridgeCreateTimestamp());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -413,6 +441,8 @@ private static final long serialVersionUID = 0L;
 
       magpieBridgeId_ = 0;
 
+      magpieBridgeCreateTimestamp_ = 0L;
+
       return this;
     }
 
@@ -442,6 +472,7 @@ private static final long serialVersionUID = 0L;
       result.magpieBridgeName_ = magpieBridgeName_;
       result.magpieBridgeAddress_ = magpieBridgeAddress_;
       result.magpieBridgeId_ = magpieBridgeId_;
+      result.magpieBridgeCreateTimestamp_ = magpieBridgeCreateTimestamp_;
       onBuilt();
       return result;
     }
@@ -500,6 +531,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getMagpieBridgeId() != 0) {
         setMagpieBridgeId(other.getMagpieBridgeId());
+      }
+      if (other.getMagpieBridgeCreateTimestamp() != 0L) {
+        setMagpieBridgeCreateTimestamp(other.getMagpieBridgeCreateTimestamp());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -729,6 +763,37 @@ private static final long serialVersionUID = 0L;
     public Builder clearMagpieBridgeId() {
       
       magpieBridgeId_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private long magpieBridgeCreateTimestamp_ ;
+    /**
+     * <code>uint64 magpieBridgeCreateTimestamp = 4;</code>
+     * @return The magpieBridgeCreateTimestamp.
+     */
+    @java.lang.Override
+    public long getMagpieBridgeCreateTimestamp() {
+      return magpieBridgeCreateTimestamp_;
+    }
+    /**
+     * <code>uint64 magpieBridgeCreateTimestamp = 4;</code>
+     * @param value The magpieBridgeCreateTimestamp to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMagpieBridgeCreateTimestamp(long value) {
+      
+      magpieBridgeCreateTimestamp_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 magpieBridgeCreateTimestamp = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMagpieBridgeCreateTimestamp() {
+      
+      magpieBridgeCreateTimestamp_ = 0L;
       onChanged();
       return this;
     }
