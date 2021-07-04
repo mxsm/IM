@@ -15,11 +15,6 @@ rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
-set IM_HOME=%IM_HOME%
-if "%IM_HOME%"=="" IM_HOME=%1
-
-echo "IM_HOME:%IM_HOME%"
-
 if not exist "%IM_HOME%\bin\runregister.cmd" echo Please set the IM_HOME variable in your environment! & EXIT /B 1
 
 call "%IM_HOME%\bin\runregister.cmd" com.github.mxsm.register.RegisterBootstrap %*
