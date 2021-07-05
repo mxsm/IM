@@ -126,7 +126,7 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             }
             if(needUpdate){
                 Collections.shuffle(addrs);
-                LOGGER.info("name server address updated. new : {} , old: {}", addrs, oldRegisterAddrs);
+                LOGGER.info("registration center address updated. new : {} , old: {}", addrs, oldRegisterAddrs);
                 this.registerAddrs.set(addrs);
             }
 
