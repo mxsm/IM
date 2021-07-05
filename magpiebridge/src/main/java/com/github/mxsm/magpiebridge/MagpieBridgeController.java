@@ -30,8 +30,6 @@ public class MagpieBridgeController {
 
     private final NettyClientConfig nettyClientConfig;
 
-   // private NettyRemotingClient magpieBridgeClient;
-
     private NettyRemotingServer magpieBridgeServer;
 
     private MagpieBridgeAPI magpieBridgeAPI;

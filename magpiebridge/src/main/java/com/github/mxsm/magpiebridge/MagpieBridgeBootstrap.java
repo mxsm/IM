@@ -1,5 +1,6 @@
 package com.github.mxsm.magpiebridge;
 
+import com.github.mxsm.common.AnnotationUtils;
 import com.github.mxsm.common.MixAll;
 import com.github.mxsm.common.commandline.CommandlineUtils;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
@@ -79,6 +80,8 @@ public class MagpieBridgeBootstrap {
             int port = CommandlineUtils.getOptionValue2Int(cmdLine, "p");
             nettyServerConfig.setBindPort(port);
         }
+
+        AnnotationUtils.validatorNotNull(nettyClientConfig,magpieBridgeConfig,nettyClientConfig);
 
         return new MagpieBridgeController(nettyServerConfig, magpieBridgeConfig, nettyClientConfig);
     }
