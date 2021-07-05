@@ -16,9 +16,19 @@ IM 基于Netty的即时通讯
 
 ![](https://github.com/mxsm/picture/blob/main/IM/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B.png?raw=true)
 
+### 从源码构建
+
+```shell
+git clone https://github.com/mxsm/IM.git
+cd IM
+mvn -Prelease-all -DskipTests clean install -U
+cd distribution/target/im-0.1-SNAPSHOT/im-0.1-SNAPSHOT
+```
+
 
 
 ### 工程目录结构说明
+
 - **common**    包含了工程的通用工具类
 - **container**   包含了启动容器(当前只有spring容器的实现)
 - **core**   处理消息的逻辑
