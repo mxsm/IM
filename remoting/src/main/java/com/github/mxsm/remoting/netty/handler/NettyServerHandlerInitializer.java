@@ -40,10 +40,9 @@ public class NettyServerHandlerInitializer extends ChannelInitializer {
 
     private final ProtobufVarint32LengthFieldPrepender fieldPrepender = new ProtobufVarint32LengthFieldPrepender();
 
-    public NettyServerHandlerInitializer(
-        final NettyServerConnectManageHandler nettyServerConnectManageHandler, final EventExecutorGroup eventExecutorGroup,
+    public NettyServerHandlerInitializer(final NettyRemotingHandler nettyRemoting,final EventExecutorGroup eventExecutorGroup,
         final NettyServerConfig nettyServerConfig, final NettyServerHandler nettyServerHandler) {
-        this.nettyServerConnectManageHandler = nettyServerConnectManageHandler;
+        this.nettyServerConnectManageHandler = new NettyServerConnectManageHandler(nettyRemoting);
         this.eventExecutorGroup = eventExecutorGroup;
         this.nettyServerConfig = nettyServerConfig;
         this.nettyServerHandler = nettyServerHandler;
@@ -64,13 +63,14 @@ public class NettyServerHandlerInitializer extends ChannelInitializer {
         AnnotationUtils.validatorNotNull(this);
 
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast(eventExecutorGroup,new IdleStateHandler(0, 0, nettyServerConfig.getServerChannelMaxIdleTimeSeconds()));
-        pipeline.addLast(eventExecutorGroup,new ProtobufVarint32FrameDecoder());
-        pipeline.addLast(eventExecutorGroup,new ProtobufDecoder(lite));
-        pipeline.addLast(eventExecutorGroup,fieldPrepender);
-        pipeline.addLast(eventExecutorGroup,protobufEncoder);
-        pipeline.addLast(eventExecutorGroup,nettyServerConnectManageHandler);
-        pipeline.addLast(eventExecutorGroup,nettyServerHandler);
+        pipeline.addLast(eventExecutorGroup,
+            new IdleStateHandler(0, 0, nettyServerConfig.getServerChannelMaxIdleTimeSeconds()));
+        pipeline.addLast(eventExecutorGroup, new ProtobufVarint32FrameDecoder());
+        pipeline.addLast(eventExecutorGroup, new ProtobufDecoder(lite));
+        pipeline.addLast(eventExecutorGroup, fieldPrepender);
+        pipeline.addLast(eventExecutorGroup, protobufEncoder);
+        pipeline.addLast(eventExecutorGroup, nettyServerConnectManageHandler);
+        pipeline.addLast(eventExecutorGroup, nettyServerHandler);
 
     }
 }

@@ -1,5 +1,7 @@
 package com.github.mxsm.register.mananger;
 
+import io.netty.channel.Channel;
+
 /**
  * @author mxsm
  * @Date 2021/6/20
@@ -31,6 +33,8 @@ public class MagpieBridgeLiveInfo {
      * 鹊桥是否在线,默认不在线
      */
     private volatile boolean online = false;
+
+    private  Channel channel;
 
     public long getConnRegisterTime() {
         return connRegisterTime;
@@ -73,6 +77,15 @@ public class MagpieBridgeLiveInfo {
         this.magpieBridgeAddress = magpieBridgeAddress;
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
+
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -96,7 +109,10 @@ public class MagpieBridgeLiveInfo {
         if (!getMagpieBridgeName().equals(that.getMagpieBridgeName())) {
             return false;
         }
-        return getMagpieBridgeAddress().equals(that.getMagpieBridgeAddress());
+        if (!getMagpieBridgeAddress().equals(that.getMagpieBridgeAddress())) {
+            return false;
+        }
+        return getChannel().equals(that.getChannel());
     }
 
     @Override
@@ -106,17 +122,20 @@ public class MagpieBridgeLiveInfo {
         result = 31 * result + (int) (getConnRegisterTime() ^ (getConnRegisterTime() >>> 32));
         result = 31 * result + (int) (getLastHeartbeatTime() ^ (getLastHeartbeatTime() >>> 32));
         result = 31 * result + (isOnline() ? 1 : 0);
+        result = 31 * result + getChannel().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "MagpieBridgeInfo{" +
+        return "MagpieBridgeLiveInfo{" +
             "magpieBridgeName='" + magpieBridgeName + '\'' +
             ", magpieBridgeAddress='" + magpieBridgeAddress + '\'' +
             ", connRegisterTime=" + connRegisterTime +
             ", lastHeartbeatTime=" + lastHeartbeatTime +
             ", online=" + online +
+            ", channel=" + channel +
             '}';
     }
+
 }

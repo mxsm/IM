@@ -22,7 +22,6 @@ import io.netty.util.concurrent.EventExecutorGroup;
  */
 public class NettyClientHandlerInitializer extends ChannelInitializer {
 
-    private final ChannelEventListener channelEventListener;
 
     private final EventExecutorGroup eventExecutorGroup;
 
@@ -32,10 +31,9 @@ public class NettyClientHandlerInitializer extends ChannelInitializer {
 
     private final NettyRemotingHandler nettyRemoting;
 
-    public NettyClientHandlerInitializer(final ChannelEventListener channelEventListener,
-        final EventExecutorGroup eventExecutorGroup, final NettyClientConfig nettyClientConfig,
+    public NettyClientHandlerInitializer(final EventExecutorGroup eventExecutorGroup,
+        final NettyClientConfig nettyClientConfig,
         final NettyRemotingHandler nettyRemoting) {
-        this.channelEventListener = channelEventListener;
         this.eventExecutorGroup = eventExecutorGroup;
         this.nettyClientConfig = nettyClientConfig;
         this.nettyRemoting = nettyRemoting;
@@ -60,7 +58,7 @@ public class NettyClientHandlerInitializer extends ChannelInitializer {
         pipeline.addLast(eventExecutorGroup, new ProtobufDecoder(this.lite));
         pipeline.addLast(eventExecutorGroup, new ProtobufVarint32LengthFieldPrepender());
         pipeline.addLast(eventExecutorGroup, new ProtobufEncoder());
-        pipeline.addLast(eventExecutorGroup, new NettyClientConnectManageHandler(this.channelEventListener));
+        pipeline.addLast(eventExecutorGroup, new NettyClientConnectManageHandler(this.nettyRemoting));
         pipeline.addLast(eventExecutorGroup, new NettyClientHandler(this.nettyRemoting));
     }
 }

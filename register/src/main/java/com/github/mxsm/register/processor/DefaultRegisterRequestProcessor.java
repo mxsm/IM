@@ -82,9 +82,9 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
         mbLiveInfo.setMagpieBridgeName(mbInfo.getMagpieBridgeName());
         mbLiveInfo.setOnline(true);
         mbLiveInfo.setLastHeartbeatTime(System.currentTimeMillis());
-
+        mbLiveInfo.setChannel(ctx.channel());
         this.magpieBridgeManager.magpieBridgeRegistry(mbLiveInfo);
-        LOGGER.info("register magpie bridge[{}] SUCCESS",mbLiveInfo.getMagpieBridgeName());
+
         return responseBuilder.setCode(ResponseCode.SUCCESS).build();
     }
 }

@@ -6,6 +6,7 @@ import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingServer;
 import com.github.mxsm.remoting.common.RemotingUtils;
+import com.github.mxsm.remoting.event.NettyEvent;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
@@ -58,8 +59,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     private int bindPort;
 
-    private NettyServerConnectManageHandler nettyServerConnectManageHandler;
-
     private NettyServerHandler nettyServerHandler;
 
     private final ExecutorService publicExecutor;
@@ -93,8 +92,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         }
         eventExecutorGroup = new DefaultEventExecutorGroup(nettyServerConfig.getServerWorkerThreads(),
             new NamedThreadFactory("eventExecutorThread"));
-
-        nettyServerConnectManageHandler = new NettyServerConnectManageHandler(this.channelEventListener);
     }
 
 
@@ -185,7 +182,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new NettyServerHandlerInitializer(nettyServerConnectManageHandler, eventExecutorGroup,
+            .childHandler(new NettyServerHandlerInitializer(this,eventExecutorGroup,
                 nettyServerConfig,
                 nettyServerHandler));
 
@@ -198,6 +195,10 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        if(this.channelEventListener != null){
+            this.nettyEventWork.start();
+        }
     }
 
     /**
@@ -205,6 +206,11 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
      */
     @Override
     public void shutdown() {
+
+        if (this.nettyEventWork != null) {
+            this.nettyEventWork.shutdown(false);
+        }
+
         this.bossEventLoopGroup.shutdownGracefully();
         this.selectorEventLoopGroup.shutdownGracefully();
         if (this.eventExecutorGroup != null) {
@@ -221,4 +227,8 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         return this.publicExecutor;
     }
 
+    @Override
+    public void publishEvent(NettyEvent nettyEvent) {
+        putNettyEvent(nettyEvent);
+    }
 }

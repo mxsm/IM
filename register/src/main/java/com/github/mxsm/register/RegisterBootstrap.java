@@ -39,7 +39,7 @@ public class RegisterBootstrap {
         registerController.initialize();
         registerController.startup();
 
-        LOGGER.info("----------------registration center started [centerName={}},IP={},Port={}]-------------------",
+        LOGGER.info("----------------registration center started [centerName={},IP={},Port={}]-------------------",
             registerController.getRegisterConfig().getRegisterName(), NetUtils.getLocalAddress(),
             registerController.getRegisterServerConfig().getBindPort());
     }

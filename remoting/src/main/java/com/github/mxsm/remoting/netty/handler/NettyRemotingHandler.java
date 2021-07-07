@@ -7,6 +7,9 @@ import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.RemotingResponseCallback;
 import com.github.mxsm.remoting.common.NetUtils;
+import com.github.mxsm.remoting.common.Worker;
+import com.github.mxsm.remoting.event.NettyEvent;
+import com.github.mxsm.remoting.event.NettyEventPublisher;
 import com.github.mxsm.remoting.netty.AsyncNettyRequestProcessor;
 import com.github.mxsm.remoting.netty.NettyRequestProcessor;
 import com.github.mxsm.remoting.netty.RequestTask;
@@ -16,6 +19,8 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +29,8 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/25
  * @Since 0.1
  */
-public abstract class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler{
+public abstract class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler,
+    NettyEventPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyRemotingHandler.class);
 
@@ -32,6 +38,8 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         64);
 
     private Pair<NettyRequestProcessor, ExecutorService> defaultRequestProcessor;
+
+    protected final NettyEventWork nettyEventWork = new NettyEventWork();
 
     public NettyRemotingHandler(int permitsOneway, int permitsAsync) {
         super(permitsOneway, permitsAsync);
@@ -146,4 +154,69 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
     }
 
     public abstract ChannelEventListener getChannelEventListener();
+
+    protected void putNettyEvent(final NettyEvent event) {
+        this.nettyEventWork.addNettyEvent(event);
+    }
+
+    public class NettyEventWork extends Worker{
+
+        private final Logger WLOGGER = LoggerFactory.getLogger(NettyEventWork.class);
+
+        private static final int MAX_SIZE = 10 * 10000;
+
+        private final LinkedBlockingQueue<NettyEvent> nettyEventQueue = new LinkedBlockingQueue<>(MAX_SIZE);
+
+        public void addNettyEvent(NettyEvent nettyEvent){
+            try {
+                nettyEventQueue.add(nettyEvent);
+            } catch (Exception e) {
+                LOGGER.warn("Netty event Queue is full[MAX_SIZE={}], drop this netty event[{}]", MAX_SIZE,nettyEvent);
+            }
+        }
+
+        @Override
+        public String getWorkerName() {
+            return "NettyEventWork";
+        }
+
+        /**
+         * When an object implementing interface <code>Runnable</code> is used to create a thread, starting the thread
+         * causes the object's
+         * <code>run</code> method to be called in that separately executing
+         * thread.
+         * <p>
+         * The general contract of the method <code>run</code> is that it may take any action whatsoever.
+         *
+         * @see Thread#run()
+         */
+        @Override
+        public void run() {
+
+            final ChannelEventListener channelEventListener = NettyRemotingHandler.this.getChannelEventListener();
+
+            while (isRunning()){
+                try {
+                    NettyEvent nettyEvent = nettyEventQueue.poll(3000, TimeUnit.MILLISECONDS);
+                    if(nettyEvent == null || channelEventListener == null){
+                        continue;
+                    }
+                    switch (nettyEvent.getEventType()){
+                        case IDLE:
+                            break;
+                        case CLOSE:
+                            break;
+                        case CONNECT:
+                            break;
+                        case EXCEPTION:
+                            channelEventListener.onExceptionCaught(nettyEvent.getChannel(), (Throwable)nettyEvent.getSource());
+                            break;
+                        default:
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("NettyEventWork run exception",e);
+                }
+            }
+        }
+    }
 }

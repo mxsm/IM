@@ -1,6 +1,11 @@
 package com.github.mxsm.remoting.netty.handler;
 
 import com.github.mxsm.remoting.ChannelEventListener;
+import com.github.mxsm.remoting.common.NetUtils;
+import com.github.mxsm.remoting.common.NettyUtils;
+import com.github.mxsm.remoting.event.NettyEvent;
+import com.github.mxsm.remoting.event.NettyEventPublisher;
+import com.github.mxsm.remoting.event.NettyEventType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -20,14 +25,10 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerConnectManageHandler.class.getSimpleName());
 
-    private ChannelEventListener channelEventListener;
+    private final NettyEventPublisher nettyEventPublisher;
 
-    public NettyServerConnectManageHandler() {
-        super();
-    }
-
-    public NettyServerConnectManageHandler(ChannelEventListener channelEventListener) {
-        this.channelEventListener = channelEventListener;
+    public NettyServerConnectManageHandler(final NettyEventPublisher nettyEventPublisher) {
+        this.nettyEventPublisher = nettyEventPublisher;
     }
 
     /**
@@ -42,11 +43,6 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         LOGGER.info("Netty Server channelRegistered");
         super.channelRegistered(ctx);
-        if (channelEventListener != null) {
-            Channel channel = ctx.channel();
-            channelEventListener.onChannelRegistered(channel.remoteAddress().toString(), channel);
-        }
-
     }
 
     /**
@@ -61,10 +57,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         LOGGER.info("Netty Server channelUnregistered");
         super.channelUnregistered(ctx);
-        if (channelEventListener != null) {
-            Channel channel = ctx.channel();
-            channelEventListener.onChannelUnregistered(channel);
-        }
+
     }
 
     /**
@@ -79,10 +72,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         LOGGER.info("Netty Server channelActive");
         super.channelActive(ctx);
-        if (channelEventListener != null) {
-            Channel channel = ctx.channel();
-            channelEventListener.onChannelActive(channel);
-        }
+
     }
 
     /**
@@ -97,10 +87,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         LOGGER.info("Netty Server channelInactive");
         super.channelInactive(ctx);
-        if (channelEventListener != null) {
-            Channel channel = ctx.channel();
-            channelEventListener.onChannelInactive(channel);
-        }
+
     }
 
     /**
@@ -114,12 +101,13 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.info("Netty Server exceptionCaught");
-        super.exceptionCaught(ctx, cause);
-        if (channelEventListener != null) {
-            Channel channel = ctx.channel();
-            channelEventListener.onExceptionCaught(channel, cause);
+        if (nettyEventPublisher != null) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.EXCEPTION,
+                NetUtils.parseChannelRemoteAddr(ctx.channel()),ctx.channel(), cause));
+        } else {
+            LOGGER.error("Netty Server exceptionCaught", cause);
         }
+        NettyUtils.closeChannel(ctx.channel());
     }
 
     /**
@@ -134,18 +122,10 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         LOGGER.info("Netty Server channelRegistered");
-        super.userEventTriggered(ctx, evt);
-        if (channelEventListener != null) {
+        if (nettyEventPublisher != null) {
             Channel channel = ctx.channel();
-            channelEventListener.onUserEventTriggered(channel, evt);
+            //channelEventListener.onUserEventTriggered(channel, evt);
         }
-    }
-
-    public ChannelEventListener getChannelEventListener() {
-        return channelEventListener;
-    }
-
-    public void setChannelEventListener(ChannelEventListener channelEventListener) {
-        this.channelEventListener = channelEventListener;
+        super.userEventTriggered(ctx, evt);
     }
 }

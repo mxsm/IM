@@ -7,6 +7,7 @@ import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingClient;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.common.NettyUtils;
+import com.github.mxsm.remoting.event.NettyEvent;
 import com.github.mxsm.remoting.exception.RemotingConnectException;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
@@ -115,16 +116,16 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
             if (oldRegisterAddrs == null) {
                 needUpdate = true;
-            }else if(addrs.size() != oldRegisterAddrs.size()){
+            } else if (addrs.size() != oldRegisterAddrs.size()) {
                 needUpdate = true;
-            }else{
-                for(int index = 0; index < addrs.size() && !needUpdate; ++index){
-                    if(oldRegisterAddrs.contains(addrs.get(index))){
+            } else {
+                for (int index = 0; index < addrs.size() && !needUpdate; ++index) {
+                    if (oldRegisterAddrs.contains(addrs.get(index))) {
                         needUpdate = true;
                     }
                 }
             }
-            if(needUpdate){
+            if (needUpdate) {
                 Collections.shuffle(addrs);
                 LOGGER.info("registration center address updated. new : {} , old: {}", addrs, oldRegisterAddrs);
                 this.registerAddrs.set(addrs);
@@ -273,8 +274,11 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyClientConfig.getConnectTimeoutMillis())
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
-            .handler(
-                new NettyClientHandlerInitializer(channelEventListener, eventExecutorGroup, nettyClientConfig, this));
+            .handler(new NettyClientHandlerInitializer(eventExecutorGroup, nettyClientConfig, this));
+
+        if(this.channelEventListener != null){
+            this.nettyEventWork.start();
+        }
 
     }
 
@@ -283,19 +287,20 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      */
     @Override
     public void shutdown() {
-
+        if (this.nettyEventWork != null) {
+            this.nettyEventWork.shutdown(false);
+        }
     }
 
     /**
-     * 根据IP从缓存中获取，如果不存在则创建Channel, IP为空则创建或者获取<br/>
-     * 注册中心的Channel
+     * 根据IP从缓存中获取，如果不存在则创建Channel, IP为空则创建或者获取<br/> 注册中心的Channel
      *
      * @param ip 带上端口127.0.0.1:8080
      * @return
      */
     private Channel getOrElseCreateChannel(String ip) throws InterruptedException, RemotingConnectException {
 
-        if(StringUtils.isBlank(ip)){
+        if (StringUtils.isBlank(ip)) {
             return getOrElseCreateRegisterChannel();
         }
 
@@ -362,28 +367,28 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     private Channel getOrElseCreateRegisterChannel() throws InterruptedException, RemotingConnectException {
 
         String chooseRegisterAddr = this.registerAddrsChoosed.get();
-        if(null != chooseRegisterAddr){
+        if (null != chooseRegisterAddr) {
             ChannelWrapper channelWrapper = this.channelTable.get(chooseRegisterAddr);
-            if(null != channelWrapper && channelWrapper.isOK()){
+            if (null != channelWrapper && channelWrapper.isOK()) {
                 return channelWrapper.getChannel();
             }
         }
 
         final List<String> addrsList = this.registerAddrs.get();
 
-        if(this.channelRegisterTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)){
+        if (this.channelRegisterTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
             try {
                 chooseRegisterAddr = this.registerAddrsChoosed.get();
-                if(null != chooseRegisterAddr){
+                if (null != chooseRegisterAddr) {
                     ChannelWrapper channelWrapper = this.channelTable.get(chooseRegisterAddr);
-                    if(null != channelWrapper && channelWrapper.isOK()){
+                    if (null != channelWrapper && channelWrapper.isOK()) {
                         return channelWrapper.getChannel();
                     }
                 }
 
-                if(CollectionUtils.isNotEmpty(addrsList)){
+                if (CollectionUtils.isNotEmpty(addrsList)) {
                     for (int i = 0; i < addrsList.size(); i++) {
-                        int index = (int)(Math.random() * addrsList.size());
+                        int index = (int) (Math.random() * addrsList.size());
                         String newAddr = addrsList.get(index);
                         this.registerAddrsChoosed.set(newAddr);
                         LOGGER.info("new name server is chosen. NEW: {}. namesrvIndex = {}", newAddr, index);
@@ -402,7 +407,6 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
         return null;
     }
-
 
 
     private void closeChannel(final String ip, final Channel channel) {
@@ -443,5 +447,10 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     @Override
     public ChannelEventListener getChannelEventListener() {
         return this.channelEventListener;
+    }
+
+    @Override
+    public void publishEvent(NettyEvent nettyEvent) {
+        putNettyEvent(nettyEvent);
     }
 }

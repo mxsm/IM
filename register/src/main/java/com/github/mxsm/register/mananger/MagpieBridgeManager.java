@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MagpieBridgeManager {
 
-    private static final  Logger LOGGER = LoggerFactory.getLogger(MagpieBridgeManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MagpieBridgeManager.class);
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -25,32 +25,38 @@ public class MagpieBridgeManager {
 
     /**
      * 注册鹊桥
+     *
      * @param info
      */
-    public void magpieBridgeRegistry(final MagpieBridgeLiveInfo info){
+    public void magpieBridgeRegistry(final MagpieBridgeLiveInfo info) {
         try {
             try {
                 readWriteLock.writeLock().lockInterruptibly();
                 MagpieBridgeLiveInfo liveInfo = magpieBridgeTable.get(info.getMagpieBridgeName());
-                if(null != liveInfo){
+                if (null != liveInfo) {
                     liveInfo.setOnline(true);
                     liveInfo.setLastHeartbeatTime(System.currentTimeMillis());
+                    LOGGER.info("update magpie bridge[name={},address={}]", info.getMagpieBridgeName(),
+                        info.getMagpieBridgeAddress());
                     return;
                 }
                 magpieBridgeTable.put(info.getMagpieBridgeName(), info);
+                LOGGER.info("register magpie bridge[name={},address={}] SUCCESS", info.getMagpieBridgeName(),
+                    info.getMagpieBridgeAddress());
             } finally {
                 readWriteLock.writeLock().unlock();
             }
         } catch (Exception e) {
-            LOGGER.error("Register Magpie Bridge Error",e);
+            LOGGER.error("Register Magpie Bridge Error", e);
         }
     }
 
     /**
      * 删除鹊桥
+     *
      * @param queqiaoName
      */
-    public void removeMagpieBridgeInfo(String magpieBridgeName){
+    public void removeMagpieBridgeInfo(String magpieBridgeName) {
 
         try {
             try {
@@ -60,7 +66,7 @@ public class MagpieBridgeManager {
                 readWriteLock.writeLock().unlock();
             }
         } catch (Exception e) {
-            LOGGER.error("Remove MagpieBridgeInfo Error",e);
+            LOGGER.error("Remove MagpieBridgeInfo Error", e);
         }
     }
 
