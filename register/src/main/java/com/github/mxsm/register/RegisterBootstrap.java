@@ -36,6 +36,9 @@ public class RegisterBootstrap {
 
         RegisterController registerController = createRegisterController(args);
 
+        LOGGER.info("----------------registration center is starting [centerName={},IP={},Port={}]-------------------",
+            registerController.getRegisterConfig().getRegisterName(), NetUtils.getLocalAddress(),
+            registerController.getRegisterServerConfig().getBindPort());
         registerController.initialize();
         registerController.startup();
 

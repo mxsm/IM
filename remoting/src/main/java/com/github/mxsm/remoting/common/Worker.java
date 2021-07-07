@@ -27,7 +27,6 @@ public abstract class Worker implements Runnable{
     public void start(){
         this.running = true;
         this.thread.start();
-        LOGGER.info("-----{} started-----",this.getWorkerName());
     }
 
     public void shutdown(final boolean interrupt){

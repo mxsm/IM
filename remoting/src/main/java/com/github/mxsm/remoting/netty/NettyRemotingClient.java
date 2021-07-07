@@ -277,7 +277,7 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             .handler(new NettyClientHandlerInitializer(eventExecutorGroup, nettyClientConfig, this));
 
         if(this.channelEventListener != null){
-            this.nettyEventWork.start();
+            this.nettyEventWorker.start();
         }
 
     }
@@ -287,8 +287,8 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      */
     @Override
     public void shutdown() {
-        if (this.nettyEventWork != null) {
-            this.nettyEventWork.shutdown(false);
+        if (this.nettyEventWorker != null) {
+            this.nettyEventWorker.shutdown(false);
         }
     }
 

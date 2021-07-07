@@ -39,7 +39,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
     private Pair<NettyRequestProcessor, ExecutorService> defaultRequestProcessor;
 
-    protected final NettyEventWork nettyEventWork = new NettyEventWork();
+    protected final NettyEventWorker nettyEventWorker = new NettyEventWorker();
 
     public NettyRemotingHandler(int permitsOneway, int permitsAsync) {
         super(permitsOneway, permitsAsync);
@@ -156,12 +156,12 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
     public abstract ChannelEventListener getChannelEventListener();
 
     protected void putNettyEvent(final NettyEvent event) {
-        this.nettyEventWork.addNettyEvent(event);
+        this.nettyEventWorker.addNettyEvent(event);
     }
 
-    public class NettyEventWork extends Worker{
+    public class NettyEventWorker extends Worker{
 
-        private final Logger WLOGGER = LoggerFactory.getLogger(NettyEventWork.class);
+        private final Logger WLOGGER = LoggerFactory.getLogger(NettyEventWorker.class);
 
         private static final int MAX_SIZE = 10 * 10000;
 
@@ -171,7 +171,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
             try {
                 nettyEventQueue.add(nettyEvent);
             } catch (Exception e) {
-                LOGGER.warn("Netty event Queue is full[MAX_SIZE={}], drop this netty event[{}]", MAX_SIZE,nettyEvent);
+                WLOGGER.warn("Netty event Queue is full[MAX_SIZE={}], drop this netty event[{}]", MAX_SIZE,nettyEvent);
             }
         }
 

@@ -11,13 +11,11 @@ import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.handler.NettyRemotingHandler;
-import com.github.mxsm.remoting.netty.handler.NettyServerConnectManageHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
@@ -30,8 +28,6 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +74,8 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             publicThreadNums = 4;
         }
 
-        this.publicExecutor = Executors.newFixedThreadPool(publicThreadNums, new NamedThreadFactory("NettyServerPublicExecutor"));
+        this.publicExecutor = Executors
+            .newFixedThreadPool(publicThreadNums, new NamedThreadFactory("NettyServerPublicExecutor"));
 
         this.nettyServerConfig = nettyServerConfig;
         if (useEpoll()) {
@@ -129,7 +126,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
     public void invokeAsync(Channel channel, RemotingCommand request, long timeoutMillis,
         InvokeCallback invokeCallback)
         throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-        this.invokeAsyncImpl(channel, request, timeoutMillis,invokeCallback);
+        this.invokeAsyncImpl(channel, request, timeoutMillis, invokeCallback);
     }
 
     /**
@@ -182,7 +179,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new NettyServerHandlerInitializer(this,eventExecutorGroup,
+            .childHandler(new NettyServerHandlerInitializer(this, eventExecutorGroup,
                 nettyServerConfig,
                 nettyServerHandler));
 
@@ -190,14 +187,16 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             ChannelFuture sync = this.serverBootstrap.bind().sync();
             InetSocketAddress address = (InetSocketAddress) sync.channel().localAddress();
             bindPort = address.getPort();
-            LOGGER.info(">>>>>>>>>>NettyRemotingServer-[{}:{}]启动完成<<<<<<<<<<<<", address.getAddress().getHostAddress(),
+            LOGGER.info("---------------NettyRemotingServer-[{}:{}] started finish----------------",
+                address.getAddress().getHostAddress(),
                 bindPort);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        if(this.channelEventListener != null){
-            this.nettyEventWork.start();
+        if (this.channelEventListener != null) {
+            this.nettyEventWorker.start();
+            LOGGER.info("-----------------NettyEventWork started-------------------");
         }
     }
 
@@ -207,8 +206,8 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
     @Override
     public void shutdown() {
 
-        if (this.nettyEventWork != null) {
-            this.nettyEventWork.shutdown(false);
+        if (this.nettyEventWorker != null) {
+            this.nettyEventWorker.shutdown(false);
         }
 
         this.bossEventLoopGroup.shutdownGracefully();
