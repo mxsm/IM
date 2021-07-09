@@ -1,12 +1,12 @@
 package com.github.mxsm.register;
 
-import com.github.mxsm.register.processor.DefaultRegisterRequestProcessor;
 import com.github.mxsm.common.thread.NamedThreadFactory;
-import com.github.mxsm.remoting.netty.NettyRemotingServer;
-import com.github.mxsm.remoting.netty.NettyServerConfig;
 import com.github.mxsm.register.config.RegisterConfig;
 import com.github.mxsm.register.mananger.MagpieBridgeManager;
 import com.github.mxsm.register.mananger.MagpieBridgeOnlineKeepingService;
+import com.github.mxsm.register.processor.DefaultRegisterRequestProcessor;
+import com.github.mxsm.remoting.netty.NettyRemotingServer;
+import com.github.mxsm.remoting.netty.NettyServerConfig;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.slf4j.Logger;

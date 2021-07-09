@@ -1,6 +1,5 @@
 package com.github.mxsm.remoting.netty;
 
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

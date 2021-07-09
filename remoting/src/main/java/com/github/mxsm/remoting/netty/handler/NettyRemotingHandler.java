@@ -56,7 +56,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
             String error = " request type " + cmd.getCode() + " not supported";
             final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().build();
             ctx.writeAndFlush(response);
-            LOGGER.error(NetUtils.parseChannelRemoteAddr(ctx.channel()) + error);
+            LOGGER.error(NetUtils.parseChannelRemoteAddress(ctx.channel()) + error);
             return;
         }
 
@@ -137,7 +137,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                 responseFuture.release();
             }
         } else {
-            LOGGER.warn("receive response, but not matched any request, " + NetUtils.parseChannelRemoteAddr(ctx.channel()));
+            LOGGER.warn("receive response, but not matched any request, " + NetUtils.parseChannelRemoteAddress(ctx.channel()));
             LOGGER.warn(cmd.toString());
         }
     }

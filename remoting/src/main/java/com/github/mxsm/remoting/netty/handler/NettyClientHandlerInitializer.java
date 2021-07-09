@@ -1,7 +1,6 @@
 package com.github.mxsm.remoting.netty.handler;
 
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
-import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
 import com.google.protobuf.MessageLite;
 import io.netty.channel.Channel;

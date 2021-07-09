@@ -1,6 +1,5 @@
 package com.github.mxsm.remoting.netty.handler;
 
-import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.common.NettyUtils;
 import com.github.mxsm.remoting.event.NettyEvent;
@@ -8,8 +7,11 @@ import com.github.mxsm.remoting.event.NettyEventPublisher;
 import com.github.mxsm.remoting.event.NettyEventType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandler;
+import io.netty.channel.ChannelPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +105,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (nettyEventPublisher != null) {
             this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.EXCEPTION,
-                NetUtils.parseChannelRemoteAddr(ctx.channel()),ctx.channel(), cause));
+                NetUtils.parseChannelRemoteAddress(ctx.channel()),ctx.channel(), cause));
         } else {
             LOGGER.error("Netty Server exceptionCaught", cause);
         }

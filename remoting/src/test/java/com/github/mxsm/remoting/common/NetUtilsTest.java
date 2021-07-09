@@ -1,9 +1,6 @@
 package com.github.mxsm.remoting.common;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

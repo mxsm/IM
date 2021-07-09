@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public abstract class NetUtils {
         return isa;
     }
 
-    public static String parseChannelRemoteAddr(final Channel channel) {
+    public static String parseChannelRemoteAddress(final Channel channel) {
         if (null == channel) {
             return "";
         }

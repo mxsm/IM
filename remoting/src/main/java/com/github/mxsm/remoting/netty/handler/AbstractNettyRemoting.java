@@ -75,13 +75,13 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
                     releaseWrapper.release();
                     if (!future.isSuccess()) {
                         LOGGER.warn("send a request command to channel <{}> failed.",
-                            NetUtils.parseChannelRemoteAddr(channel));
+                            NetUtils.parseChannelRemoteAddress(channel));
                     }
                 });
             } catch (Exception e) {
                 LOGGER.warn("write send a request command to channel <{}> failed.",
-                    NetUtils.parseChannelRemoteAddr(channel));
-                throw new RemotingSendRequestException(NetUtils.parseChannelRemoteAddr(channel), e);
+                    NetUtils.parseChannelRemoteAddress(channel));
+                throw new RemotingSendRequestException(NetUtils.parseChannelRemoteAddress(channel), e);
             } finally {
                 releaseWrapper.release();
             }
@@ -139,7 +139,7 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
                 }
                 requestFail(commandId);
                 LOGGER.warn("invokeAsyncImpl: send a request command to channel <{}> failed.",
-                    NetUtils.parseChannelRemoteAddr(channel));
+                    NetUtils.parseChannelRemoteAddress(channel));
             });
 
         } else {
@@ -180,16 +180,16 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
                 responseTable.remove(commandId);
                 responseFuture.setCause(f.cause());
                 responseFuture.putRemotingCommandResponse(null);
-                LOGGER.warn("send a request command to channel <{}> failed.", NetUtils.parseChannelRemoteAddr(channel));
+                LOGGER.warn("send a request command to channel <{}> failed.", NetUtils.parseChannelRemoteAddress(channel));
             });
 
             RemotingCommand responseCommand = responseFuture.wait4Response(timeoutMillis);
             if (null == responseCommand) {
                 if (responseFuture.isSendRequestOk()) {
-                    throw new RemotingTimeoutException(NetUtils.parseChannelRemoteAddr(channel), timeoutMillis,
+                    throw new RemotingTimeoutException(NetUtils.parseChannelRemoteAddress(channel), timeoutMillis,
                         responseFuture.getCause());
                 } else {
-                    throw new RemotingSendRequestException(NetUtils.parseChannelRemoteAddr(channel),
+                    throw new RemotingSendRequestException(NetUtils.parseChannelRemoteAddress(channel),
                         responseFuture.getCause());
                 }
             }

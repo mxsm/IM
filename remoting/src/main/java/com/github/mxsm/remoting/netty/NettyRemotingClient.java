@@ -413,7 +413,7 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
         if (null == channel) {
             return;
         }
-        final String remoteIp = ip == null ? NetUtils.parseChannelRemoteAddr(channel) : ip;
+        final String remoteIp = ip == null ? NetUtils.parseChannelRemoteAddress(channel) : ip;
         try {
             if (this.channelTableLock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
                 boolean removeCw = true;

@@ -1,10 +1,12 @@
 package com.github.mxsm.register.mananger;
 
 import com.github.mxsm.remoting.ChannelEventListener;
+import com.github.mxsm.remoting.common.NetUtils;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import java.net.SocketAddress;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandler;
+import io.netty.channel.ChannelPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,19 +89,7 @@ public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onExceptionCaught(Channel channel, Throwable cause) throws Exception {
-        SocketAddress socketAddress = channel.remoteAddress();
-        LOGGER.warn("RemoteAddress={}",socketAddress.toString());
-        System.out.println(channel.isActive());
-        System.out.println(channel.isOpen());
-        System.out.println(channel.isWritable());
-        System.out.println(channel.isRegistered());
-        channel.closeFuture().addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                System.out.println("111111111111");
-            }
-        });
-
+        this.magpieBridgeManager.closeChannelOnException(NetUtils.parseChannelRemoteAddress(channel), channel);
     }
 
     /**
