@@ -30,9 +30,10 @@ public class MagpieBridgeManager {
 
     private final Map<String /*MagpieBridge address*/, MagpieBridgeLiveInfo> magpieBridgeLiveTable = new HashMap<>(128);
 
-    public void magpieBridgeRegistry(final Channel channel, final String remoteAddress, final String magpieBridgeName) {
+    public void registerMagpieBridge(final Channel channel, final String remoteAddress, final String magpieBridgeName) {
         try {
             try {
+
                 readWriteLock.writeLock().lockInterruptibly();
                 MagpieBridgeLiveInfo liveInfo = magpieBridgeLiveTable.get(remoteAddress);
                 if (null != liveInfo) {
@@ -62,6 +63,35 @@ public class MagpieBridgeManager {
     }
 
 
+    public void unRegisterMagpieBridge(final Channel channel, final String remoteAddress, final String magpieBridgeName){
+
+        try {
+            try {
+                this.readWriteLock.writeLock().lockInterruptibly();
+                this.magpieBridgeLiveTable.remove(remoteAddress);
+                Iterator<Entry<String, MagpieBridgeMetaData>> iterator = this.magpieBridgeMetaDataTable.entrySet()
+                    .iterator();
+                while (iterator.hasNext()) {
+                    Entry<String, MagpieBridgeMetaData> next = iterator.next();
+                    MagpieBridgeMetaData metaData = next.getValue();
+                    if (StringUtils.equals(metaData.getMagpieBridgeAddress(), remoteAddress)) {
+                        iterator.remove();
+                        LOGGER.info(
+                            "remove MagpieBridge[{}, {}] from magpieBridgeMetaDataTable, because MagpieBridge unregister",
+                            magpieBridgeName, remoteAddress);
+                    }
+                }
+            } finally {
+                this.readWriteLock.writeLock().unlock();
+            }
+            NettyUtils.closeChannel(channel);
+        } catch (Exception e) {
+            LOGGER.error("closeChannelOnException error", e);
+        }
+
+    }
+
+
     public void scanInactiveMagpieBridge() {
 
         Iterator<Entry<String, MagpieBridgeLiveInfo>> iterator = magpieBridgeLiveTable.entrySet().iterator();
@@ -83,7 +113,7 @@ public class MagpieBridgeManager {
 
         String mbAddressFound = null;
 
-        if (null != null) {
+        if (null != channel) {
             try {
                 try {
                     this.readWriteLock.readLock().lockInterruptibly();

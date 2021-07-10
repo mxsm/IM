@@ -7,10 +7,22 @@ package com.github.mxsm.remoting.common;
  */
 public abstract class RequestCode {
 
+    /*system code 1-20*/
+
     /**
-     * 心跳
+     * heart beat
      */
     public static final int HEART_BEAT = 0;
 
-    public static final int MAGPIE_BRIDGE_REGISTER = 1;
+    /*magpie bridge  21-200*/
+
+    /**
+     * magpie bridge register
+     */
+    public static final int MAGPIE_BRIDGE_REGISTER = 21;
+
+    /**
+     * magpie bridge unregister
+     */
+    public static final int MAGPIE_BRIDGE_UNREGISTER = 22;
 }

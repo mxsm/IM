@@ -3,6 +3,7 @@ package com.github.mxsm.magpiebridge.service;
 import com.alibaba.fastjson.JSON;
 import com.github.mxsm.common.GeneralUtils;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
+import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.exception.RegisterRequestException;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
@@ -41,7 +42,8 @@ public class MagpieBridgeAPI {
     private final NettyClientConfig nettyClientConfig;
 
     private ExecutorService bmExecutorService = new ThreadPoolExecutor(GeneralUtils.getAvailableProcessors(),
-        GeneralUtils.getAvailableProcessors() * 2, 2, TimeUnit.MINUTES, new ArrayBlockingQueue<>(128));
+        GeneralUtils.getAvailableProcessors() * 2, 2, TimeUnit.MINUTES, new ArrayBlockingQueue<>(128),
+        new NamedThreadFactory("MagpieBridgeAPI_Thread"));
 
     public MagpieBridgeAPI(final NettyClientConfig nettyClientConfig) {
         this.nettyClientConfig = nettyClientConfig;
@@ -51,6 +53,10 @@ public class MagpieBridgeAPI {
     public void start(){
         this.remotingClient.start();
 
+    }
+
+    public void shutdown(){
+        this.remotingClient.shutdown();
     }
 
     public void updateRegisterAddressList(final List<String> addrs){
@@ -99,8 +105,41 @@ public class MagpieBridgeAPI {
         } catch (InterruptedException e) {
             LOGGER.warn("Get MagpieBridge register Result time out[timeout={}ms]", timeout);
         }
-
         return registerMbResultList;
+    }
+
+    /**
+     * unregister all magpie bridge
+     * @param mbInfo
+     * @param timeout
+     * @return
+     */
+    public List<RemotingCommand> unRegisterMagpieBridgeAll(final MagpieBridgeInfo mbInfo, final long timeout) {
+
+        final List<String> registerAddressList = this.remotingClient.getRegisterAddressList();
+        if (CollectionUtils.isEmpty(registerAddressList)) {
+            LOGGER.warn("Registration center address is empty, not center to register MagpieBridge");
+            return null;
+        }
+        byte[] mbInfoBytes = JSON.toJSONBytes(mbInfo);
+        final int crc32 = GeneralUtils.crc32(mbInfoBytes);
+
+        for (String registerAddress : registerAddressList) {
+            this.bmExecutorService.submit(() -> {
+                try {
+
+                    RemotingCommand request = RemotingCommandBuilder.buildRequestCommand(true)
+                        .setCode(RequestCode.MAGPIE_BRIDGE_UNREGISTER).setPayloadCrc32(crc32)
+                        .setPayload(ByteString.copyFrom(mbInfoBytes)).build();
+                    MagpieBridgeAPI.this.unRegisterMagpieBridge(registerAddress, request, timeout, true);
+
+                    LOGGER.info("Register MagpieBridge[{}] SUCCESS", mbInfo.getMagpieBridgeName());
+                } catch (Exception e) {
+                    LOGGER.error(String.format("Register MagpieBridge Error to Registration[%s]", registerAddress), e);
+                }
+            });
+        }
+        return null;
     }
 
     /**
@@ -143,6 +182,49 @@ public class MagpieBridgeAPI {
                 throw new RegisterRequestException(response.getCode(), response.getResultMessage());
         }
 
+        return response;
+    }
+
+    /**
+     * 注销注册中心的鹊桥
+     * @param registerAddress
+     * @param request
+     * @param timeoutMillis
+     * @param oneway
+     * @return
+     * @throws RemotingConnectException
+     * @throws RemotingSendRequestException
+     * @throws RemotingTimeoutException
+     * @throws InterruptedException
+     * @throws RegisterRequestException
+     */
+    private RemotingCommand unRegisterMagpieBridge(final String registerAddress, final RemotingCommand request,
+        final long timeoutMillis, final boolean oneway)
+        throws RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException, InterruptedException, RegisterRequestException {
+
+        if (oneway) {
+            try {
+                this.remotingClient.invokeOneway(registerAddress, request, timeoutMillis);
+            } catch (RemotingTooMuchRequestException e) {
+                // nothing to do
+            }
+            return null;
+        }
+        RemotingCommand response = this.remotingClient.invokeSync(registerAddress, request, timeoutMillis);
+
+        if(response == null){
+            LOGGER.warn("unregister MagpieBridge from registration center[{}], Return null", registerAddress);
+            return null;
+        }
+        switch (response.getCode()) {
+            case ResponseCode.SUCCESS:
+                LOGGER.info("unregister MagpieBridge from registration center[{}] SUCCESS",registerAddress);
+                break;
+            default:
+                LOGGER.error("unregister MagpieBridge Return code[{}],register error:{}", response.getCode(),
+                    response.getResultMessage());
+                throw new RegisterRequestException(response.getCode(), response.getResultMessage());
+        }
         return response;
     }
 }

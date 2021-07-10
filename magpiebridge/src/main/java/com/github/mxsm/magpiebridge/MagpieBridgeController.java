@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,27 +55,48 @@ public class MagpieBridgeController {
             Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(",")));
 
         //启动定时发送MagpieBridge信息到注册中心
-        magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 5, 20, TimeUnit.SECONDS);
-
+        magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
     }
 
     private void registerMagpieBridgeAll() {
 
+        MagpieBridgeInfo mbInfo = buildMagpieBridgeInfo();
 
+        long magpieBridgeRegisterTimeoutMills = this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills();
+        this.magpieBridgeAPI.registerMagpieBridgeAll(mbInfo, magpieBridgeRegisterTimeoutMills);
+    }
+
+    private void unRegisterMagpieBridgeAll() {
+
+        MagpieBridgeInfo mbInfo = buildMagpieBridgeInfo();
+
+        long magpieBridgeRegisterTimeoutMills = this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills();
+        this.magpieBridgeAPI.unRegisterMagpieBridgeAll(mbInfo, magpieBridgeRegisterTimeoutMills);
+    }
+
+    private MagpieBridgeInfo buildMagpieBridgeInfo() {
         MagpieBridgeInfo mbInfo = new MagpieBridgeInfo();
         mbInfo.setMagpieBridgeId(this.magpieBridgeConfig.getMagpieBridgeId());
         mbInfo.setMagpieBridgeAddress(NetUtils.getLocalAddress() + ":" + this.nettyServerConfig.getBindPort());
         mbInfo.setMagpieBridgeName(this.magpieBridgeConfig.getMagpieBridgeName());
         mbInfo.setMagpieBridgeCreateTimestamp(System.currentTimeMillis());
-
-        this.magpieBridgeAPI.registerMagpieBridgeAll(mbInfo,this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills());
-
+        return mbInfo;
     }
 
-
     public void startup() {
+
         this.magpieBridgeServer.start();
         this.magpieBridgeAPI.start();
+
+        this.registerMagpieBridgeAll();
+    }
+
+    public void shutdown(){
+
+        this.magpieBridgeAPI.shutdown();
+        this.magpieBridgeServer.shutdown();
+        this.unRegisterMagpieBridgeAll();
+
     }
 
     public NettyServerConfig getNettyServerConfig() {

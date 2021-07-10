@@ -213,7 +213,11 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         this.bossEventLoopGroup.shutdownGracefully();
         this.selectorEventLoopGroup.shutdownGracefully();
         if (this.eventExecutorGroup != null) {
-            eventExecutorGroup.shutdownGracefully();
+            this.eventExecutorGroup.shutdownGracefully();
+        }
+
+        if(this.publicExecutor != null){
+            this.publicExecutor.shutdown();
         }
     }
 

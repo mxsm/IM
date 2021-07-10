@@ -44,6 +44,8 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
                 return null;
             case RequestCode.MAGPIE_BRIDGE_REGISTER:
                 return this.registerMagpieBridge(ctx, request);
+            case RequestCode.MAGPIE_BRIDGE_UNREGISTER:
+                return this.unRegisterMagpieBridge(ctx, request);
             default:
                 break;
         }
@@ -69,7 +71,7 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
         ByteString payload = request.getPayload();
         if (payloadCrc32 != 0 && payloadCrc32 != GeneralUtils.crc32(payload.toByteArray())) {
             LOGGER.warn("Payload CRC32 not Match");
-            responseBuilder.setCode(ResponseCode.SYSTEM_ERROR);
+            responseBuilder.setCode(ResponseCode.CRC32_MATCH_ERROR);
             responseBuilder.setResultMessage("payload CRC32 not Match");
             return responseBuilder.build();
         }
@@ -77,7 +79,28 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
         MagpieBridgeInfo mbInfo = JSON.parseObject(payload.toByteArray(), MagpieBridgeInfo.class);
 
         this.magpieBridgeManager
-            .magpieBridgeRegistry(ctx.channel(), mbInfo.getMagpieBridgeAddress(), mbInfo.getMagpieBridgeName());
+            .registerMagpieBridge(ctx.channel(), mbInfo.getMagpieBridgeAddress(), mbInfo.getMagpieBridgeName());
+
+        return responseBuilder.setCode(ResponseCode.SUCCESS).build();
+    }
+
+    private RemotingCommand unRegisterMagpieBridge(final ChannelHandlerContext ctx, final RemotingCommand request) {
+
+        RemotingCommand.Builder responseBuilder = RemotingCommandBuilder.buildResponseCommand(request.getCommandId());
+
+        int payloadCrc32 = request.getPayloadCrc32();
+        ByteString payload = request.getPayload();
+        if (payloadCrc32 != 0 && payloadCrc32 != GeneralUtils.crc32(payload.toByteArray())) {
+            LOGGER.warn("Payload CRC32 not Match");
+            responseBuilder.setCode(ResponseCode.CRC32_MATCH_ERROR);
+            responseBuilder.setResultMessage("payload CRC32 not Match");
+            return responseBuilder.build();
+        }
+
+        MagpieBridgeInfo mbInfo = JSON.parseObject(payload.toByteArray(), MagpieBridgeInfo.class);
+
+        this.magpieBridgeManager
+            .unRegisterMagpieBridge(ctx.channel(), mbInfo.getMagpieBridgeAddress(), mbInfo.getMagpieBridgeName());
 
         return responseBuilder.setCode(ResponseCode.SUCCESS).build();
     }

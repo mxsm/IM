@@ -19,6 +19,12 @@ public abstract class RemotingCommandBuilder {
             .setCreateTimestamp(System.currentTimeMillis());
     }
 
+    public static RemotingCommand.Builder buildRequestCommand(boolean oneway) {
+
+        return RemotingCommand.newBuilder().setCommandType(RemotingCommandType.REQUEST).setCommandId(incrementCmdId.incrementAndGet())
+            .setCreateTimestamp(System.currentTimeMillis()).setOneway(oneway);
+    }
+
     public static RemotingCommand.Builder buildResponseCommand() {
 
         return RemotingCommand.newBuilder().setCommandType(RemotingCommandType.RESPONSE)

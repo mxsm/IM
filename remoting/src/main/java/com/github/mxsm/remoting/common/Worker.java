@@ -40,7 +40,7 @@ public abstract class Worker implements Runnable{
             this.thread.join(getWaitTimeBeforeShutdown());
             long endTime = System.currentTimeMillis();
 
-            LOGGER.info("work[{}] wait run to finish time:{}",endTime-startTime);
+            LOGGER.info("work[{}] wait run to finish time:{}",getWorkerName(),endTime-startTime);
 
         } catch (InterruptedException e) {
             LOGGER.error("work shutdown error", e);

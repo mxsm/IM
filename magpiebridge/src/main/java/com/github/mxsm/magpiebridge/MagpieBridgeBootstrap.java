@@ -41,6 +41,23 @@ public class MagpieBridgeBootstrap {
         magpieBridgeController.initialize();
         magpieBridgeController.startup();
 
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            private volatile boolean hasShutDown = false;
+            @Override
+            public void run() {
+                synchronized (this){
+                    LOGGER.info("MagpieBridge ShutdownHook was invoked");
+                    if(!this.hasShutDown){
+                        this.hasShutDown = true;
+                        long startTime = System.currentTimeMillis();
+                        magpieBridgeController.shutdown();
+                        LOGGER.info("MagpieBridge ShutdownHook Spend time:{}ms",System.currentTimeMillis()-startTime);
+                    }
+                }
+
+            }
+        }, "MagpieBridge_ShutdownHook"));
+
         LOGGER.info("----------------MagpieBridge started [IP={},Port={}]-------------------", NetUtils.getLocalAddress(),
             magpieBridgeController.getNettyServerConfig().getBindPort());
 

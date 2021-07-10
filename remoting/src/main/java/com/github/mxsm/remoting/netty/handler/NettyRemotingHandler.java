@@ -7,6 +7,7 @@ import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.RemotingResponseCallback;
 import com.github.mxsm.remoting.common.NetUtils;
+import com.github.mxsm.remoting.common.ResponseCode;
 import com.github.mxsm.remoting.common.Worker;
 import com.github.mxsm.remoting.event.NettyEvent;
 import com.github.mxsm.remoting.event.NettyEventPublisher;
@@ -49,12 +50,15 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
     public void processRequestCommand(final ChannelHandlerContext ctx, final RemotingCommand cmd) {
 
         final Pair<NettyRequestProcessor, ExecutorService> matchedPair = processorTable.get(cmd.getCode());
-        final Pair<NettyRequestProcessor, ExecutorService> pair = null == matchedPair ? this.defaultRequestProcessor : matchedPair;
+        final Pair<NettyRequestProcessor, ExecutorService> pair =
+            null == matchedPair ? this.defaultRequestProcessor : matchedPair;
 
-        if(pair == null){
-            //TODO build RemotingCommand for response
+        final long commandId = cmd.getCommandId();
+
+        if (pair == null) {
             String error = " request type " + cmd.getCode() + " not supported";
-            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().build();
+            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+                .setCode(ResponseCode.REQUEST_CODE_NOT_SUPPORTED).setResultMessage(error).build();
             ctx.writeAndFlush(response);
             LOGGER.error(NetUtils.parseChannelRemoteAddress(ctx.channel()) + error);
             return;
@@ -64,45 +68,42 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
             try {
                 final RemotingResponseCallback callback = response -> {
 
-                    if(ProtobufUtils.isOnewayRequest(cmd) || response == null){
+                    if (ProtobufUtils.isOnewayRequest(cmd) || response == null) {
                         return;
                     }
                     try {
                         ctx.writeAndFlush(response);
                     } catch (Exception e) {
                         LOGGER.error("process request over, but response failed", e);
-                        LOGGER.error(cmd.toString());
-                        LOGGER.error(response.toString());
                     }
-
                 };
 
                 //异步处理
-                if(pair.getLeft() instanceof AsyncNettyRequestProcessor){
-                    AsyncNettyRequestProcessor processor = (AsyncNettyRequestProcessor)pair.getLeft();
+                NettyRequestProcessor requestProcessor = pair.getLeft();
+                if (requestProcessor instanceof AsyncNettyRequestProcessor) {
+                    AsyncNettyRequestProcessor processor = (AsyncNettyRequestProcessor) requestProcessor;
                     processor.asyncProcessRequest(ctx, cmd, callback);
-                }else if(pair.getLeft() instanceof NettyRequestProcessor){
-                    NettyRequestProcessor processor = pair.getLeft();
-                    RemotingCommand response = processor.processRequest(ctx, cmd);
+                } else if (requestProcessor instanceof NettyRequestProcessor) {
+                    RemotingCommand response = requestProcessor.processRequest(ctx, cmd);
                     callback.callback(response);
-                }else{
+                } else {
                     //
                 }
             } catch (Exception e) {
                 LOGGER.error("process request exception", e);
-                LOGGER.error(cmd.toString());
                 //处理返回数据
                 if (!ProtobufUtils.isOnewayRequest(cmd)) {
-                    //TODO
-                    final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().build();
+                    final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand()
+                        .setCommandId(commandId)
+                        .setCode(ResponseCode.SYSTEM_ERROR).setResultMessage(e.getMessage()).build();
                     ctx.writeAndFlush(response);
                 }
             }
         };
 
-        if(pair.getLeft().rejectRequest()){
-            //TODO
-            final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().build();
+        if (pair.getLeft().rejectRequest()) {
+            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+                .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("request was rejected").build();
             ctx.writeAndFlush(response);
             return;
         }
@@ -112,8 +113,9 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
             pair.getRight().submit(requestTaskWrapper);
         } catch (Exception e) {
             if (!ProtobufUtils.isOnewayRequest(cmd)) {
-                //TODO
-                final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().build();
+                final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+                    .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("submit RequestTaskWrapper to exe error")
+                    .build();
                 ctx.writeAndFlush(response);
             }
         }
@@ -137,15 +139,16 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                 responseFuture.release();
             }
         } else {
-            LOGGER.warn("receive response, but not matched any request, " + NetUtils.parseChannelRemoteAddress(ctx.channel()));
+            LOGGER.warn(
+                "receive response, but not matched any request, " + NetUtils.parseChannelRemoteAddress(ctx.channel()));
             LOGGER.warn(cmd.toString());
         }
     }
 
     public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
-        final ExecutorService executor){
-        Pair<NettyRequestProcessor,ExecutorService> pair = Pair.builder(processor, executor);
-        processorTable.put(requestCode,pair);
+        final ExecutorService executor) {
+        Pair<NettyRequestProcessor, ExecutorService> pair = Pair.builder(processor, executor);
+        processorTable.put(requestCode, pair);
     }
 
 
@@ -159,7 +162,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         this.nettyEventWorker.addNettyEvent(event);
     }
 
-    public class NettyEventWorker extends Worker{
+    public class NettyEventWorker extends Worker {
 
         private final Logger WLOGGER = LoggerFactory.getLogger(NettyEventWorker.class);
 
@@ -167,11 +170,11 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
         private final LinkedBlockingQueue<NettyEvent> nettyEventQueue = new LinkedBlockingQueue<>(MAX_SIZE);
 
-        public void addNettyEvent(NettyEvent nettyEvent){
+        public void addNettyEvent(NettyEvent nettyEvent) {
             try {
                 nettyEventQueue.add(nettyEvent);
             } catch (Exception e) {
-                WLOGGER.warn("Netty event Queue is full[MAX_SIZE={}], drop this netty event[{}]", MAX_SIZE,nettyEvent);
+                WLOGGER.warn("Netty event Queue is full[MAX_SIZE={}], drop this netty event[{}]", MAX_SIZE, nettyEvent);
             }
         }
 
@@ -195,13 +198,13 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
             final ChannelEventListener channelEventListener = NettyRemotingHandler.this.getChannelEventListener();
 
-            while (isRunning()){
+            while (isRunning()) {
                 try {
                     NettyEvent nettyEvent = nettyEventQueue.poll(3000, TimeUnit.MILLISECONDS);
-                    if(nettyEvent == null || channelEventListener == null){
+                    if (nettyEvent == null || channelEventListener == null) {
                         continue;
                     }
-                    switch (nettyEvent.getEventType()){
+                    switch (nettyEvent.getEventType()) {
                         case IDLE:
                             break;
                         case CLOSE:
@@ -209,12 +212,13 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                         case CONNECT:
                             break;
                         case EXCEPTION:
-                            channelEventListener.onExceptionCaught(nettyEvent.getChannel(), (Throwable)nettyEvent.getSource());
+                            channelEventListener
+                                .onExceptionCaught(nettyEvent.getChannel(), (Throwable) nettyEvent.getSource());
                             break;
                         default:
                     }
                 } catch (Exception e) {
-                    LOGGER.warn("NettyEventWork run exception",e);
+                    LOGGER.warn("NettyEventWork run exception", e);
                 }
             }
         }
