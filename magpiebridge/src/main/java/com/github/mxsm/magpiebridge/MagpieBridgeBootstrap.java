@@ -34,7 +34,7 @@ public class MagpieBridgeBootstrap {
         main0(args);
     }
 
-    private static void main0(String[] args){
+    private static void main0(String[] args) {
 
         MagpieBridgeController magpieBridgeController = createRegisterController(args);
 
@@ -43,23 +43,26 @@ public class MagpieBridgeBootstrap {
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             private volatile boolean hasShutDown = false;
+
             @Override
             public void run() {
-                synchronized (this){
+                synchronized (this) {
                     LOGGER.info("MagpieBridge ShutdownHook was invoked");
-                    if(!this.hasShutDown){
+                    if (!this.hasShutDown) {
                         this.hasShutDown = true;
                         long startTime = System.currentTimeMillis();
                         magpieBridgeController.shutdown();
-                        LOGGER.info("MagpieBridge ShutdownHook Spend time:{}ms",System.currentTimeMillis()-startTime);
+                        long endTime = System.currentTimeMillis();
+                        LOGGER.info("MagpieBridge ShutdownHook Spend time:{}ms", endTime - startTime);
                     }
                 }
 
             }
         }, "MagpieBridge_ShutdownHook"));
 
-        LOGGER.info("----------------MagpieBridge started [IP={},Port={}]-------------------", NetUtils.getLocalAddress(),
-            magpieBridgeController.getNettyServerConfig().getBindPort());
+        LOGGER
+            .info("----------------MagpieBridge started [IP={},Port={}]-------------------", NetUtils.getLocalAddress(),
+                magpieBridgeController.getNettyServerConfig().getBindPort());
 
     }
 
@@ -98,7 +101,12 @@ public class MagpieBridgeBootstrap {
             nettyServerConfig.setBindPort(port);
         }
 
-        AnnotationUtils.validatorNotNull(nettyClientConfig,magpieBridgeConfig,nettyClientConfig);
+        if (cmdLine.hasOption("r")) {
+            String registerAddrs = CommandlineUtils.getOptionValue(cmdLine, "r");
+            magpieBridgeConfig.setRegisterAddress(registerAddrs);
+        }
+
+        AnnotationUtils.validatorNotNull(nettyClientConfig, magpieBridgeConfig, nettyClientConfig);
 
         return new MagpieBridgeController(nettyServerConfig, magpieBridgeConfig, nettyClientConfig);
     }
@@ -106,7 +114,9 @@ public class MagpieBridgeBootstrap {
     private static void addOptions(final Options options) {
         Option portOption = new Option("p", "port", true, "register bind port");
         Option configFileOption = new Option("c", "config", true, "MagpieBridge config file path");
-        options.addOption(portOption).addOption(configFileOption);
+        Option registerOption = new Option("r", "register-address", true,
+            "register address,example:127.0.0.1:8080,192.168.10.16:8080");
+        options.addOption(portOption).addOption(configFileOption).addOption(registerOption);
 
     }
 }
