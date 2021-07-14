@@ -248,10 +248,10 @@ private static final long serialVersionUID = 0L;
    * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
    * @return The commandType.
    */
-  @java.lang.Override public com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType() {
+  @java.lang.Override public com.github.mxsm.protocol.protobuf.constant.RemotingCommandType getCommandType() {
     @SuppressWarnings("deprecation")
-    com.github.mxsm.protocol.protobuf.RemotingCommandType result = com.github.mxsm.protocol.protobuf.RemotingCommandType.valueOf(commandType_);
-    return result == null ? com.github.mxsm.protocol.protobuf.RemotingCommandType.UNRECOGNIZED : result;
+    com.github.mxsm.protocol.protobuf.constant.RemotingCommandType result = com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.valueOf(commandType_);
+    return result == null ? com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.UNRECOGNIZED : result;
   }
 
   public static final int CODE_FIELD_NUMBER = 4;
@@ -408,7 +408,7 @@ private static final long serialVersionUID = 0L;
     if (responseHeaders_ != null) {
       output.writeMessage(2, getResponseHeaders());
     }
-    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST.getNumber()) {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.REQUEST.getNumber()) {
       output.writeEnum(3, commandType_);
     }
     if (code_ != 0) {
@@ -449,7 +449,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getResponseHeaders());
     }
-    if (commandType_ != com.github.mxsm.protocol.protobuf.RemotingCommandType.REQUEST.getNumber()) {
+    if (commandType_ != com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.REQUEST.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(3, commandType_);
     }
@@ -1217,10 +1217,10 @@ private static final long serialVersionUID = 0L;
      * @return The commandType.
      */
     @java.lang.Override
-    public com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType() {
+    public com.github.mxsm.protocol.protobuf.constant.RemotingCommandType getCommandType() {
       @SuppressWarnings("deprecation")
-      com.github.mxsm.protocol.protobuf.RemotingCommandType result = com.github.mxsm.protocol.protobuf.RemotingCommandType.valueOf(commandType_);
-      return result == null ? com.github.mxsm.protocol.protobuf.RemotingCommandType.UNRECOGNIZED : result;
+      com.github.mxsm.protocol.protobuf.constant.RemotingCommandType result = com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.valueOf(commandType_);
+      return result == null ? com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.UNRECOGNIZED : result;
     }
     /**
      * <pre>
@@ -1231,7 +1231,7 @@ private static final long serialVersionUID = 0L;
      * @param value The commandType to set.
      * @return This builder for chaining.
      */
-    public Builder setCommandType(com.github.mxsm.protocol.protobuf.RemotingCommandType value) {
+    public Builder setCommandType(com.github.mxsm.protocol.protobuf.constant.RemotingCommandType value) {
       if (value == null) {
         throw new NullPointerException();
       }

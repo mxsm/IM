@@ -1,5 +1,7 @@
 package com.github.mxsm.register.mananger;
 
+import java.util.Map;
+import java.util.TreeMap;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,34 +12,17 @@ import org.jetbrains.annotations.NotNull;
 public class MagpieBridgeMetaData implements Comparable<MagpieBridgeMetaData>{
 
     /**
-     * 鹊桥名称
+     * magpie bridge name
      */
     private String magpieBridgeName;
 
-    /**
-     * 鹊桥地址 IP:Port
-     */
-    private String magpieBridgeAddress;
+    private String magpieBridgeNameClusterName;
 
-    public MagpieBridgeMetaData(String magpieBridgeName, String magpieBridgeAddress) {
+    private final TreeMap<Long/*magpieBridge ID*/, String/*address*/> magpieBridgeAddresses = new TreeMap<>();
+
+    public MagpieBridgeMetaData(String magpieBridgeName, String magpieBridgeNameClusterName) {
         this.magpieBridgeName = magpieBridgeName;
-        this.magpieBridgeAddress = magpieBridgeAddress;
-    }
-
-    public String getMagpieBridgeName() {
-        return magpieBridgeName;
-    }
-
-    public void setMagpieBridgeName(String magpieBridgeName) {
-        this.magpieBridgeName = magpieBridgeName;
-    }
-
-    public String getMagpieBridgeAddress() {
-        return magpieBridgeAddress;
-    }
-
-    public void setMagpieBridgeAddress(String magpieBridgeAddress) {
-        this.magpieBridgeAddress = magpieBridgeAddress;
+        this.magpieBridgeNameClusterName = magpieBridgeNameClusterName;
     }
 
     /**
@@ -74,5 +59,25 @@ public class MagpieBridgeMetaData implements Comparable<MagpieBridgeMetaData>{
     @Override
     public int compareTo(@NotNull MagpieBridgeMetaData o) {
         return 0;
+    }
+
+    public String getMagpieBridgeName() {
+        return magpieBridgeName;
+    }
+
+    public void setMagpieBridgeName(String magpieBridgeName) {
+        this.magpieBridgeName = magpieBridgeName;
+    }
+
+    public String getMagpieBridgeNameClusterName() {
+        return magpieBridgeNameClusterName;
+    }
+
+    public void setMagpieBridgeNameClusterName(String magpieBridgeNameClusterName) {
+        this.magpieBridgeNameClusterName = magpieBridgeNameClusterName;
+    }
+
+    public TreeMap<Long, String> getMagpieBridgeAddresses() {
+        return magpieBridgeAddresses;
     }
 }

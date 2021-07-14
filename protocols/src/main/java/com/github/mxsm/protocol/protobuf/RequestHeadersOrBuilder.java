@@ -92,20 +92,19 @@ public interface RequestHeadersOrBuilder extends
    *发送消息的终端
    * </pre>
    *
-   * <code>string terminalType = 7;</code>
-   * @return The terminalType.
+   * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+   * @return The enum numeric value on the wire for terminalType.
    */
-  java.lang.String getTerminalType();
+  int getTerminalTypeValue();
   /**
    * <pre>
    *发送消息的终端
    * </pre>
    *
-   * <code>string terminalType = 7;</code>
-   * @return The bytes for terminalType.
+   * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+   * @return The terminalType.
    */
-  com.google.protobuf.ByteString
-      getTerminalTypeBytes();
+  com.github.mxsm.protocol.protobuf.constant.TerminalType getTerminalType();
 
   /**
    * <pre>

@@ -1,7 +1,9 @@
 package com.github.mxsm.magpiebridge;
 
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
+import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
 import com.github.mxsm.common.thread.NamedThreadFactory;
+import com.github.mxsm.magpiebridge.client.manager.ClientOnlineKeepingService;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
 import com.github.mxsm.remoting.common.NetUtils;
@@ -12,7 +14,6 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +36,11 @@ public class MagpieBridgeController {
 
     private MagpieBridgeAPI magpieBridgeAPI;
 
+    private final ClientOnlineKeepingService clientOnlineKeepingService;
 
     private ScheduledExecutorService magpieBridgeRegisterService = Executors
         .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterService"));
-    ;
+
 
     public MagpieBridgeController(final NettyServerConfig nettyServerConfig,
         final MagpieBridgeConfig magpieBridgeConfig, final NettyClientConfig nettyClientConfig) {
@@ -46,16 +48,29 @@ public class MagpieBridgeController {
         this.magpieBridgeConfig = magpieBridgeConfig;
         this.nettyClientConfig = nettyClientConfig;
         this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig);
+        this.clientOnlineKeepingService = new ClientOnlineKeepingService();
     }
 
     public void initialize() {
-        this.magpieBridgeServer = new NettyRemotingServer(this.nettyServerConfig);
 
+        //before initialize check
+        checkConfig();
+
+        this.magpieBridgeServer = new NettyRemotingServer(this.nettyServerConfig, this.clientOnlineKeepingService);
         this.magpieBridgeAPI.updateRegisterAddressList(
             Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(",")));
 
         //启动定时发送MagpieBridge信息到注册中心
         magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
+    }
+
+    private void checkConfig() {
+        if (this.magpieBridgeConfig.getMagpieBridgeRole() == MagpieBridgeRole.MASTER
+            && this.magpieBridgeConfig.getMagpieBridgeId() != 0) {
+            LOGGER.error("if magpie bridge the role is master, magpie bridge id must be zero(0), actually the id is"
+                + this.magpieBridgeConfig.getMagpieBridgeId());
+            System.exit(0);
+        }
     }
 
     private void registerMagpieBridgeAll() {
@@ -80,6 +95,8 @@ public class MagpieBridgeController {
         mbInfo.setMagpieBridgeAddress(NetUtils.getLocalAddress() + ":" + this.nettyServerConfig.getBindPort());
         mbInfo.setMagpieBridgeName(this.magpieBridgeConfig.getMagpieBridgeName());
         mbInfo.setMagpieBridgeCreateTimestamp(System.currentTimeMillis());
+        mbInfo.setMagpieBridgeClusterName(this.magpieBridgeConfig.getMagpieBridgeClusterName());
+        mbInfo.setMagpieBridgeRole(this.getMagpieBridgeConfig().getMagpieBridgeRole());
         return mbInfo;
     }
 
@@ -91,11 +108,12 @@ public class MagpieBridgeController {
         this.registerMagpieBridgeAll();
     }
 
-    public void shutdown(){
+    public void shutdown() {
 
+        this.unRegisterMagpieBridgeAll();
         this.magpieBridgeAPI.shutdown();
         this.magpieBridgeServer.shutdown();
-        this.unRegisterMagpieBridgeAll();
+
 
     }
 

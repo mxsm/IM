@@ -78,7 +78,7 @@ public interface RemotingCommandOrBuilder extends
    * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
    * @return The commandType.
    */
-  com.github.mxsm.protocol.protobuf.RemotingCommandType getCommandType();
+  com.github.mxsm.protocol.protobuf.constant.RemotingCommandType getCommandType();
 
   /**
    * <pre>

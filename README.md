@@ -25,6 +25,13 @@ mvn -Prelease-all -DskipTests clean install -U
 cd distribution/target/im-0.1-SNAPSHOT/im-0.1-SNAPSHOT
 ```
 
+### 鹊桥(MagpieBridge)
+
+在鹊桥的集群中，只有一个Master,多个SLAVE。一个集群名称唯一，集群中的节点的名称可以相同。节点ID集群内必须唯一。
+
+- 节点ID最小的为MASTER，当Master掉线或者失去作用的时候回将节点ID最小的为MASTER。
+- 一个集群内节点名称必须相同。不同的节点名称可以不相同
+
 
 
 ### 工程目录结构说明

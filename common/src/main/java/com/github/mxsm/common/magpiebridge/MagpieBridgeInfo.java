@@ -12,9 +12,13 @@ public class MagpieBridgeInfo {
 
     private String magpieBridgeAddress;
 
-    private int magpieBridgeId;
+    private long magpieBridgeId;
 
     private long magpieBridgeCreateTimestamp;
+
+    private String magpieBridgeClusterName;
+
+    private MagpieBridgeRole magpieBridgeRole;
 
     public String getMagpieBridgeName() {
         return magpieBridgeName;
@@ -32,11 +36,11 @@ public class MagpieBridgeInfo {
         this.magpieBridgeAddress = magpieBridgeAddress;
     }
 
-    public int getMagpieBridgeId() {
+    public long getMagpieBridgeId() {
         return magpieBridgeId;
     }
 
-    public void setMagpieBridgeId(int magpieBridgeId) {
+    public void setMagpieBridgeId(long magpieBridgeId) {
         this.magpieBridgeId = magpieBridgeId;
     }
 
@@ -46,5 +50,21 @@ public class MagpieBridgeInfo {
 
     public void setMagpieBridgeCreateTimestamp(long magpieBridgeCreateTimestamp) {
         this.magpieBridgeCreateTimestamp = magpieBridgeCreateTimestamp;
+    }
+
+    public String getMagpieBridgeClusterName() {
+        return magpieBridgeClusterName;
+    }
+
+    public void setMagpieBridgeClusterName(String magpieBridgeClusterName) {
+        this.magpieBridgeClusterName = magpieBridgeClusterName;
+    }
+
+    public MagpieBridgeRole getMagpieBridgeRole() {
+        return magpieBridgeRole;
+    }
+
+    public void setMagpieBridgeRole(MagpieBridgeRole magpieBridgeRole) {
+        this.magpieBridgeRole = magpieBridgeRole;
     }
 }

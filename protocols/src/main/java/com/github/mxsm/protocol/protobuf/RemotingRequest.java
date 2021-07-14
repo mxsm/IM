@@ -47,7 +47,7 @@ public final class RemotingRequest {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.github.mxsm.protocol.protobuf.RemotingCommandTypeOuterClass.getDescriptor(),
+          com.github.mxsm.protocol.protobuf.constant.RemotingCommandTypeOuterClass.getDescriptor(),
           com.github.mxsm.protocol.protobuf.RequestHeadersOuterClass.getDescriptor(),
           com.github.mxsm.protocol.protobuf.ResponseHeadersOuterClass.getDescriptor(),
         });
@@ -57,7 +57,7 @@ public final class RemotingRequest {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_descriptor,
         new java.lang.String[] { "RequestHeaders", "ResponseHeaders", "CommandType", "Code", "PayloadCrc32", "Oneway", "CommandId", "CreateTimestamp", "Payload", "ResultMessage", });
-    com.github.mxsm.protocol.protobuf.RemotingCommandTypeOuterClass.getDescriptor();
+    com.github.mxsm.protocol.protobuf.constant.RemotingCommandTypeOuterClass.getDescriptor();
     com.github.mxsm.protocol.protobuf.RequestHeadersOuterClass.getDescriptor();
     com.github.mxsm.protocol.protobuf.ResponseHeadersOuterClass.getDescriptor();
   }

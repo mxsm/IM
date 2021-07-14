@@ -19,7 +19,7 @@ private static final long serialVersionUID = 0L;
     protocol_ = "";
     version_ = "";
     contentType_ = "";
-    terminalType_ = "";
+    terminalType_ = 0;
     deviceToken_ = "";
     sender_ = "";
     receiver_ = "";
@@ -83,10 +83,10 @@ private static final long serialVersionUID = 0L;
             contentType_ = s;
             break;
           }
-          case 58: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 56: {
+            int rawValue = input.readEnum();
 
-            terminalType_ = s;
+            terminalType_ = rawValue;
             break;
           }
           case 66: {
@@ -308,49 +308,30 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int TERMINALTYPE_FIELD_NUMBER = 7;
-  private volatile java.lang.Object terminalType_;
+  private int terminalType_;
   /**
    * <pre>
    *发送消息的终端
    * </pre>
    *
-   * <code>string terminalType = 7;</code>
-   * @return The terminalType.
+   * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+   * @return The enum numeric value on the wire for terminalType.
    */
-  @java.lang.Override
-  public java.lang.String getTerminalType() {
-    java.lang.Object ref = terminalType_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      terminalType_ = s;
-      return s;
-    }
+  @java.lang.Override public int getTerminalTypeValue() {
+    return terminalType_;
   }
   /**
    * <pre>
    *发送消息的终端
    * </pre>
    *
-   * <code>string terminalType = 7;</code>
-   * @return The bytes for terminalType.
+   * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+   * @return The terminalType.
    */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getTerminalTypeBytes() {
-    java.lang.Object ref = terminalType_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      terminalType_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  @java.lang.Override public com.github.mxsm.protocol.protobuf.constant.TerminalType getTerminalType() {
+    @SuppressWarnings("deprecation")
+    com.github.mxsm.protocol.protobuf.constant.TerminalType result = com.github.mxsm.protocol.protobuf.constant.TerminalType.valueOf(terminalType_);
+    return result == null ? com.github.mxsm.protocol.protobuf.constant.TerminalType.UNRECOGNIZED : result;
   }
 
   public static final int DEVICETOKEN_FIELD_NUMBER = 8;
@@ -520,8 +501,8 @@ private static final long serialVersionUID = 0L;
     if (!getContentTypeBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 6, contentType_);
     }
-    if (!getTerminalTypeBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, terminalType_);
+    if (terminalType_ != com.github.mxsm.protocol.protobuf.constant.TerminalType.HARMONYOS.getNumber()) {
+      output.writeEnum(7, terminalType_);
     }
     if (!getDeviceTokenBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 8, deviceToken_);
@@ -558,8 +539,9 @@ private static final long serialVersionUID = 0L;
     if (!getContentTypeBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, contentType_);
     }
-    if (!getTerminalTypeBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, terminalType_);
+    if (terminalType_ != com.github.mxsm.protocol.protobuf.constant.TerminalType.HARMONYOS.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(7, terminalType_);
     }
     if (!getDeviceTokenBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, deviceToken_);
@@ -595,8 +577,7 @@ private static final long serialVersionUID = 0L;
         != other.getRemoteAddress()) return false;
     if (!getContentType()
         .equals(other.getContentType())) return false;
-    if (!getTerminalType()
-        .equals(other.getTerminalType())) return false;
+    if (terminalType_ != other.terminalType_) return false;
     if (!getDeviceToken()
         .equals(other.getDeviceToken())) return false;
     if (!getSender()
@@ -627,7 +608,7 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + CONTENTTYPE_FIELD_NUMBER;
     hash = (53 * hash) + getContentType().hashCode();
     hash = (37 * hash) + TERMINALTYPE_FIELD_NUMBER;
-    hash = (53 * hash) + getTerminalType().hashCode();
+    hash = (53 * hash) + terminalType_;
     hash = (37 * hash) + DEVICETOKEN_FIELD_NUMBER;
     hash = (53 * hash) + getDeviceToken().hashCode();
     hash = (37 * hash) + SENDER_FIELD_NUMBER;
@@ -777,7 +758,7 @@ private static final long serialVersionUID = 0L;
 
       contentType_ = "";
 
-      terminalType_ = "";
+      terminalType_ = 0;
 
       deviceToken_ = "";
 
@@ -886,9 +867,8 @@ private static final long serialVersionUID = 0L;
         contentType_ = other.contentType_;
         onChanged();
       }
-      if (!other.getTerminalType().isEmpty()) {
-        terminalType_ = other.terminalType_;
-        onChanged();
+      if (other.terminalType_ != 0) {
+        setTerminalTypeValue(other.getTerminalTypeValue());
       }
       if (!other.getDeviceToken().isEmpty()) {
         deviceToken_ = other.deviceToken_;
@@ -1305,63 +1285,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object terminalType_ = "";
+    private int terminalType_ = 0;
     /**
      * <pre>
      *发送消息的终端
      * </pre>
      *
-     * <code>string terminalType = 7;</code>
-     * @return The terminalType.
+     * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+     * @return The enum numeric value on the wire for terminalType.
      */
-    public java.lang.String getTerminalType() {
-      java.lang.Object ref = terminalType_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        terminalType_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override public int getTerminalTypeValue() {
+      return terminalType_;
     }
     /**
      * <pre>
      *发送消息的终端
      * </pre>
      *
-     * <code>string terminalType = 7;</code>
-     * @return The bytes for terminalType.
-     */
-    public com.google.protobuf.ByteString
-        getTerminalTypeBytes() {
-      java.lang.Object ref = terminalType_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        terminalType_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *发送消息的终端
-     * </pre>
-     *
-     * <code>string terminalType = 7;</code>
-     * @param value The terminalType to set.
+     * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+     * @param value The enum numeric value on the wire for terminalType to set.
      * @return This builder for chaining.
      */
-    public Builder setTerminalType(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
+    public Builder setTerminalTypeValue(int value) {
+      
       terminalType_ = value;
       onChanged();
       return this;
@@ -1371,32 +1317,44 @@ private static final long serialVersionUID = 0L;
      *发送消息的终端
      * </pre>
      *
-     * <code>string terminalType = 7;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+     * @return The terminalType.
+     */
+    @java.lang.Override
+    public com.github.mxsm.protocol.protobuf.constant.TerminalType getTerminalType() {
+      @SuppressWarnings("deprecation")
+      com.github.mxsm.protocol.protobuf.constant.TerminalType result = com.github.mxsm.protocol.protobuf.constant.TerminalType.valueOf(terminalType_);
+      return result == null ? com.github.mxsm.protocol.protobuf.constant.TerminalType.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     *发送消息的终端
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
+     * @param value The terminalType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTerminalType(com.github.mxsm.protocol.protobuf.constant.TerminalType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      terminalType_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *发送消息的终端
+     * </pre>
+     *
+     * <code>.com.github.mxsm.protocol.protobuf.TerminalType terminalType = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearTerminalType() {
       
-      terminalType_ = getDefaultInstance().getTerminalType();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *发送消息的终端
-     * </pre>
-     *
-     * <code>string terminalType = 7;</code>
-     * @param value The bytes for terminalType to set.
-     * @return This builder for chaining.
-     */
-    public Builder setTerminalTypeBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      terminalType_ = value;
+      terminalType_ = 0;
       onChanged();
       return this;
     }

@@ -84,7 +84,6 @@ public class MagpieBridgeAPI {
         for (String registerAddress : registerAddressList) {
             this.bmExecutorService.submit(() -> {
                 try {
-
                     RemotingCommand request = RemotingCommandBuilder.buildRequestCommand()
                         .setCode(RequestCode.MAGPIE_BRIDGE_REGISTER).setPayloadCrc32(crc32)
                         .setPayload(ByteString.copyFrom(mbInfoBytes)).build();

@@ -2,6 +2,7 @@ package com.github.mxsm.magpiebridge.config;
 
 import com.github.mxsm.common.annotation.NotNull;
 import com.github.mxsm.magpiebridge.common.MagpieBridgeConst;
+import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
 import java.util.UUID;
 
 /**
@@ -19,6 +20,10 @@ public class MagpieBridgeConfig {
     private int magpieBridgeId;
 
     private long magpieBridgeRegisterTimeoutMills = 3000;
+
+    private String magpieBridgeClusterName;
+
+    private MagpieBridgeRole magpieBridgeRole;
 
     public String getRegisterAddress() {
         return registerAddress;
@@ -50,5 +55,21 @@ public class MagpieBridgeConfig {
 
     public void setMagpieBridgeRegisterTimeoutMills(long magpieBridgeRegisterTimeoutMills) {
         this.magpieBridgeRegisterTimeoutMills = magpieBridgeRegisterTimeoutMills;
+    }
+
+    public String getMagpieBridgeClusterName() {
+        return magpieBridgeClusterName;
+    }
+
+    public void setMagpieBridgeClusterName(String magpieBridgeClusterName) {
+        this.magpieBridgeClusterName = magpieBridgeClusterName;
+    }
+
+    public MagpieBridgeRole getMagpieBridgeRole() {
+        return magpieBridgeRole;
+    }
+
+    public void setMagpieBridgeRole(String magpieBridgeRole) {
+        this.magpieBridgeRole = MagpieBridgeRole.valueOf(magpieBridgeRole);
     }
 }

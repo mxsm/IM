@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "TerminalType.proto";
+
 package com.github.mxsm.protocol.protobuf;
 
 option java_package = "com.github.mxsm.protocol.protobuf";
@@ -24,7 +26,7 @@ message RequestHeaders{
   string contentType = 6;
 
   //发送消息的终端
-  string terminalType = 7;
+  TerminalType terminalType = 7;
 
   //发送消息的终端设备号
   string deviceToken = 8;
