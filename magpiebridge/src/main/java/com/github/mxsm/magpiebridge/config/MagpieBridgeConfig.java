@@ -12,6 +12,9 @@ import java.util.UUID;
  */
 public class MagpieBridgeConfig {
 
+    /**
+     * address split by ,
+     */
     @NotNull
     private String registerAddress = System.getProperty(MagpieBridgeConst.REGISTER_ADDRESS);
 

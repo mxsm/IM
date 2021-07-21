@@ -102,7 +102,7 @@ public class MagpieBridgeAPI {
         try {
             registerLatch.await(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            LOGGER.warn("Get MagpieBridge register Result time out[timeout={}ms]", timeout);
+            LOGGER.warn("get MagpieBridge register Result time out[timeout={}ms]", timeout);
         }
         return registerMbResultList;
     }

@@ -1,19 +1,24 @@
 package com.github.mxsm.magpiebridge;
 
+import com.github.mxsm.common.Symbol;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
 import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.client.manager.ClientOnlineKeepingService;
+import com.github.mxsm.magpiebridge.cluster.ClusterMetaData;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
+import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +43,8 @@ public class MagpieBridgeController {
 
     private final ClientOnlineKeepingService clientOnlineKeepingService;
 
+    private final ClusterMetaData clusterMetaData;
+
     private ScheduledExecutorService magpieBridgeRegisterService = Executors
         .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterService"));
 
@@ -49,6 +56,7 @@ public class MagpieBridgeController {
         this.nettyClientConfig = nettyClientConfig;
         this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig);
         this.clientOnlineKeepingService = new ClientOnlineKeepingService();
+        this.clusterMetaData = new ClusterMetaData();
     }
 
     public void initialize() {
@@ -58,7 +66,7 @@ public class MagpieBridgeController {
 
         this.magpieBridgeServer = new NettyRemotingServer(this.nettyServerConfig, this.clientOnlineKeepingService);
         this.magpieBridgeAPI.updateRegisterAddressList(
-            Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(",")));
+            Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(Symbol.COMMA)));
 
         //启动定时发送MagpieBridge信息到注册中心
         magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
@@ -78,7 +86,15 @@ public class MagpieBridgeController {
         MagpieBridgeInfo mbInfo = buildMagpieBridgeInfo();
 
         long magpieBridgeRegisterTimeoutMills = this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills();
-        this.magpieBridgeAPI.registerMagpieBridgeAll(mbInfo, magpieBridgeRegisterTimeoutMills);
+        List<RemotingCommand> responseCommands = this.magpieBridgeAPI
+            .registerMagpieBridgeAll(mbInfo, magpieBridgeRegisterTimeoutMills);
+        if(CollectionUtils.isEmpty(responseCommands)){
+            LOGGER.warn("register magpie bridge to registration center [{}] not response",this.magpieBridgeConfig.getRegisterAddress());
+            return;
+        }
+        for (RemotingCommand responseCommand : responseCommands){
+            
+        }
     }
 
     private void unRegisterMagpieBridgeAll() {

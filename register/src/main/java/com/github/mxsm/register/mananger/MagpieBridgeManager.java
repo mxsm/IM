@@ -80,7 +80,7 @@ public class MagpieBridgeManager {
 
                 Entry<Long, String> mbAdressEntry = magpieBridgeMetaData.getMagpieBridgeAddresses().firstEntry();
                 if(mbAdressEntry == null){
-                    return new RegisterMagpieBridgeResult(0,null);
+                    return new RegisterMagpieBridgeResult(-1,null);
                 }
                 return new RegisterMagpieBridgeResult(mbAdressEntry.getKey(),mbAdressEntry.getValue());
             } finally {
@@ -89,7 +89,7 @@ public class MagpieBridgeManager {
         } catch (Exception e) {
             LOGGER.error("Register Magpie Bridge Error", e);
         }
-        return new RegisterMagpieBridgeResult(0,null);
+        return new RegisterMagpieBridgeResult(-1,null);
     }
 
 
