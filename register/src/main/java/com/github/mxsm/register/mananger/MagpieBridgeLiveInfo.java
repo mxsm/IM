@@ -13,7 +13,7 @@ public class MagpieBridgeLiveInfo {
     //最近一次更新时间
     private long lastUpdateTimestamp;
 
-    private long connectionTimestamp;
+    private final long connectionTimestamp;
 
     private final Channel channel;
 
@@ -45,10 +45,6 @@ public class MagpieBridgeLiveInfo {
 
     public long getConnectionTimestamp() {
         return connectionTimestamp;
-    }
-
-    public void setConnectionTimestamp(long connectionTimestamp) {
-        this.connectionTimestamp = connectionTimestamp;
     }
 
     public boolean isOnline() {

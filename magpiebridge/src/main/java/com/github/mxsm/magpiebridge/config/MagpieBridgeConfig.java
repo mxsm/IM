@@ -20,9 +20,9 @@ public class MagpieBridgeConfig {
 
     private String magpieBridgeName = UUID.randomUUID().toString();
 
-    private int magpieBridgeId;
+    private long magpieBridgeId = Seed.seed();
 
-    private long magpieBridgeRegisterTimeoutMills = 3000;
+    private long magpieBridgeRegisterTimeoutMills = 300000;
 
     private String magpieBridgeClusterName;
 
@@ -44,11 +44,11 @@ public class MagpieBridgeConfig {
         this.magpieBridgeName = magpieBridgeName;
     }
 
-    public int getMagpieBridgeId() {
+    public long getMagpieBridgeId() {
         return magpieBridgeId;
     }
 
-    public void setMagpieBridgeId(int magpieBridgeId) {
+    public void setMagpieBridgeId(long magpieBridgeId) {
         this.magpieBridgeId = magpieBridgeId;
     }
 

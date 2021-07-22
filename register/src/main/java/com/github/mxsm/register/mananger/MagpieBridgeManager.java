@@ -1,7 +1,7 @@
 package com.github.mxsm.register.mananger;
 
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
-import com.github.mxsm.common.magpiebridge.RegisterMagpieBridgeResult;
+import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
 import com.github.mxsm.remoting.common.NettyUtils;
 import io.netty.channel.Channel;
 import java.util.HashMap;
@@ -39,11 +39,12 @@ public class MagpieBridgeManager {
     public RegisterMagpieBridgeResult registerMagpieBridge(final Channel channel, final MagpieBridgeInfo mbInfo) {
         try {
             try {
-
                 readWriteLock.writeLock().lockInterruptibly();
-                String remoteAddress = mbInfo.getMagpieBridgeAddress();
-                String magpieBridgeName = mbInfo.getMagpieBridgeName();
-                String clusterName = mbInfo.getMagpieBridgeClusterName();
+
+                //get request mb(MagpieBridge) base info
+                final String remoteAddress = mbInfo.getMagpieBridgeAddress();
+                final String magpieBridgeName = mbInfo.getMagpieBridgeName();
+                final String clusterName = mbInfo.getMagpieBridgeClusterName();
                 long magpieBridgeId = mbInfo.getMagpieBridgeId();
 
                 Set<String> mbNames = clusterTable.get(clusterName);
@@ -61,14 +62,22 @@ public class MagpieBridgeManager {
                     magpieBridgeMetaDataTable.put(magpieBridgeName, magpieBridgeMetaData);
                     LOGGER.info("register magpie bridge metadata[name={},address={}] SUCCESS", magpieBridgeName,
                         remoteAddress);
+                }else{
+                    Set<Long> mbIdSet = magpieBridgeMetaData.getMagpieBridgeAddresses().keySet();
+                    if(!mbIdSet.contains(magpieBridgeId)){
+                        //make sure new register mb id is largest
+                        Long lastMbId = magpieBridgeMetaData.getMagpieBridgeAddresses().lastKey();
+                       if(magpieBridgeId <= lastMbId.longValue()){
+                           magpieBridgeId = lastMbId + 1;
+                           magpieBridgeMetaData.getMagpieBridgeAddresses().put(magpieBridgeId,remoteAddress);
+                       }
+                    }
                 }
-
                 MagpieBridgeLiveInfo liveInfo = magpieBridgeLiveTable.get(remoteAddress);
                 if (null != liveInfo) {
                     liveInfo.setOnline(true);
                     long lastUpdateTimestamp = System.currentTimeMillis();
                     liveInfo.setLastUpdateTimestamp(lastUpdateTimestamp);
-                    liveInfo.setConnectionTimestamp(lastUpdateTimestamp);
                     LOGGER.info("update magpie bridge Live[name={},address={}]", magpieBridgeName, remoteAddress);
                 } else {
                     liveInfo = new MagpieBridgeLiveInfo(System.currentTimeMillis(), System.currentTimeMillis(), channel,
@@ -79,17 +88,15 @@ public class MagpieBridgeManager {
                 }
 
                 Entry<Long, String> mbAdressEntry = magpieBridgeMetaData.getMagpieBridgeAddresses().firstEntry();
-                if(mbAdressEntry == null){
-                    return new RegisterMagpieBridgeResult(-1,null);
-                }
-                return new RegisterMagpieBridgeResult(mbAdressEntry.getKey(),mbAdressEntry.getValue());
+                return new RegisterMagpieBridgeResult(magpieBridgeId,mbAdressEntry.getKey(),mbAdressEntry.getValue());
             } finally {
                 readWriteLock.writeLock().unlock();
             }
         } catch (Exception e) {
             LOGGER.error("Register Magpie Bridge Error", e);
+
         }
-        return new RegisterMagpieBridgeResult(-1,null);
+        return new RegisterMagpieBridgeResult();
     }
 
 

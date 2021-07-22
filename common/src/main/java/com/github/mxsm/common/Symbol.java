@@ -8,4 +8,6 @@ package com.github.mxsm.common;
 public abstract class Symbol {
 
     public static final String COMMA = ",";
+
+    public static final String COLON = ":";
 }
