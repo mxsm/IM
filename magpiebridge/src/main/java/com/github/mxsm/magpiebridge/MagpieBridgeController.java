@@ -74,7 +74,7 @@ public class MagpieBridgeController {
         this.magpieBridgeServer = new NettyRemotingServer(this.nettyServerConfig, this.clientOnlineKeepingService);
         this.magpieBridgeAPI.updateRegisterAddressList(
             Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(Symbol.COMMA)));
-        
+
         magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
     }
 
@@ -109,17 +109,20 @@ public class MagpieBridgeController {
             if (null != result && StringUtils.isNotBlank(result.getMasterAddress())) {
                 long magpieBridgeId = result.getMagpieBridgeId();
                 long magpieBridgeMasterId = result.getMagpieBridgeMasterId();
-                LOGGER.info("register magpie bridge to center success, old[id={},role={}]",
-                    this.magpieBridgeConfig.getMagpieBridgeId(), this.magpieBridgeConfig.getMagpieBridgeRole());
+                MagpieBridgeRole oldRole = this.magpieBridgeConfig.getMagpieBridgeRole();
+                LOGGER.info("register magpie bridge to center success, current mb status [id={},role={},master-address={}]",
+                    this.magpieBridgeConfig.getMagpieBridgeId(), oldRole,result.getMasterAddress());
                 if (magpieBridgeId != RegisterMagpieBridgeResult.NO_MASTER
                     && magpieBridgeMasterId != RegisterMagpieBridgeResult.NO_MASTER) {
                     this.magpieBridgeConfig.setMagpieBridgeId(magpieBridgeId);
                     if (StringUtils.equals(result.getMasterAddress(), this.magpieBridgeAddress)
                         && magpieBridgeId == magpieBridgeMasterId) {
                         this.magpieBridgeConfig.setMagpieBridgeRole(MagpieBridgeRole.MASTER.name());
+                    }else{
+                        this.magpieBridgeConfig.setMagpieBridgeRole(MagpieBridgeRole.SLAVE.name());
                     }
-                    LOGGER.info("register magpie bridge to center success and update status,new[id={},role={}]",
-                        this.magpieBridgeConfig.getMagpieBridgeId(), this.magpieBridgeConfig.getMagpieBridgeRole());
+                    LOGGER.info("register magpie bridge to center success and update status,new role [id={},role={}->{},master-address={}]",
+                        this.magpieBridgeConfig.getMagpieBridgeId(),oldRole, this.magpieBridgeConfig.getMagpieBridgeRole(),result.getMasterAddress());
                     isRegisterSuccess = true;
                     break;
                 }
@@ -153,7 +156,10 @@ public class MagpieBridgeController {
         this.magpieBridgeServer.start();
         this.magpieBridgeAPI.start();
 
-        this.registerMagpieBridgeAll();
+        boolean registerSuccess = this.registerMagpieBridgeAll();
+        if(!registerSuccess){
+            System.exit(-1);
+        }
     }
 
     public void shutdown() {
