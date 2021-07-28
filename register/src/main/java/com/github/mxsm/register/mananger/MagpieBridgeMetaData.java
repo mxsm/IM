@@ -1,6 +1,7 @@
 package com.github.mxsm.register.mananger;
 
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,14 +15,13 @@ public class MagpieBridgeMetaData implements Comparable<MagpieBridgeMetaData>{
     /**
      * magpie bridge name
      */
-    private String magpieBridgeName;
-
     private String magpieBridgeNameClusterName;
 
-    private final TreeMap<Long/*magpieBridge ID*/, String/*address*/> magpieBridgeAddresses = new TreeMap<>();
+    private final Set<String> magpieBridgeNameSet = new HashSet<>(32);
 
-    public MagpieBridgeMetaData(String magpieBridgeName, String magpieBridgeNameClusterName) {
-        this.magpieBridgeName = magpieBridgeName;
+    private final TreeMap<Long/*magpieBridge ID*/, MagpieBridgeInnerMetaData/*address*/> magpieBridgeAddresses = new TreeMap<>();
+
+    public MagpieBridgeMetaData(String magpieBridgeNameClusterName) {
         this.magpieBridgeNameClusterName = magpieBridgeNameClusterName;
     }
 
@@ -61,12 +61,8 @@ public class MagpieBridgeMetaData implements Comparable<MagpieBridgeMetaData>{
         return 0;
     }
 
-    public String getMagpieBridgeName() {
-        return magpieBridgeName;
-    }
-
-    public void setMagpieBridgeName(String magpieBridgeName) {
-        this.magpieBridgeName = magpieBridgeName;
+    public Set<String> getMagpieBridgeNameSet() {
+        return magpieBridgeNameSet;
     }
 
     public String getMagpieBridgeNameClusterName() {
@@ -77,7 +73,26 @@ public class MagpieBridgeMetaData implements Comparable<MagpieBridgeMetaData>{
         this.magpieBridgeNameClusterName = magpieBridgeNameClusterName;
     }
 
-    public TreeMap<Long, String> getMagpieBridgeAddresses() {
+    public TreeMap<Long, MagpieBridgeInnerMetaData> getMagpieBridgeAddresses() {
         return magpieBridgeAddresses;
+    }
+
+    static class MagpieBridgeInnerMetaData {
+        private final String magpieBridgeName;
+
+        private final String magpieBridgeAddress;
+
+        public MagpieBridgeInnerMetaData(String magpieBridgeName, String magpieBridgeAddress) {
+            this.magpieBridgeName = magpieBridgeName;
+            this.magpieBridgeAddress = magpieBridgeAddress;
+        }
+
+        public String getMagpieBridgeName() {
+            return magpieBridgeName;
+        }
+
+        public String getMagpieBridgeAddress() {
+            return magpieBridgeAddress;
+        }
     }
 }

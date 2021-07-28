@@ -2,8 +2,11 @@ package com.github.mxsm.register.mananger;
 
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
+import com.github.mxsm.register.mananger.MagpieBridgeMetaData.MagpieBridgeInnerMetaData;
 import com.github.mxsm.remoting.common.NettyUtils;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,16 +26,14 @@ import org.slf4j.LoggerFactory;
  */
 public class MagpieBridgeManager {
 
-    public static final long MAGPIE_BRIDGE_INACTIVE = 10 * 1000L;
+    public static final long MAGPIE_BRIDGE_INACTIVE = 30 * 1000L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MagpieBridgeManager.class);
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private final Map<String /*MagpieBridge Name*/, MagpieBridgeMetaData> magpieBridgeMetaDataTable = new HashMap<>(
+    private final Map<String /*MagpieBridge cluster Name*/, MagpieBridgeMetaData> magpieBridgeMetaDataTable = new HashMap<>(
         128);
-
-    private final Map<String/*cluster name*/, Set<String> /*mb name*/> clusterTable = new HashMap<>(128);
 
     private final Map<String /*MagpieBridge address*/, MagpieBridgeLiveInfo> magpieBridgeLiveTable = new HashMap<>(128);
 
@@ -47,12 +48,6 @@ public class MagpieBridgeManager {
                 final String clusterName = mbInfo.getMagpieBridgeClusterName();
                 long magpieBridgeId = mbInfo.getMagpieBridgeId();
 
-                Set<String> mbNames = clusterTable.get(clusterName);
-                if (mbNames == null) {
-                    mbNames = new HashSet<>();
-                    clusterTable.put(clusterName, mbNames);
-                }
-                mbNames.add(magpieBridgeName);
                 boolean isFirstRegister = false;
                 MagpieBridgeLiveInfo liveInfo = magpieBridgeLiveTable.get(remoteAddress);
                 if (null != liveInfo) {
@@ -71,25 +66,28 @@ public class MagpieBridgeManager {
 
                 MagpieBridgeMetaData magpieBridgeMetaData = magpieBridgeMetaDataTable.get(magpieBridgeName);
                 if (magpieBridgeMetaData == null) {
-                    magpieBridgeMetaData = new MagpieBridgeMetaData(magpieBridgeName,
-                        clusterName);
-                    magpieBridgeMetaData.getMagpieBridgeAddresses().put(magpieBridgeId, remoteAddress);
+                    magpieBridgeMetaData = new MagpieBridgeMetaData(clusterName);
+                    magpieBridgeMetaData.getMagpieBridgeAddresses()
+                        .put(magpieBridgeId, new MagpieBridgeInnerMetaData(magpieBridgeName, remoteAddress));
                     magpieBridgeMetaDataTable.put(magpieBridgeName, magpieBridgeMetaData);
                     LOGGER.info("register magpie bridge metadata[name={},address={}] SUCCESS", magpieBridgeName,
                         remoteAddress);
                 } else {
                     //make sure new register mb id is largest
-                    if(isFirstRegister){
+                    if (isFirstRegister) {
                         Long lastMbId = magpieBridgeMetaData.getMagpieBridgeAddresses().lastKey();
                         if (magpieBridgeId <= lastMbId.longValue()) {
                             magpieBridgeId = lastMbId + 1;
-                            magpieBridgeMetaData.getMagpieBridgeAddresses().put(magpieBridgeId, remoteAddress);
+                            magpieBridgeMetaData.getMagpieBridgeAddresses()
+                                .put(magpieBridgeId, new MagpieBridgeInnerMetaData(magpieBridgeName, remoteAddress));
                         }
                     }
                 }
-
-                Entry<Long, String> mbAdressEntry = magpieBridgeMetaData.getMagpieBridgeAddresses().firstEntry();
-                return new RegisterMagpieBridgeResult(magpieBridgeId, mbAdressEntry.getKey(), mbAdressEntry.getValue());
+                magpieBridgeMetaData.getMagpieBridgeNameSet().add(magpieBridgeName);
+                Entry<Long, MagpieBridgeInnerMetaData> mbAdressEntry = magpieBridgeMetaData.getMagpieBridgeAddresses()
+                    .firstEntry();
+                return new RegisterMagpieBridgeResult(magpieBridgeId, mbAdressEntry.getKey(),
+                    mbAdressEntry.getValue().getMagpieBridgeAddress());
             } finally {
                 readWriteLock.writeLock().unlock();
             }
@@ -109,20 +107,57 @@ public class MagpieBridgeManager {
                 this.magpieBridgeLiveTable.remove(mbInfo.getMagpieBridgeAddress());
 
                 MagpieBridgeMetaData magpieBridgeMetaData = this.magpieBridgeMetaDataTable
-                    .get(mbInfo.getMagpieBridgeName());
+                    .get(mbInfo.getMagpieBridgeClusterName());
                 if (null != magpieBridgeMetaData) {
                     long magpieBridgeId = mbInfo.getMagpieBridgeId();
-                    String address = magpieBridgeMetaData.getMagpieBridgeAddresses().remove(magpieBridgeId);
+                    long masterMbId = magpieBridgeMetaData.getMagpieBridgeAddresses().firstKey();
+
+                    MagpieBridgeInnerMetaData removeMb = magpieBridgeMetaData.getMagpieBridgeAddresses()
+                        .remove(magpieBridgeId);
                     LOGGER.info("Unregister MagpieBridge from MagpieBridgeAddresses table ID[{}],MagpieBridge[{}]",
-                        magpieBridgeId, address);
+                        magpieBridgeId, removeMb.getMagpieBridgeAddress());
                     if (magpieBridgeMetaData.getMagpieBridgeAddresses().isEmpty()) {
-                        this.magpieBridgeMetaDataTable.remove(mbInfo.getMagpieBridgeName());
+                        this.magpieBridgeMetaDataTable.remove(mbInfo.getMagpieBridgeClusterName());
                     }
+
+                    // remove mb name for MagpieBridgeMetaData mb set
+                    Set<Entry<Long, MagpieBridgeInnerMetaData>> entries = magpieBridgeMetaData.getMagpieBridgeAddresses()
+                        .entrySet();
+                    Iterator<Entry<Long, MagpieBridgeInnerMetaData>> iterator = entries.iterator();
+                    boolean removeMbNameFromMbSet = true;
+                    while (iterator.hasNext()) {
+                        Entry<Long, MagpieBridgeInnerMetaData> next = iterator.next();
+                        if (StringUtils.equals(next.getValue().getMagpieBridgeName(), removeMb.getMagpieBridgeName())) {
+                            removeMbNameFromMbSet = false;
+                            break;
+                        }
+                    }
+                    if (removeMbNameFromMbSet) {
+                        magpieBridgeMetaData.getMagpieBridgeNameSet().remove(removeMb.getMagpieBridgeName());
+                    }
+
+                    if (magpieBridgeId == masterMbId) {
+                        Entry<Long, MagpieBridgeInnerMetaData> mbAdressEntry = magpieBridgeMetaData.getMagpieBridgeAddresses()
+                            .firstEntry();
+                        final long newMasterMbId = mbAdressEntry.getKey();
+                        final String newMasterMbAddress = mbAdressEntry.getValue().getMagpieBridgeAddress();
+                        magpieBridgeMetaData.getMagpieBridgeAddresses().entrySet().forEach(entry -> {
+                            MagpieBridgeLiveInfo magpieBridgeLiveInfo = magpieBridgeLiveTable.get(
+                                entry.getValue().getMagpieBridgeAddress());
+                            if (magpieBridgeLiveInfo != null && null != magpieBridgeLiveInfo.getChannel()
+                                && magpieBridgeLiveInfo.getChannel().isActive()) {
+                                magpieBridgeLiveInfo.getChannel().writeAndFlush(null)
+                                    .addListener((ChannelFutureListener) future -> {
+
+                                    });
+                            }
+                        });
+                    }
+
                 }
             } finally {
                 this.readWriteLock.writeLock().unlock();
             }
-            NettyUtils.closeChannel(channel);
         } catch (Exception e) {
             LOGGER.error("closeChannelOnException error", e);
         }
@@ -191,24 +226,24 @@ public class MagpieBridgeManager {
                 while (iterator.hasNext() && (magpieBridgeNameFound == null)) {
                     Entry<String, MagpieBridgeMetaData> next = iterator.next();
                     MagpieBridgeMetaData metaData = next.getValue();
-                    Map<Long, String> magpieBridgeAddresses = metaData.getMagpieBridgeAddresses();
-                    Iterator<Entry<Long, String>> mbIt = magpieBridgeAddresses.entrySet().iterator();
+                    Map<Long, MagpieBridgeInnerMetaData> magpieBridgeAddresses = metaData.getMagpieBridgeAddresses();
+                    Iterator<Entry<Long, MagpieBridgeInnerMetaData>> mbIt = magpieBridgeAddresses.entrySet().iterator();
                     while (mbIt.hasNext()) {
-                        Entry<Long, String> metaNext = mbIt.next();
-                        if (StringUtils.equals(metaNext.getValue(), mbAddressFound)) {
+                        Entry<Long, MagpieBridgeInnerMetaData> metaNext = mbIt.next();
+                        if (StringUtils.equals(metaNext.getValue().getMagpieBridgeAddress(), mbAddressFound)) {
                             magpieBridgeNameFound = next.getKey();
                             mbIt.remove();
                             LOGGER.info(
                                 "remove MagpieBridge address[{}, {}] from magpieBridgeAddresses, because channel destroyed",
-                                metaData.getMagpieBridgeName(), mbAddressFound);
+                                metaNext.getValue().getMagpieBridgeName(), mbAddressFound);
                             break;
                         }
                     }
                     if (magpieBridgeAddresses.isEmpty()) {
                         iterator.remove();
-                        LOGGER.info(
+                       /* LOGGER.info(
                             "remove MagpieBridge Name[{}, {}] from magpieBridgeMetaDataTable, because channel destroyed",
-                            metaData.getMagpieBridgeName(), mbAddressFound);
+                            metaNext.getMagpieBridgeName(), mbAddressFound);*/
                     }
                 }
             } finally {

@@ -9,6 +9,8 @@ import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +31,14 @@ public class RegisterController {
 
     private ExecutorService executorService;
 
+    private final ScheduledExecutorService scheduledExecutorService = Executors
+        .newSingleThreadScheduledExecutor(new NamedThreadFactory("RegisterScheduledServiceThread"));
+
     private final MagpieBridgeManager magpieBridgeManager;
 
     private final MagpieBridgeOnlineKeepingService mbOnlineKeepingService;
 
-    public RegisterController(final NettyServerConfig registerServerConfig,final RegisterConfig registerConfig) {
+    public RegisterController(final NettyServerConfig registerServerConfig, final RegisterConfig registerConfig) {
         this.registerServerConfig = registerServerConfig;
         this.registerConfig = registerConfig;
         this.magpieBridgeManager = new MagpieBridgeManager();
@@ -42,10 +47,13 @@ public class RegisterController {
 
     public void initialize() {
 
-        registerServer = new NettyRemotingServer(registerServerConfig,mbOnlineKeepingService);
+        registerServer = new NettyRemotingServer(registerServerConfig, mbOnlineKeepingService);
         executorService = Executors.newFixedThreadPool(registerServerConfig.getServerWorkerThreads(),
             new NamedThreadFactory("RegisterWorkThread"));
         registerProcessor();
+
+        scheduledExecutorService.scheduleAtFixedRate(() -> magpieBridgeManager.scanInactiveMagpieBridge(), 10, 10,
+            TimeUnit.SECONDS);
 
     }
 
