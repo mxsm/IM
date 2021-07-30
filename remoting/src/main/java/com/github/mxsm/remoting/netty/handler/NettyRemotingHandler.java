@@ -145,10 +145,10 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         }
     }
 
-    public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
+    protected void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
         final ExecutorService executor) {
         Pair<NettyRequestProcessor, ExecutorService> pair = Pair.builder(processor, executor);
-        processorTable.put(requestCode, pair);
+        this.processorTable.put(requestCode, pair);
     }
 
 

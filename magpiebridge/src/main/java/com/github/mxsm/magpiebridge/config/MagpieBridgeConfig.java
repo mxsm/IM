@@ -26,7 +26,7 @@ public class MagpieBridgeConfig {
 
     private String magpieBridgeClusterName;
 
-    private MagpieBridgeRole magpieBridgeRole;
+    private volatile MagpieBridgeRole magpieBridgeRole;
 
     public String getRegisterAddress() {
         return registerAddress;

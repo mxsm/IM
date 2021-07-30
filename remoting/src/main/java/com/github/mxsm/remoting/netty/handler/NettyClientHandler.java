@@ -30,7 +30,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RemotingComm
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
-        LOGGER.info("Received RemotingCommand Type: {}", msg.getCommandType());
+        LOGGER.debug("Received RemotingCommand Type: {}", msg.getCommandType());
         nettyRemoting.processMessageReceived(ctx, msg);
 
     }

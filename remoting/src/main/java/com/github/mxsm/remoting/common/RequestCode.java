@@ -25,4 +25,8 @@ public abstract class RequestCode {
      * magpie bridge unregister
      */
     public static final int MAGPIE_BRIDGE_UNREGISTER = 22;
+
+    /*register code 201-400*/
+
+    public static final int MAGPIE_BRIDGE_MASTER_CHANGE = 201;
 }

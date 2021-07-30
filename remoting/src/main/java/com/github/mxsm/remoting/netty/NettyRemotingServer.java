@@ -154,7 +154,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
     @Override
     public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
         final ExecutorService executor) {
-        this.registerProcessor(requestCode, processor, executor);
+        super.registerProcessor(requestCode, processor, executor);
     }
 
     @Override

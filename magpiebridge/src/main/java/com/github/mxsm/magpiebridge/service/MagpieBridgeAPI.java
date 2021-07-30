@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.github.mxsm.common.GeneralUtils;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.common.thread.NamedThreadFactory;
+import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.exception.RegisterRequestException;
+import com.github.mxsm.magpiebridge.processor.RegistrationCenterProcessor;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.RemotingClient;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,25 +44,36 @@ public class MagpieBridgeAPI {
 
     private final NettyClientConfig nettyClientConfig;
 
+    private final String magpieBridgeAddress;
+
+    private final MagpieBridgeConfig magpieBridgeConfig;
+
     private ExecutorService bmExecutorService = new ThreadPoolExecutor(GeneralUtils.getAvailableProcessors(),
         GeneralUtils.getAvailableProcessors() * 2, 2, TimeUnit.MINUTES, new ArrayBlockingQueue<>(128),
         new NamedThreadFactory("MagpieBridgeAPI_Thread"));
 
-    public MagpieBridgeAPI(final NettyClientConfig nettyClientConfig) {
+    private ExecutorService registerExecutor = Executors.newFixedThreadPool(4,
+        new NamedThreadFactory("RegisterExecutorThread"));
+    ;
+
+    public MagpieBridgeAPI(NettyClientConfig nettyClientConfig, String magpieBridgeAddress,
+        MagpieBridgeConfig magpieBridgeConfig) {
         this.nettyClientConfig = nettyClientConfig;
+        this.magpieBridgeAddress = magpieBridgeAddress;
+        this.magpieBridgeConfig = magpieBridgeConfig;
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
     }
 
-    public void start(){
+    public void start() {
+        registerProcessor();
         this.remotingClient.start();
-
     }
 
-    public void shutdown(){
+    public void shutdown() {
         this.remotingClient.shutdown();
     }
 
-    public void updateRegisterAddressList(final List<String> addrs){
+    public void updateRegisterAddressList(final List<String> addrs) {
         this.remotingClient.updateRegisterAddressList(addrs);
     }
 
@@ -109,6 +123,7 @@ public class MagpieBridgeAPI {
 
     /**
      * unregister all magpie bridge
+     *
      * @param mbInfo
      * @param timeout
      * @return
@@ -143,6 +158,7 @@ public class MagpieBridgeAPI {
 
     /**
      * 注册鹊桥到注册中心
+     *
      * @param registerAddress
      * @param request
      * @param timeoutMillis
@@ -173,7 +189,7 @@ public class MagpieBridgeAPI {
         }
         switch (response.getCode()) {
             case ResponseCode.SUCCESS:
-                LOGGER.info("Register MagpieBridge to registration center[{}] SUCCESS",registerAddress);
+                LOGGER.info("Register MagpieBridge to registration center[{}] SUCCESS", registerAddress);
                 break;
             default:
                 LOGGER.error("Register MagpieBridge Return code[{}],register error:{}", response.getCode(),
@@ -186,6 +202,7 @@ public class MagpieBridgeAPI {
 
     /**
      * 注销注册中心的鹊桥
+     *
      * @param registerAddress
      * @param request
      * @param timeoutMillis
@@ -211,13 +228,13 @@ public class MagpieBridgeAPI {
         }
         RemotingCommand response = this.remotingClient.invokeSync(registerAddress, request, timeoutMillis);
 
-        if(response == null){
+        if (response == null) {
             LOGGER.warn("unregister MagpieBridge from registration center[{}], Return null", registerAddress);
             return null;
         }
         switch (response.getCode()) {
             case ResponseCode.SUCCESS:
-                LOGGER.info("unregister MagpieBridge from registration center[{}] SUCCESS",registerAddress);
+                LOGGER.info("unregister MagpieBridge from registration center[{}] SUCCESS", registerAddress);
                 break;
             default:
                 LOGGER.error("unregister MagpieBridge Return code[{}],register error:{}", response.getCode(),
@@ -225,5 +242,12 @@ public class MagpieBridgeAPI {
                 throw new RegisterRequestException(response.getCode(), response.getResultMessage());
         }
         return response;
+    }
+
+    private void registerProcessor() {
+        RegistrationCenterProcessor registrationCenterProcessor = new RegistrationCenterProcessor(
+            this.magpieBridgeConfig, this.magpieBridgeAddress);
+        this.remotingClient.registerProcessor(RequestCode.MAGPIE_BRIDGE_MASTER_CHANGE, registrationCenterProcessor,
+            this.registerExecutor);
     }
 }

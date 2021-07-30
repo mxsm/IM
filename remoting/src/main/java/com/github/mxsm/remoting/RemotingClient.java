@@ -5,7 +5,9 @@ import com.github.mxsm.remoting.exception.RemotingConnectException;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
+import com.github.mxsm.remoting.netty.NettyRequestProcessor;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author mxsm
@@ -73,6 +75,6 @@ public interface RemotingClient extends RemotingService {
         throws InterruptedException, RemotingConnectException, RemotingTooMuchRequestException,
         RemotingTimeoutException, RemotingSendRequestException;
 
-/*    void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
-        final ExecutorService executor);*/
+    void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
+        final ExecutorService executor);
 }

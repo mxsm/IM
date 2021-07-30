@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ public class MagpieBridgeController {
     private final String magpieBridgeAddress;
 
     private ScheduledExecutorService magpieBridgeRegisterService = Executors
-        .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterService"));
+        .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterServiceThread"));
 
 
     public MagpieBridgeController(final NettyServerConfig nettyServerConfig,
@@ -60,10 +59,11 @@ public class MagpieBridgeController {
         this.nettyServerConfig = nettyServerConfig;
         this.magpieBridgeConfig = magpieBridgeConfig;
         this.nettyClientConfig = nettyClientConfig;
-        this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig);
         this.clientOnlineKeepingService = new ClientOnlineKeepingService();
         this.clusterMetaData = new ClusterMetaData();
         this.magpieBridgeAddress = getMagpieBridgeAddress();
+        this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig, this.magpieBridgeAddress,
+            this.magpieBridgeConfig);
     }
 
     public void initialize() {
@@ -75,7 +75,9 @@ public class MagpieBridgeController {
         this.magpieBridgeAPI.updateRegisterAddressList(
             Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(Symbol.COMMA)));
 
-        magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
+        registerProcessor();
+
+        //magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
     }
 
     private void checkConfig() {
@@ -110,19 +112,22 @@ public class MagpieBridgeController {
                 long magpieBridgeId = result.getMagpieBridgeId();
                 long magpieBridgeMasterId = result.getMagpieBridgeMasterId();
                 MagpieBridgeRole oldRole = this.magpieBridgeConfig.getMagpieBridgeRole();
-                LOGGER.info("register magpie bridge to center success, current mb status [id={},role={},master-address={}]",
-                    this.magpieBridgeConfig.getMagpieBridgeId(), oldRole,result.getMasterAddress());
+                LOGGER.info(
+                    "register magpie bridge to center success, current mb status [id={},role={},master-address={}]",
+                    this.magpieBridgeConfig.getMagpieBridgeId(), oldRole, result.getMasterAddress());
                 if (magpieBridgeId != RegisterMagpieBridgeResult.NO_MASTER
                     && magpieBridgeMasterId != RegisterMagpieBridgeResult.NO_MASTER) {
                     this.magpieBridgeConfig.setMagpieBridgeId(magpieBridgeId);
                     if (StringUtils.equals(result.getMasterAddress(), this.magpieBridgeAddress)
                         && magpieBridgeId == magpieBridgeMasterId) {
                         this.magpieBridgeConfig.setMagpieBridgeRole(MagpieBridgeRole.MASTER.name());
-                    }else{
+                    } else {
                         this.magpieBridgeConfig.setMagpieBridgeRole(MagpieBridgeRole.SLAVE.name());
                     }
-                    LOGGER.info("register magpie bridge to center success and update status,new role [id={},role={}->{},master-address={}]",
-                        this.magpieBridgeConfig.getMagpieBridgeId(),oldRole, this.magpieBridgeConfig.getMagpieBridgeRole(),result.getMasterAddress());
+                    LOGGER.info(
+                        "register magpie bridge to center success and update status,new role [id={},role={}->{},master-address={}]",
+                        this.magpieBridgeConfig.getMagpieBridgeId(), oldRole,
+                        this.magpieBridgeConfig.getMagpieBridgeRole(), result.getMasterAddress());
                     isRegisterSuccess = true;
                     break;
                 }
@@ -157,7 +162,7 @@ public class MagpieBridgeController {
         this.magpieBridgeAPI.start();
 
         boolean registerSuccess = this.registerMagpieBridgeAll();
-        if(!registerSuccess){
+        if (!registerSuccess) {
             System.exit(-1);
         }
     }
@@ -181,5 +186,9 @@ public class MagpieBridgeController {
 
     private String getMagpieBridgeAddress() {
         return NetUtils.getLocalAddress() + Symbol.COLON + this.nettyServerConfig.getBindPort();
+    }
+
+    private void registerProcessor() {
+
     }
 }

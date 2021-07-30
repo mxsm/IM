@@ -14,7 +14,7 @@ public interface NettyRequestProcessor {
         throws Exception;
 
     /**
-     * 请求是否抛弃
+     * request is reject
      * @return
      */
     boolean rejectRequest();
