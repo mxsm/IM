@@ -12,6 +12,8 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,9 +74,12 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("Netty Server channelActive");
+        final String address = NetUtils.parseChannelRemoteAddress(ctx.channel());
+        LOGGER.info("Netty Server channelActive[{}]");
         super.channelActive(ctx);
-
+        if (this.nettyEventPublisher != null) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CONNECT, address, ctx.channel(), null));
+        }
     }
 
     /**
@@ -87,8 +92,14 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("Netty Server channelInactive");
+
+        final String address = NetUtils.parseChannelRemoteAddress(ctx.channel());
+        LOGGER.info("Netty Server channelInactive[{}]", address);
         super.channelInactive(ctx);
+        if (this.nettyEventPublisher != null) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CLOSE, address, ctx.channel(), null));
+        }
+
 
     }
 
@@ -105,7 +116,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (nettyEventPublisher != null) {
             this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.EXCEPTION,
-                NetUtils.parseChannelRemoteAddress(ctx.channel()),ctx.channel(), cause));
+                NetUtils.parseChannelRemoteAddress(ctx.channel()), ctx.channel(), cause));
         } else {
             LOGGER.error("Netty Server exceptionCaught", cause);
         }
@@ -123,11 +134,17 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        LOGGER.info("Netty Server channelRegistered");
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
-            //channelEventListener.onUserEventTriggered(channel, evt);
+
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (this.nettyEventPublisher != null && event.state() == IdleState.ALL_IDLE) {
+                if (nettyEventPublisher != null) {
+                    Channel channel = ctx.channel();
+                    this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.IDLE,
+                        NetUtils.parseChannelRemoteAddress(channel), channel, null));
+                }
+            }
         }
-        super.userEventTriggered(ctx, evt);
+        ctx.fireUserEventTriggered(evt);
     }
 }
