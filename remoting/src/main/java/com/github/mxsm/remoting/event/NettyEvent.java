@@ -24,6 +24,13 @@ public class NettyEvent extends EventObject {
         this.channel = channel;
     }
 
+    public NettyEvent(NettyEventType eventType, String address, Channel channel) {
+        super(new Object());
+        this.eventType = eventType;
+        this.address = address;
+        this.channel = channel;
+    }
+
     public NettyEventType getEventType() {
         return eventType;
     }

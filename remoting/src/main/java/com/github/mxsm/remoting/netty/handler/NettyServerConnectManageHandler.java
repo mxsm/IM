@@ -40,7 +40,8 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("Netty Server channelRegistered");
+        final String address = NetUtils.parseChannelRemoteAddress(ctx.channel());
+        LOGGER.info("Netty Server channelRegistered[{}]", address);
         super.channelRegistered(ctx);
     }
 
@@ -54,7 +55,8 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("Netty Server channelUnregistered");
+        final String address = NetUtils.parseChannelRemoteAddress(ctx.channel());
+        LOGGER.info("Netty Server channelUnregistered[{}]",address);
         super.channelUnregistered(ctx);
 
     }
@@ -70,10 +72,10 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         final String address = NetUtils.parseChannelRemoteAddress(ctx.channel());
-        LOGGER.info("Netty Server channelActive[{}]");
+        LOGGER.info("Netty Server channelActive[{}]",address);
         super.channelActive(ctx);
         if (this.nettyEventPublisher != null) {
-            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CONNECT, address, ctx.channel(), null));
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CONNECT, address, ctx.channel()));
         }
     }
 
@@ -92,7 +94,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
         LOGGER.info("Netty Server channelInactive[{}]", address);
         super.channelInactive(ctx);
         if (this.nettyEventPublisher != null) {
-            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CLOSE, address, ctx.channel(), null));
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CLOSE, address, ctx.channel()));
         }
 
 
@@ -109,9 +111,10 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        LOGGER.error("nettyServerConnect exception",cause);
         if (nettyEventPublisher != null) {
             this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.EXCEPTION,
-                NetUtils.parseChannelRemoteAddress(ctx.channel()), ctx.channel(), cause));
+                    NetUtils.parseChannelRemoteAddress(ctx.channel()), ctx.channel(), cause));
         } else {
             LOGGER.error("Netty Server exceptionCaught", cause);
         }
@@ -136,7 +139,7 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
                 if (nettyEventPublisher != null) {
                     Channel channel = ctx.channel();
                     this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.IDLE,
-                        NetUtils.parseChannelRemoteAddress(channel), channel, null));
+                            NetUtils.parseChannelRemoteAddress(channel), channel, event));
                 }
             }
         }
