@@ -2,6 +2,7 @@ package com.github.mxsm.protocol.utils;
 
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.protobuf.constant.RemotingCommandType;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**

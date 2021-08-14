@@ -1,9 +1,10 @@
 package com.github.mxsm.register.mananger;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeMap;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author mxsm

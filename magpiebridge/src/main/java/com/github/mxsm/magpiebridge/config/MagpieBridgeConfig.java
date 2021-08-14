@@ -1,8 +1,9 @@
 package com.github.mxsm.magpiebridge.config;
 
 import com.github.mxsm.common.annotation.NotNull;
-import com.github.mxsm.magpiebridge.common.MagpieBridgeConst;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
+import com.github.mxsm.magpiebridge.common.MagpieBridgeConst;
+
 import java.util.UUID;
 
 /**

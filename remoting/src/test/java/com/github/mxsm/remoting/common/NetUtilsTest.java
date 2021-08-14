@@ -1,9 +1,10 @@
 package com.github.mxsm.remoting.common;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * @author mxsm

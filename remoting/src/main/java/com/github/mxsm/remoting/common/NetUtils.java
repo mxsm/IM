@@ -1,15 +1,12 @@
 package com.github.mxsm.remoting.common;
 
 import io.netty.channel.Channel;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * @author mxsm

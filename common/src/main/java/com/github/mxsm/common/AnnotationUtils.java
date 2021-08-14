@@ -2,12 +2,13 @@ package com.github.mxsm.common;
 
 import com.github.mxsm.common.annotation.NotNull;
 import com.github.mxsm.common.exception.NotNullException;
+import org.apache.commons.collections4.CollectionUtils;
+import org.reflections.ReflectionUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
-import org.apache.commons.collections4.CollectionUtils;
-import org.reflections.ReflectionUtils;
 
 /**
  * @author mxsm

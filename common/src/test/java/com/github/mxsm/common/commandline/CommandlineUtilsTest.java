@@ -1,6 +1,5 @@
 package com.github.mxsm.common.commandline;
 
-import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -8,6 +7,8 @@ import org.apache.commons.cli.Options;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Properties;
 
 /**
  * @author mxsm
