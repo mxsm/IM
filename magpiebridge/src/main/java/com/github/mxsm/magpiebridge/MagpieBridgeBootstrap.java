@@ -109,7 +109,7 @@ public class MagpieBridgeBootstrap {
     }
 
     private static void addOptions(final Options options) {
-        Option portOption = new Option("p", "port", true, "register bind port");
+        Option portOption = new Option("p", "port", true, "MagpieBridge bind port");
         Option configFileOption = new Option("c", "config", true, "MagpieBridge config file path");
         Option registerOption = new Option("r", "register-address", true,
             "register address,example:127.0.0.1:8080,192.168.10.16:8080");
