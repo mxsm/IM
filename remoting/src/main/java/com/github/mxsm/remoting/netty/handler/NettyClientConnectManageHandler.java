@@ -1,9 +1,17 @@
 package com.github.mxsm.remoting.netty.handler;
 
+import com.github.mxsm.remoting.common.NetUtils;
+import com.github.mxsm.remoting.common.NettyUtils;
+import com.github.mxsm.remoting.event.NettyEvent;
 import com.github.mxsm.remoting.event.NettyEventPublisher;
+import com.github.mxsm.remoting.event.NettyEventType;
 import io.netty.channel.*;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.SocketAddress;
 
 /**
  * 客户端连接管理
@@ -18,115 +26,71 @@ public class NettyClientConnectManageHandler extends ChannelDuplexHandler {
 
     private final NettyEventPublisher nettyEventPublisher;
 
-
     public NettyClientConnectManageHandler(final NettyEventPublisher nettyEventPublisher) {
         this.nettyEventPublisher = nettyEventPublisher;
     }
 
-    /**
-     * Calls {@link ChannelHandlerContext#fireChannelRegistered()} to forward to the next {@link ChannelInboundHandler}
-     * in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     */
     @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelRegistered(ctx);
-        LOGGER.info("Netty Server channelRegistered");
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
+    public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
 
-        }
+        final String remote = localAddress == null ? "unknown" : NetUtils.parseSocketAddress2Address(remoteAddress);
+        final String local = localAddress == null ? "unknown" : NetUtils.parseSocketAddress2Address(localAddress);
 
-    }
+        LOGGER.info("netty client pipeline: connct {}==>{}", local, remote);
+        super.connect(ctx, remoteAddress, localAddress, promise);
 
-    /**
-     * Calls {@link ChannelHandlerContext#fireChannelUnregistered()} to forward to the next {@link
-     * ChannelInboundHandler} in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     */
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelUnregistered(ctx);
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
-
+        if (null != this.nettyEventPublisher) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CONNECT, remote, ctx.channel()));
         }
     }
 
-    /**
-     * Calls {@link ChannelHandlerContext#fireChannelActive()} to forward to the next {@link ChannelInboundHandler} in
-     * the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     */
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        super.channelActive(ctx);
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
-
+    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        String remoteAddress = NetUtils.parseChannelRemoteAddress(ctx.channel());
+        super.close(ctx, promise);
+        LOGGER.info("netty client pipeline: close {}", remoteAddress);
+        if (null != this.nettyEventPublisher) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CLOSE, remoteAddress, ctx.channel()));
         }
     }
 
-    /**
-     * Calls {@link ChannelHandlerContext#fireChannelInactive()} to forward to the next {@link ChannelInboundHandler} in
-     * the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     */
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        super.channelInactive(ctx);
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
-
+    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        String remoteAddress = NetUtils.parseChannelRemoteAddress(ctx.channel());
+        LOGGER.info("netty client pipeline: disconnect {}", remoteAddress);
+        super.disconnect(ctx, promise);
+        if (null != this.nettyEventPublisher) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.CLOSE, remoteAddress, ctx.channel()));
         }
     }
 
-    /**
-     * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to forward to the next {@link ChannelHandler}
-     * in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     * @param cause
-     */
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
-
-        }
-    }
-
-    /**
-     * Calls {@link ChannelHandlerContext#fireUserEventTriggered(Object)} to forward to the next {@link
-     * ChannelInboundHandler} in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     * @param evt
-     */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        super.userEventTriggered(ctx, evt);
-        if (nettyEventPublisher != null) {
-            Channel channel = ctx.channel();
 
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (this.nettyEventPublisher != null && event.state() == IdleState.ALL_IDLE) {
+                String remoteAddress = NetUtils.parseChannelRemoteAddress(ctx.channel());
+                LOGGER.info("netty client piplie: idle exception [{}]",remoteAddress);
+                if (nettyEventPublisher != null) {
+                    Channel channel = ctx.channel();
+                    this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.IDLE,
+                            NetUtils.parseChannelRemoteAddress(channel), channel, event));
+                }
+            }
         }
+        ctx.fireUserEventTriggered(evt);
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        LOGGER.error("netty client exception",cause);
+        if (nettyEventPublisher != null) {
+            this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.EXCEPTION,
+                    NetUtils.parseChannelRemoteAddress(ctx.channel()), ctx.channel(), cause));
+        } else {
+            LOGGER.error("Netty client exceptionCaught", cause);
+        }
+        NettyUtils.closeChannel(ctx.channel());
+    }
 }

@@ -47,3 +47,26 @@ usage: MagpieBridge [-c <arg>] [-h] [-p <arg>] [-r <arg>]
 ```
 
 #### 2.1 IDEA如何启动鹊桥
+
+![](https://github.com/mxsm/picture/blob/main/IM/%E9%B9%8A%E6%A1%A5IDEA%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE.png?raw=true)
+
+配置好项目的启动参数。-c 的参数根据个人具体情况配置。主要看magpiebridge.conf文件的位置
+
+```shell
+-c E:\develop\github\IM\distribution\conf\magpiebridge.conf -r 127.0.0.1:8888
+example: -c E:\develop\github\IM\distribution\conf\magpiebridge.conf -r 127.0.0.1:8888
+```
+
+#### 2.2 Windows平台如何运行鹊桥
+
+```shell
+git clone https://github.com/mxsm/IM.git
+cd IM
+mvn -Prelease-all -DskipTests clean install -U
+cd distribution/target/im-0.1-SNAPSHOT/im-0.1-SNAPSHOT
+bin\immagpiebridge.cmd -c E:\develop\github\IM\distribution\conf\magpiebridge.conf -r 127.0.0.1:8888
+```
+
+#### 2.3 Linux平台如何运行鹊桥
+
+待编写..................

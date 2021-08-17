@@ -10,68 +10,30 @@ import io.netty.channel.*;
 public interface ChannelEventListener {
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelRegistered()} to forward to the next {@link ChannelInboundHandler}
-     * in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
+     * when the netty channel connect trigger onChannelConnect method
+     * @param remoteAddress
+     * @param channel
      */
-     void onChannelRegistered(final String remoteAddress, final Channel channel) throws Exception;
+    void onChannelConnect(final String remoteAddress, final Channel channel);
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelUnregistered()} to forward to the next {@link
-     * ChannelInboundHandler} in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
+     * when the netty channel Disconnect trigger onChannelDisconnect method
+     * @param remoteAddress
+     * @param channel
      */
-     void onChannelUnregistered(final Channel channel) throws Exception;
+    void onChannelClose(final String remoteAddress, final Channel channel);
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelActive()} to forward to the next {@link ChannelInboundHandler} in
-     * the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
+     * when the netty channel on exception trigger onChannelException
+     * @param remoteAddress
+     * @param channel
      */
-     void onChannelActive(final Channel channel) throws Exception;
+    void  onChannelException(final String remoteAddress, final Channel channel);
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelInactive()} to forward to the next {@link ChannelInboundHandler} in
-     * the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
+     * when the netty channel idle trigger onChannelIdle
+     * @param remoteAddress
+     * @param channel
      */
-
-     void onChannelInactive(final Channel channel) throws Exception;
-
-    /**
-     * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to forward to the next {@link ChannelHandler}
-     * in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     * @param cause
-     */
-     void onExceptionCaught(final Channel channel, Throwable cause) throws Exception;
-
-    /**
-     * Calls {@link ChannelHandlerContext#fireUserEventTriggered(Object)} to forward to the next {@link
-     * ChannelInboundHandler} in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param ctx
-     * @param evt
-     */
-    void onUserEventTriggered(final Channel channel, Object evt) throws Exception;
-
-
-
+    void onChannelIdle(final String remoteAddress, final Channel channel);
 }

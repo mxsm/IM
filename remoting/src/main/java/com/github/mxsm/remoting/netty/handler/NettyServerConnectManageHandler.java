@@ -132,10 +132,11 @@ public class NettyServerConnectManageHandler extends ChannelDuplexHandler {
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
             if (this.nettyEventPublisher != null && event.state() == IdleState.ALL_IDLE) {
+                String remoteAddress = NetUtils.parseChannelRemoteAddress(ctx.channel());
+                LOGGER.info("netty server piplie: idle exception [{}]",remoteAddress);
                 if (nettyEventPublisher != null) {
                     Channel channel = ctx.channel();
                     this.nettyEventPublisher.publishEvent(new NettyEvent(NettyEventType.IDLE,

@@ -5,6 +5,7 @@ import com.github.mxsm.common.GeneralUtils;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.protobuf.constant.RemotingCommandType;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.register.mananger.MagpieBridgeManager;
 import com.github.mxsm.remoting.common.NetUtils;
@@ -37,12 +38,12 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
 
         if (ctx != null) {
             LOGGER.debug("receive request from RequestCode[{}] IP[{}]", request.getCode(),
-                NetUtils.parseChannelRemoteAddress(ctx.channel()));
+                    NetUtils.parseChannelRemoteAddress(ctx.channel()));
         }
 
         switch (request.getCode()) {
             case RequestCode.HEART_BEAT:
-                return null;
+                return this.heartbeat(ctx, request);
             case RequestCode.MAGPIE_BRIDGE_REGISTER:
                 return this.registerMagpieBridge(ctx, request);
             case RequestCode.MAGPIE_BRIDGE_UNREGISTER:
@@ -102,5 +103,10 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
         this.magpieBridgeManager.unRegisterMagpieBridge(ctx.channel(), mbInfo);
 
         return responseBuilder.setCode(ResponseCode.SUCCESS).build();
+    }
+
+    private RemotingCommand heartbeat(final ChannelHandlerContext ctx, final RemotingCommand request) {
+        LOGGER.info("receive the remoting[{}] heart beat",NetUtils.parseChannelRemoteAddress(ctx.channel()));
+        return RemotingCommandBuilder.buildResponseCommand().setCode(ResponseCode.SUCCESS).build();
     }
 }

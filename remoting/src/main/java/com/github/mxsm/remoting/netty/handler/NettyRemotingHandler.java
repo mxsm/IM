@@ -28,12 +28,12 @@ import java.util.concurrent.TimeUnit;
  * @Since 0.1
  */
 public abstract class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler,
-    NettyEventPublisher {
+        NettyEventPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyRemotingHandler.class);
 
     private final Map<Integer /*request code*/, Pair<NettyRequestProcessor, ExecutorService>> processorTable = new HashMap<>(
-        64);
+            64);
 
     private Pair<NettyRequestProcessor, ExecutorService> defaultRequestProcessor;
 
@@ -48,14 +48,14 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
         final Pair<NettyRequestProcessor, ExecutorService> matchedPair = processorTable.get(cmd.getCode());
         final Pair<NettyRequestProcessor, ExecutorService> pair =
-            null == matchedPair ? this.defaultRequestProcessor : matchedPair;
+                null == matchedPair ? this.defaultRequestProcessor : matchedPair;
 
         final long commandId = cmd.getCommandId();
 
         if (pair == null) {
             String error = " request type " + cmd.getCode() + " not supported";
             final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
-                .setCode(ResponseCode.REQUEST_CODE_NOT_SUPPORTED).setResultMessage(error).build();
+                    .setCode(ResponseCode.REQUEST_CODE_NOT_SUPPORTED).setResultMessage(error).build();
             ctx.writeAndFlush(response);
             LOGGER.error(NetUtils.parseChannelRemoteAddress(ctx.channel()) + error);
             return;
@@ -91,8 +91,8 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                 //处理返回数据
                 if (!ProtobufUtils.isOnewayRequest(cmd)) {
                     final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand()
-                        .setCommandId(commandId)
-                        .setCode(ResponseCode.SYSTEM_ERROR).setResultMessage(e.getMessage()).build();
+                            .setCommandId(commandId)
+                            .setCode(ResponseCode.SYSTEM_ERROR).setResultMessage(e.getMessage()).build();
                     ctx.writeAndFlush(response);
                 }
             }
@@ -100,7 +100,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
         if (pair.getLeft().rejectRequest()) {
             final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
-                .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("request was rejected").build();
+                    .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("request was rejected").build();
             ctx.writeAndFlush(response);
             return;
         }
@@ -111,8 +111,8 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         } catch (Exception e) {
             if (!ProtobufUtils.isOnewayRequest(cmd)) {
                 final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
-                    .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("submit RequestTaskWrapper to exe error")
-                    .build();
+                        .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("submit RequestTaskWrapper to exe error")
+                        .build();
                 ctx.writeAndFlush(response);
             }
         }
@@ -137,13 +137,13 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
             }
         } else {
             LOGGER.warn(
-                "receive response, but not matched any request, " + NetUtils.parseChannelRemoteAddress(ctx.channel()));
+                    "receive response, but not matched any request, " + NetUtils.parseChannelRemoteAddress(ctx.channel()));
             LOGGER.warn(cmd.toString());
         }
     }
 
     protected void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
-        final ExecutorService executor) {
+                                     final ExecutorService executor) {
         Pair<NettyRequestProcessor, ExecutorService> pair = Pair.builder(processor, executor);
         this.processorTable.put(requestCode, pair);
     }
@@ -203,14 +203,16 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                     }
                     switch (nettyEvent.getEventType()) {
                         case IDLE:
+                            channelEventListener.onChannelIdle(nettyEvent.getAddress(),nettyEvent.getChannel());
                             break;
                         case CLOSE:
+                            channelEventListener.onChannelClose(nettyEvent.getAddress(),nettyEvent.getChannel());
                             break;
                         case CONNECT:
+                            channelEventListener.onChannelConnect(nettyEvent.getAddress(),nettyEvent.getChannel());
                             break;
                         case EXCEPTION:
-                            channelEventListener
-                                .onExceptionCaught(nettyEvent.getChannel(), (Throwable) nettyEvent.getSource());
+                            channelEventListener.onChannelException(nettyEvent.getAddress(), nettyEvent.getChannel());
                             break;
                         default:
                     }

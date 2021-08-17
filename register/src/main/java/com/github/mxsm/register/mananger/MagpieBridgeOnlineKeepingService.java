@@ -13,96 +13,57 @@ import org.slf4j.LoggerFactory;
  */
 public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MagpieBridgeOnlineKeepingService.class);
-
     private MagpieBridgeManager magpieBridgeManager;
 
     public MagpieBridgeOnlineKeepingService(MagpieBridgeManager magpieBridgeManager) {
         this.magpieBridgeManager = magpieBridgeManager;
     }
 
+    public MagpieBridgeManager getMagpieBridgeManager() {
+        return magpieBridgeManager;
+    }
+
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelRegistered()} to forward to the next {@link ChannelInboundHandler}
-     * in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
+     * when the netty channel connect trigger onChannelConnect method
      *
      * @param remoteAddress
      * @param channel
      */
     @Override
-    public void onChannelRegistered(String remoteAddress, Channel channel) throws Exception {
-
+    public void onChannelConnect(String remoteAddress, Channel channel) {
+        // nothing to do here
     }
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelUnregistered()} to forward to the next {@link
-     * ChannelInboundHandler} in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
+     * when the netty channel Disconnect trigger onChannelDisconnect method
      *
+     * @param remoteAddress
      * @param channel
      */
     @Override
-    public void onChannelUnregistered(Channel channel) throws Exception {
-
+    public void onChannelClose(String remoteAddress, Channel channel) {
+        this.magpieBridgeManager.closeChannelOnException(remoteAddress, channel);
     }
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelActive()} to forward to the next {@link ChannelInboundHandler} in
-     * the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
+     * when the netty channel on exception trigger onChannelException
      *
+     * @param remoteAddress
      * @param channel
      */
     @Override
-    public void onChannelActive(Channel channel) throws Exception {
-
+    public void onChannelException(String remoteAddress, Channel channel) {
+        this.magpieBridgeManager.closeChannelOnException(remoteAddress, channel);
     }
 
     /**
-     * Calls {@link ChannelHandlerContext#fireChannelInactive()} to forward to the next {@link ChannelInboundHandler} in
-     * the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
+     * when the netty channel idle trigger onChannelIdle
      *
+     * @param remoteAddress
      * @param channel
      */
     @Override
-    public void onChannelInactive(Channel channel) throws Exception {
-
-    }
-
-    /**
-     * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to forward to the next {@link ChannelHandler}
-     * in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param channel
-     * @param cause
-     */
-    @Override
-    public void onExceptionCaught(Channel channel, Throwable cause) throws Exception {
-        this.magpieBridgeManager.closeChannelOnException(NetUtils.parseChannelRemoteAddress(channel), channel);
-    }
-
-    /**
-     * Calls {@link ChannelHandlerContext#fireUserEventTriggered(Object)} to forward to the next {@link
-     * ChannelInboundHandler} in the {@link ChannelPipeline}.
-     * <p>
-     * Sub-classes may override this method to change behavior.
-     *
-     * @param channel
-     * @param evt
-     */
-    @Override
-    public void onUserEventTriggered(Channel channel, Object evt) throws Exception {
-
-    }
-
-    public MagpieBridgeManager getMagpieBridgeManager() {
-        return magpieBridgeManager;
+    public void onChannelIdle(String remoteAddress, Channel channel) {
+        this.magpieBridgeManager.closeChannelOnException(remoteAddress, channel);
     }
 }

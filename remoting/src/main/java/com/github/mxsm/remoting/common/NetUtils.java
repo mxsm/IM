@@ -94,4 +94,15 @@ public abstract class NetUtils {
             return localHost.getHostAddress();
         }
     }
+
+    public static String parseSocketAddress2Address(SocketAddress socketAddress) {
+        if (socketAddress != null) {
+            final String address = socketAddress.toString();
+
+            if (address.length() > 0) {
+                return address.substring(1);
+            }
+        }
+        return "";
+    }
 }
