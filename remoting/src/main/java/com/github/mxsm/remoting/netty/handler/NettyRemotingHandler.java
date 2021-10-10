@@ -75,7 +75,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                     }
                 };
 
-                //异步处理
+                //async processor
                 NettyRequestProcessor requestProcessor = pair.getLeft();
                 if (requestProcessor instanceof AsyncNettyRequestProcessor) {
                     AsyncNettyRequestProcessor processor = (AsyncNettyRequestProcessor) requestProcessor;
@@ -88,7 +88,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                 }
             } catch (Exception e) {
                 LOGGER.error("process request exception", e);
-                //处理返回数据
+                //handle return data
                 if (!ProtobufUtils.isOnewayRequest(cmd)) {
                     final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand()
                             .setCommandId(commandId)

@@ -7,6 +7,7 @@ import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
 import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.client.manager.ClientOnlineKeepingService;
+import com.github.mxsm.magpiebridge.client.manager.RemotingClientManager;
 import com.github.mxsm.magpiebridge.cluster.ClusterMetaData;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
@@ -54,13 +55,12 @@ public class MagpieBridgeController {
     private ScheduledExecutorService magpieBridgeRegisterService = Executors
         .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterServiceThread"));
 
-
     public MagpieBridgeController(final NettyServerConfig nettyServerConfig,
         final MagpieBridgeConfig magpieBridgeConfig, final NettyClientConfig nettyClientConfig) {
         this.nettyServerConfig = nettyServerConfig;
         this.magpieBridgeConfig = magpieBridgeConfig;
         this.nettyClientConfig = nettyClientConfig;
-        this.clientOnlineKeepingService = new ClientOnlineKeepingService();
+        this.clientOnlineKeepingService = new ClientOnlineKeepingService(new RemotingClientManager());
         this.clusterMetaData = new ClusterMetaData();
         this.magpieBridgeAddress = getMagpieBridgeAddress();
         this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig, this.magpieBridgeAddress,

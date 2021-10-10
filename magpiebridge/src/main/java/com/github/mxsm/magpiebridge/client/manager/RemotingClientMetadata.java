@@ -14,8 +14,7 @@ public class RemotingClientMetadata {
 
     private TerminalType terminalType;
 
-    public RemotingClientMetadata(String remoteAddress,
-        TerminalType terminalType) {
+    public RemotingClientMetadata(String remoteAddress, TerminalType terminalType) {
         this.remoteAddress = remoteAddress;
         this.terminalType = terminalType;
     }

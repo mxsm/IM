@@ -10,6 +10,12 @@ import io.netty.channel.Channel;
  */
 public class ClientOnlineKeepingService implements ChannelEventListener {
 
+    private RemotingClientManager remotingClientManager;
+
+
+    public ClientOnlineKeepingService(final RemotingClientManager remotingClientManager) {
+        this.remotingClientManager = remotingClientManager;
+    }
 
     /**
      * when the netty channel connect trigger onChannelConnect method
@@ -19,8 +25,8 @@ public class ClientOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelConnect(String remoteAddress, Channel channel) {
-
-    }
+        this.remotingClientManager.onChannelConnect(remoteAddress, channel);
+     }
 
     /**
      * when the netty channel Disconnect trigger onChannelDisconnect method
@@ -30,7 +36,7 @@ public class ClientOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelClose(String remoteAddress, Channel channel) {
-
+        this.remotingClientManager.onChannelClose(remoteAddress, channel);
     }
 
     /**

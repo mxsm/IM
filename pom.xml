@@ -19,6 +19,7 @@
     <module>protocols</module>
     <module>magpiebridge</module>
     <module>distribution</module>
+      <module>client</module>
   </modules>
 
   <properties>
