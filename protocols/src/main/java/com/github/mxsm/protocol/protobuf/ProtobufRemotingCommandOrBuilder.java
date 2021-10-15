@@ -3,8 +3,8 @@
 
 package com.github.mxsm.protocol.protobuf;
 
-public interface RemotingCommandOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.github.mxsm.protocol.protobuf.RemotingCommand)
+public interface ProtobufRemotingCommandOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)
     com.google.protobuf.MessageOrBuilder {
 
   /**

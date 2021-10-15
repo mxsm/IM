@@ -1,5 +1,6 @@
 package com.github.mxsm.remoting;
 
+import com.github.mxsm.protocol.RemotingCommand;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.exception.RemotingConnectException;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;

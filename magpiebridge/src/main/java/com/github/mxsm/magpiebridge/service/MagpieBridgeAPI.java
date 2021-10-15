@@ -7,6 +7,7 @@ import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.exception.RegisterRequestException;
 import com.github.mxsm.magpiebridge.processor.RegistrationCenterProcessor;
+import com.github.mxsm.protocol.RemotingCommand;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.RemotingClient;
@@ -183,7 +184,7 @@ public class MagpieBridgeAPI {
             LOGGER.warn("Register MagpieBridge to registration center[{}], Return null", registerAddress);
             return null;
         }
-        switch (response.getCode()) {
+        switch (response.getCommandCode()) {
             case ResponseCode.SUCCESS:
                 LOGGER.info("Register MagpieBridge to registration center[{}] SUCCESS", registerAddress);
                 break;

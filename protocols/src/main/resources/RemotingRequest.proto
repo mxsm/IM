@@ -10,7 +10,7 @@ option java_package = "com.github.mxsm.protocol.protobuf";
 
 option java_multiple_files = true;
 
-message RemotingCommand{
+message ProtobufRemotingCommand{
 
     //请求头部
     RequestHeaders requestHeaders = 1;

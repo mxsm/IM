@@ -1,4 +1,4 @@
-package com.github.mxsm.remoting.processor;
+package com.github.mxsm.protocol;
 
 import java.io.Serializable;
 
@@ -7,8 +7,14 @@ import java.io.Serializable;
  * @Date 2021/10/15
  * @Since
  */
-public interface RemotingCommand extends Serializable {
+public interface RemotingCommand<T> extends Serializable {
 
+    ProtocolCode getProtocolCode();
 
+    CommandCode getCommandCode();
+
+    T getRemotingCommand();
+
+    byte[] getRemotingCommandBytes();
 
 }

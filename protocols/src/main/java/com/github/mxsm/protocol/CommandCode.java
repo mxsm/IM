@@ -2,9 +2,10 @@ package com.github.mxsm.protocol;
 
 /**
  * @author mxsm
- * @Date 2021/10/15
+ * @Date 2021/10/16
  * @Since
  */
-public enum ProtocolCode {
+public interface CommandCode {
 
+    int getCode();
 }

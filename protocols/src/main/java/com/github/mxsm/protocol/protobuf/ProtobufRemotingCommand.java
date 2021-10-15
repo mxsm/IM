@@ -4,18 +4,18 @@
 package com.github.mxsm.protocol.protobuf;
 
 /**
- * Protobuf type {@code com.github.mxsm.protocol.protobuf.RemotingCommand}
+ * Protobuf type {@code com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand}
  */
-public final class RemotingCommand extends
+public final class ProtobufRemotingCommand extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.github.mxsm.protocol.protobuf.RemotingCommand)
-    RemotingCommandOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)
+    ProtobufRemotingCommandOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use RemotingCommand.newBuilder() to construct.
-  private RemotingCommand(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ProtobufRemotingCommand.newBuilder() to construct.
+  private ProtobufRemotingCommand(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private RemotingCommand() {
+  private ProtobufRemotingCommand() {
     commandType_ = 0;
     payload_ = com.google.protobuf.ByteString.EMPTY;
     resultMessage_ = "";
@@ -25,7 +25,7 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new RemotingCommand();
+    return new ProtobufRemotingCommand();
   }
 
   @java.lang.Override
@@ -33,7 +33,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private RemotingCommand(
+  private ProtobufRemotingCommand(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -140,15 +140,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_descriptor;
+    return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_ProtobufRemotingCommand_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_fieldAccessorTable
+    return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_ProtobufRemotingCommand_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.github.mxsm.protocol.protobuf.RemotingCommand.class, com.github.mxsm.protocol.protobuf.RemotingCommand.Builder.class);
+            com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.class, com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.Builder.class);
   }
 
   public static final int REQUESTHEADERS_FIELD_NUMBER = 1;
@@ -490,10 +490,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.github.mxsm.protocol.protobuf.RemotingCommand)) {
+    if (!(obj instanceof com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)) {
       return super.equals(obj);
     }
-    com.github.mxsm.protocol.protobuf.RemotingCommand other = (com.github.mxsm.protocol.protobuf.RemotingCommand) obj;
+    com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand other = (com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand) obj;
 
     if (hasRequestHeaders() != other.hasRequestHeaders()) return false;
     if (hasRequestHeaders()) {
@@ -563,69 +563,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(byte[] data)
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(java.io.InputStream input)
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseDelimitedFrom(java.io.InputStream input)
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseDelimitedFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand parseFrom(
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -638,7 +638,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.github.mxsm.protocol.protobuf.RemotingCommand prototype) {
+  public static Builder newBuilder(com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -654,26 +654,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.github.mxsm.protocol.protobuf.RemotingCommand}
+   * Protobuf type {@code com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.github.mxsm.protocol.protobuf.RemotingCommand)
-      com.github.mxsm.protocol.protobuf.RemotingCommandOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)
+      com.github.mxsm.protocol.protobuf.ProtobufRemotingCommandOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_descriptor;
+      return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_ProtobufRemotingCommand_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_fieldAccessorTable
+      return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_ProtobufRemotingCommand_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.github.mxsm.protocol.protobuf.RemotingCommand.class, com.github.mxsm.protocol.protobuf.RemotingCommand.Builder.class);
+              com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.class, com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.Builder.class);
     }
 
-    // Construct using com.github.mxsm.protocol.protobuf.RemotingCommand.newBuilder()
+    // Construct using com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -725,17 +725,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_RemotingCommand_descriptor;
+      return com.github.mxsm.protocol.protobuf.RemotingRequest.internal_static_com_github_mxsm_protocol_protobuf_ProtobufRemotingCommand_descriptor;
     }
 
     @java.lang.Override
-    public com.github.mxsm.protocol.protobuf.RemotingCommand getDefaultInstanceForType() {
-      return com.github.mxsm.protocol.protobuf.RemotingCommand.getDefaultInstance();
+    public com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand getDefaultInstanceForType() {
+      return com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.github.mxsm.protocol.protobuf.RemotingCommand build() {
-      com.github.mxsm.protocol.protobuf.RemotingCommand result = buildPartial();
+    public com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand build() {
+      com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -743,8 +743,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.github.mxsm.protocol.protobuf.RemotingCommand buildPartial() {
-      com.github.mxsm.protocol.protobuf.RemotingCommand result = new com.github.mxsm.protocol.protobuf.RemotingCommand(this);
+    public com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand buildPartial() {
+      com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand result = new com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand(this);
       if (requestHeadersBuilder_ == null) {
         result.requestHeaders_ = requestHeaders_;
       } else {
@@ -801,16 +801,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.github.mxsm.protocol.protobuf.RemotingCommand) {
-        return mergeFrom((com.github.mxsm.protocol.protobuf.RemotingCommand)other);
+      if (other instanceof com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand) {
+        return mergeFrom((com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.github.mxsm.protocol.protobuf.RemotingCommand other) {
-      if (other == com.github.mxsm.protocol.protobuf.RemotingCommand.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand other) {
+      if (other == com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand.getDefaultInstance()) return this;
       if (other.hasRequestHeaders()) {
         mergeRequestHeaders(other.getRequestHeaders());
       }
@@ -857,11 +857,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.github.mxsm.protocol.protobuf.RemotingCommand parsedMessage = null;
+      com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.github.mxsm.protocol.protobuf.RemotingCommand) e.getUnfinishedMessage();
+        parsedMessage = (com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1618,41 +1618,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.github.mxsm.protocol.protobuf.RemotingCommand)
+    // @@protoc_insertion_point(builder_scope:com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)
   }
 
-  // @@protoc_insertion_point(class_scope:com.github.mxsm.protocol.protobuf.RemotingCommand)
-  private static final com.github.mxsm.protocol.protobuf.RemotingCommand DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand)
+  private static final com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.github.mxsm.protocol.protobuf.RemotingCommand();
+    DEFAULT_INSTANCE = new com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand();
   }
 
-  public static com.github.mxsm.protocol.protobuf.RemotingCommand getDefaultInstance() {
+  public static com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<RemotingCommand>
-      PARSER = new com.google.protobuf.AbstractParser<RemotingCommand>() {
+  private static final com.google.protobuf.Parser<ProtobufRemotingCommand>
+      PARSER = new com.google.protobuf.AbstractParser<ProtobufRemotingCommand>() {
     @java.lang.Override
-    public RemotingCommand parsePartialFrom(
+    public ProtobufRemotingCommand parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new RemotingCommand(input, extensionRegistry);
+      return new ProtobufRemotingCommand(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<RemotingCommand> parser() {
+  public static com.google.protobuf.Parser<ProtobufRemotingCommand> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<RemotingCommand> getParserForType() {
+  public com.google.protobuf.Parser<ProtobufRemotingCommand> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.github.mxsm.protocol.protobuf.RemotingCommand getDefaultInstanceForType() {
+  public com.github.mxsm.protocol.protobuf.ProtobufRemotingCommand getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
