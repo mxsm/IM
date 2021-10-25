@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.netty;
 
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
+
+import com.github.mxsm.protocol.core.RemotingCommand;
 import com.github.mxsm.remoting.Future;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.common.SemaphoreReleaseWrapper;

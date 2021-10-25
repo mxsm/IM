@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.netty.handler;
 
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
+
+import com.github.mxsm.protocol.core.RemotingCommand;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;

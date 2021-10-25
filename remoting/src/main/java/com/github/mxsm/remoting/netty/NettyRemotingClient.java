@@ -1,7 +1,7 @@
 package com.github.mxsm.remoting.netty;
 
 import com.github.mxsm.common.thread.NamedThreadFactory;
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.core.RemotingCommand;
 import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingClient;
@@ -24,18 +24,21 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author mxsm
@@ -262,6 +265,26 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
         super.registerProcessor(requestCode, processor, executor);
     }
 
+    @Override
+    public void beforeInit() {
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void afterInit() {
+
+    }
+
+    @Override
+    public void beforeStart() {
+
+    }
+
     /**
      * start service
      */
@@ -285,6 +308,16 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
     }
 
+    @Override
+    public void afterStart() {
+
+    }
+
+    @Override
+    public void beforeShutdown() {
+
+    }
+
     /**
      * shutdown service
      */
@@ -293,6 +326,11 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
         if (this.nettyEventWorker != null) {
             this.nettyEventWorker.shutdown(false);
         }
+    }
+
+    @Override
+    public void afterShutdown() {
+
     }
 
     /**

@@ -27,7 +27,7 @@ public final class MessageHeaderOuterClass {
   private static  com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    java.lang.String[] descriptorData = {
+    String[] descriptorData = {
       "\n\023MessageHeader.proto\022!com.github.mxsm.p" +
       "rotocol.protobuf\"=\n\rMessageHeader\022\025\n\rsou" +
       "rceAddress\030\001 \001(\003\022\025\n\rremoteAddress\030\002 \001(\003B" +
@@ -43,7 +43,7 @@ public final class MessageHeaderOuterClass {
     internal_static_com_github_mxsm_protocol_protobuf_MessageHeader_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_github_mxsm_protocol_protobuf_MessageHeader_descriptor,
-        new java.lang.String[] { "SourceAddress", "RemoteAddress", });
+        new String[] { "SourceAddress", "RemoteAddress", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

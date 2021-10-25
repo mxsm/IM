@@ -47,7 +47,7 @@ public enum RemotingCommandType
 
   public final int getNumber() {
     if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalArgumentException(
+      throw new IllegalArgumentException(
           "Can't get the number of an unknown enum value.");
     }
     return value;
@@ -58,7 +58,7 @@ public enum RemotingCommandType
    * @return The enum associated with the given numeric wire value.
    * @deprecated Use {@link #forNumber(int)} instead.
    */
-  @java.lang.Deprecated
+  @Deprecated
   public static RemotingCommandType valueOf(int value) {
     return forNumber(value);
   }
@@ -90,7 +90,7 @@ public enum RemotingCommandType
   public final com.google.protobuf.Descriptors.EnumValueDescriptor
       getValueDescriptor() {
     if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalStateException(
+      throw new IllegalStateException(
           "Can't get the descriptor of an unrecognized enum value.");
     }
     return getDescriptor().getValues().get(ordinal());
@@ -101,7 +101,7 @@ public enum RemotingCommandType
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return com.github.mxsm.protocol.protobuf.RemotingCommandTypeOuterClass.getDescriptor().getEnumTypes().get(0);
+    return RemotingCommandTypeOuterClass.getDescriptor().getEnumTypes().get(0);
   }
 
   private static final RemotingCommandType[] VALUES = values();
@@ -109,7 +109,7 @@ public enum RemotingCommandType
   public static RemotingCommandType valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
-      throw new java.lang.IllegalArgumentException(
+      throw new IllegalArgumentException(
         "EnumValueDescriptor is not for this type.");
     }
     if (desc.getIndex() == -1) {

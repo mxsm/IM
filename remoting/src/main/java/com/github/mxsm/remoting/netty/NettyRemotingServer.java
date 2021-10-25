@@ -1,7 +1,7 @@
 package com.github.mxsm.remoting.netty;
 
 import com.github.mxsm.common.thread.NamedThreadFactory;
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.core.RemotingCommand;
 import com.github.mxsm.remoting.ChannelEventListener;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingServer;
@@ -25,12 +25,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mxsm
@@ -163,6 +162,26 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         return this.channelEventListener;
     }
 
+    @Override
+    public void beforeInit() {
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void afterInit() {
+
+    }
+
+    @Override
+    public void beforeStart() {
+
+    }
+
     /**
      * start service
      */
@@ -201,6 +220,16 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         }
     }
 
+    @Override
+    public void afterStart() {
+
+    }
+
+    @Override
+    public void beforeShutdown() {
+
+    }
+
     /**
      * shutdown service
      */
@@ -220,6 +249,11 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         if(this.publicExecutor != null){
             this.publicExecutor.shutdown();
         }
+    }
+
+    @Override
+    public void afterShutdown() {
+
     }
 
     private boolean useEpoll() {

@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.netty;
 
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
+
+import com.github.mxsm.protocol.core.RemotingCommand;
 import io.netty.channel.ChannelHandlerContext;
 
 /**

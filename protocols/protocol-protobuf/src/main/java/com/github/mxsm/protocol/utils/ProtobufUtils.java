@@ -1,7 +1,5 @@
 package com.github.mxsm.protocol.utils;
 
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
-
 /**
  * @author mxsm
  * @Date 2021/6/26
@@ -9,7 +7,7 @@ import com.github.mxsm.protocol.protobuf.RemotingCommand;
  */
 public abstract class ProtobufUtils {
 
-    public static boolean isOnewayRequest(RemotingCommand request){
+/*    public static boolean isOnewayRequest(RemotingCommand request){
         return request == null? true : request.getOneway();
-    }
+    }*/
 }

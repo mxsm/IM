@@ -1,8 +1,5 @@
 package com.github.mxsm.protocol.utils;
 
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
-import com.github.mxsm.protocol.protobuf.constant.RemotingCommandType;
-
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -14,7 +11,7 @@ public abstract class RemotingCommandBuilder {
 
     public static final AtomicLong incrementCmdId = new AtomicLong(0);
 
-    public static RemotingCommand.Builder buildRequestCommand() {
+/*    public static RemotingCommand.Builder buildRequestCommand() {
 
         return RemotingCommand.newBuilder().setCommandType(RemotingCommandType.REQUEST).setCommandId(incrementCmdId.incrementAndGet())
             .setCreateTimestamp(System.currentTimeMillis());
@@ -40,6 +37,6 @@ public abstract class RemotingCommandBuilder {
 
     public static void markOneway(RemotingCommand command) {
 
-    }
+    }*/
 
 }

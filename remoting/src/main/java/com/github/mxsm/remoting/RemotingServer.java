@@ -1,12 +1,11 @@
 package com.github.mxsm.remoting;
 
-import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.core.RemotingCommand;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.NettyRequestProcessor;
 import io.netty.channel.Channel;
-
 import java.util.concurrent.ExecutorService;
 
 /**

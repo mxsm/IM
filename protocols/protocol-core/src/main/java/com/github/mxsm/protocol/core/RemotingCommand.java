@@ -1,11 +1,11 @@
-package com.github.mxsm.protocol;
+package com.github.mxsm.protocol.core;
 
 import java.io.Serializable;
 
 /**
  * @author mxsm
  * @Date 2021/10/15
- * @Since
+ * @Since 0.1
  */
 public interface RemotingCommand<T> extends Serializable {
 
@@ -13,8 +13,14 @@ public interface RemotingCommand<T> extends Serializable {
 
     CommandCode getCommandCode();
 
+    RemotingCommandType getCommandType();
+
     T getRemotingCommand();
 
     byte[] getRemotingCommandBytes();
+
+    boolean isOnewayRequest();
+
+    long getCommandId();
 
 }
