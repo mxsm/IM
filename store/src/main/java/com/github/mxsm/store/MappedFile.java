@@ -6,11 +6,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mxsm
@@ -18,6 +20,8 @@ import org.apache.commons.io.FileUtils;
  * @Since 1.0.0
  */
 public class MappedFile {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MappedFile.class);
 
     //mapped file wrote position
     private final AtomicInteger wrotePosition = new AtomicInteger(0);
@@ -51,7 +55,7 @@ public class MappedFile {
 
         this.fileSize = fileSize;
         this.fileName = fileName;
-        this.file = new File(fileName);
+        this.file = new File(this.fileName);
         this.fileFromOffset = Long.parseLong(this.file.getName());
         boolean ok = false;
         //enable dir exist
@@ -59,7 +63,7 @@ public class MappedFile {
 
         try {
             this.fileChannel = new RandomAccessFile(file, "rw").getChannel();
-            this.mappedByteBuffer = this.fileChannel.map(MapMode.READ_WRITE,0,fileSize);
+            this.mappedByteBuffer = this.fileChannel.map(MapMode.READ_WRITE,0,this.fileSize);
             ok = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -73,7 +77,38 @@ public class MappedFile {
     }
 
     public AppendMessageResult appendMessage(RemotingCommand command, AppendMessageCallback callback){
-        return callback.appendMessage(0, command);
+
+        assert command != null;
+        assert callback != null;
+
+        int currentPosition = this.wrotePosition.get();
+
+        if(currentPosition < this.fileSize){
+            ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
+            byteBuffer.position(currentPosition);
+            AppendMessageResult result = callback.appendMessage(0, command);
+            this.wrotePosition.addAndGet(result.getWroteBytesSize());
+            this.storeTimestamp = result.getStoreTimestamp();
+            return result;
+        }
+        return new AppendMessageResult(AppendMessageStatus.UNKNOWN_ERROR);
+    }
+
+    public boolean appendMessage(final byte[] data, final int offset, final int length){
+        int currentPos = this.wrotePosition.get();
+
+        if ((currentPos + length) <= this.fileSize) {
+            try {
+                this.fileChannel.position(currentPos);
+                this.fileChannel.write(ByteBuffer.wrap(data, offset, length));
+            } catch (Throwable e) {
+                LOGGER.error("Error occurred when append message to mappedFile.", e);
+            }
+            this.wrotePosition.addAndGet(length);
+            return true;
+        }
+
+        return false;
     }
 
 }
