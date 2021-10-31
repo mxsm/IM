@@ -1,6 +1,7 @@
 package com.github.mxsm.store.utils;
 
 import java.io.File;
+import java.text.NumberFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,4 +28,11 @@ public abstract class FileUtil {
         }
     }
 
+    public static String offset2FileName(final long offset) {
+        final NumberFormat nf = NumberFormat.getInstance();
+        nf.setMinimumIntegerDigits(20);
+        nf.setMaximumFractionDigits(0);
+        nf.setGroupingUsed(false);
+        return nf.format(offset);
+    }
 }

@@ -1,6 +1,7 @@
 package com.github.mxsm.client;
 
 import com.github.mxsm.client.config.ImClientConfig;
+import com.github.mxsm.common.AnnotationUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingClient;
@@ -28,9 +29,55 @@ public class ImClientImpl implements ImClient {
         this.nettyClientConfig = nettyClientConfig;
         this.imClientConfig = imClientConfig;
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
-        this.remotingClient.start();
     }
 
+    @Override
+    public void beforeInit() {
+        AnnotationUtils.validatorNotNull(this.nettyClientConfig,this.imClientConfig);
+    }
+
+    @Override
+    public void init() {
+        beforeInit();
+        afterInit();
+    }
+
+    @Override
+    public void afterInit() {
+
+    }
+
+    @Override
+    public void beforeStart() {
+        init();
+    }
+
+    @Override
+    public void start() {
+        beforeStart();
+        this.remotingClient.start();
+        afterStart();
+    }
+
+    @Override
+    public void afterStart() {
+
+    }
+
+    @Override
+    public void beforeShutdown() {
+
+    }
+
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public void afterShutdown() {
+
+    }
 
     /**
      * 同步执行

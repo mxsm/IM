@@ -62,7 +62,9 @@ public interface RemotingServer extends RemotingService {
 
     /**
      * 注册请求处理器
-     * @param requestProcessor
+     * @param requestCode
+     * @param processor
+     * @param executor
      */
     void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
         final ExecutorService executor);

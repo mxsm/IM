@@ -16,6 +16,5 @@ public abstract class ResponseCode {
     public static final int REQUEST_CODE_NOT_SUPPORTED = 404;
 
     public static final int SYSTEM_BUSY = 503;
-
-
+    
 }

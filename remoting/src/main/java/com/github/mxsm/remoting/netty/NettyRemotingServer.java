@@ -45,7 +45,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     private final ServerBootstrap serverBootstrap;
 
-
     private final EventLoopGroup bossEventLoopGroup;
 
     private final EventLoopGroup selectorEventLoopGroup;
@@ -67,18 +66,21 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig,
         final ChannelEventListener channelEventListener) {
         super(nettyServerConfig.getServerOnewaySemaphoreValue(), nettyServerConfig.getServerAsyncSemaphoreValue());
-        this.serverBootstrap = new ServerBootstrap();
+
+        this.nettyServerConfig = nettyServerConfig;
         this.channelEventListener = channelEventListener;
 
+        this.serverBootstrap = new ServerBootstrap();
+
+        //new publicExecutor
         int publicThreadNums = nettyServerConfig.getServerCallbackExecutorThreads();
         if (publicThreadNums <= 0) {
             publicThreadNums = 4;
         }
-
         this.publicExecutor = Executors
             .newFixedThreadPool(publicThreadNums, new NamedThreadFactory("NettyServerPublicExecutor"));
 
-        this.nettyServerConfig = nettyServerConfig;
+
         if (useEpoll()) {
             this.bossEventLoopGroup = new EpollEventLoopGroup(1, new NamedThreadFactory("NettyEPOLLBoss"));
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
@@ -88,6 +90,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
                 new NamedThreadFactory("NettyNIOSelector"));
         }
+
         eventExecutorGroup = new DefaultEventExecutorGroup(nettyServerConfig.getServerWorkerThreads(),
             new NamedThreadFactory("eventExecutorThread"));
     }
@@ -149,8 +152,9 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     /**
      * 注册请求处理器
-     *
-     * @param requestProcessor
+     * @param requestCode
+     * @param processor
+     * @param executor
      */
     @Override
     public void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
@@ -163,14 +167,14 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         return this.channelEventListener;
     }
 
-    /**
-     * start service
-     */
     @Override
-    public void start() {
+    public void beforeInit() {
+        // nothing to do
+    }
 
+    @Override
+    public void init() {
         nettyServerHandler = new NettyServerHandler(this);
-
         this.serverBootstrap.group(this.bossEventLoopGroup, this.selectorEventLoopGroup)
             .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 1024)
@@ -183,7 +187,27 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             .childHandler(new NettyServerHandlerInitializer(this, eventExecutorGroup,
                 nettyServerConfig,
                 nettyServerHandler));
+    }
 
+    @Override
+    public void afterInit() {
+
+    }
+
+    @Override
+    public void beforeStart() {
+        this.beforeInit();
+        this.init();
+        this.afterInit();
+    }
+
+    /**
+     * start service
+     */
+    @Override
+    public void start() {
+
+        this.beforeStart();
         try {
             ChannelFuture sync = this.serverBootstrap.bind().sync();
             InetSocketAddress address = (InetSocketAddress) sync.channel().localAddress();
@@ -194,11 +218,20 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        this.afterStart();
+    }
 
+    @Override
+    public void afterStart() {
         if (this.channelEventListener != null) {
             this.nettyEventWorker.start();
             LOGGER.info("-----------------NettyEventWork started-------------------");
         }
+    }
+
+    @Override
+    public void beforeShutdown() {
+
     }
 
     /**
@@ -206,6 +239,8 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
      */
     @Override
     public void shutdown() {
+
+        this.beforeShutdown();
 
         if (this.nettyEventWorker != null) {
             this.nettyEventWorker.shutdown(false);
@@ -220,6 +255,13 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         if(this.publicExecutor != null){
             this.publicExecutor.shutdown();
         }
+
+        this.afterShutdown();
+    }
+
+    @Override
+    public void afterShutdown() {
+
     }
 
     private boolean useEpoll() {

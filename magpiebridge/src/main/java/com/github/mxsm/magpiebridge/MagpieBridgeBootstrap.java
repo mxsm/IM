@@ -35,8 +35,8 @@ public class MagpieBridgeBootstrap {
 
         MagpieBridgeController magpieBridgeController = createRegisterController(args);
 
-        magpieBridgeController.initialize();
-        magpieBridgeController.startup();
+        magpieBridgeController.init();
+        magpieBridgeController.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             private volatile boolean hasShutDown = false;

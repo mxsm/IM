@@ -2,13 +2,14 @@ package com.github.mxsm.common;
 
 import com.github.mxsm.common.annotation.NotNull;
 import com.github.mxsm.common.exception.NotNullException;
-import org.apache.commons.collections4.CollectionUtils;
-import org.reflections.ReflectionUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
+import org.apache.commons.collections4.CollectionUtils;
+import org.reflections.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mxsm
@@ -16,6 +17,8 @@ import java.util.Set;
  * @Since
  */
 public abstract class AnnotationUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationUtils.class);
 
     private static final Class<? extends Annotation> javaNotNull;
 
@@ -55,7 +58,7 @@ public abstract class AnnotationUtils {
                         throw new NotNullException(item.getName() + " field not null");
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Field:"+item.getName()+" Access Error!", e);
                 }
             });
         });

@@ -5,7 +5,7 @@ package com.github.mxsm.remoting;
  * @Date 2021/6/18
  * @Since 0.1
  */
-public interface RemotingService {
+public interface RemotingService extends Lifecycle{
 
     /**
      * start service

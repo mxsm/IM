@@ -262,15 +262,34 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
         super.registerProcessor(requestCode, processor, executor);
     }
 
+    @Override
+    public void beforeInit() {
+
+    }
+
+    @Override
+    public void init() {
+        this.eventExecutorGroup = new DefaultEventExecutorGroup(nettyClientConfig.getClientWorkerThreads(),
+            new NamedThreadFactory("NettyClientWorkerThread"));
+    }
+
+    @Override
+    public void afterInit() {
+
+    }
+
+    @Override
+    public void beforeStart() {
+
+    }
+
     /**
      * start service
      */
     @Override
     public void start() {
 
-        this.eventExecutorGroup = new DefaultEventExecutorGroup(nettyClientConfig.getClientWorkerThreads(),
-            new NamedThreadFactory("NettyClientWorkerThread"));
-
+        beforeStart();
         this.nettyBootstrap.group(this.eventLoopGroupWorker).channel(NioSocketChannel.class)
             .option(ChannelOption.TCP_NODELAY, true)
             .option(ChannelOption.SO_KEEPALIVE, false)
@@ -278,10 +297,18 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
             .handler(new NettyClientHandlerInitializer(eventExecutorGroup, nettyClientConfig, this));
+        afterStart();
+    }
 
+    @Override
+    public void afterStart() {
         if(this.channelEventListener != null){
             this.nettyEventWorker.start();
         }
+    }
+
+    @Override
+    public void beforeShutdown() {
 
     }
 
@@ -290,9 +317,19 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      */
     @Override
     public void shutdown() {
+
+        beforeShutdown();
+
         if (this.nettyEventWorker != null) {
             this.nettyEventWorker.shutdown(false);
         }
+
+        afterShutdown();
+    }
+
+    @Override
+    public void afterShutdown() {
+
     }
 
     /**

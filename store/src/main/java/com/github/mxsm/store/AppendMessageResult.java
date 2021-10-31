@@ -40,4 +40,8 @@ public class AppendMessageResult {
     public void setStoreTimestamp(long storeTimestamp) {
         this.storeTimestamp = storeTimestamp;
     }
+
+    public boolean isOk() {
+        return this.status == AppendMessageStatus.PUT_OK;
+    }
 }

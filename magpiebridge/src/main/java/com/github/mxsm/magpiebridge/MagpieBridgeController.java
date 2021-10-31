@@ -12,11 +12,14 @@ import com.github.mxsm.magpiebridge.cluster.ClusterMetaData;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.remoting.Lifecycle;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.common.ResponseCode;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
+import com.github.mxsm.store.MessagePersistent;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,7 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @Date 2021/7/2
  * @Since 0.1
  */
-public class MagpieBridgeController {
+public class MagpieBridgeController implements Lifecycle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MagpieBridgeController.class);
 
@@ -42,43 +45,101 @@ public class MagpieBridgeController {
 
     private final NettyClientConfig nettyClientConfig;
 
-    private NettyRemotingServer magpieBridgeServer;
-
-    private MagpieBridgeAPI magpieBridgeAPI;
-
     private final ClientOnlineKeepingService clientOnlineKeepingService;
 
     private final ClusterMetaData clusterMetaData;
 
     private final String magpieBridgeAddress;
 
-    private ScheduledExecutorService magpieBridgeRegisterService = Executors
-        .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterServiceThread"));
+    private NettyRemotingServer magpieBridgeServer;
+
+    private MagpieBridgeAPI magpieBridgeAPI;
+
+    private MessagePersistent messagePersistent;
+
+    private ScheduledExecutorService magpieBridgeRegisterService;
 
     public MagpieBridgeController(final NettyServerConfig nettyServerConfig,
         final MagpieBridgeConfig magpieBridgeConfig, final NettyClientConfig nettyClientConfig) {
+
         this.nettyServerConfig = nettyServerConfig;
         this.magpieBridgeConfig = magpieBridgeConfig;
         this.nettyClientConfig = nettyClientConfig;
         this.clientOnlineKeepingService = new ClientOnlineKeepingService(new RemotingClientManager());
         this.clusterMetaData = new ClusterMetaData();
         this.magpieBridgeAddress = getMagpieBridgeAddress();
-        this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig, this.magpieBridgeAddress,
-            this.magpieBridgeConfig);
     }
 
-    public void initialize() {
-
-        //before initialize check
+    @Override
+    public void beforeInit() {
         checkConfig();
+    }
+
+    @Override
+    public void init() {
+        beforeInit();
 
         this.magpieBridgeServer = new NettyRemotingServer(this.nettyServerConfig, this.clientOnlineKeepingService);
-        this.magpieBridgeAPI.updateRegisterAddressList(
-            Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(Symbol.COMMA)));
+        this.magpieBridgeAPI = new MagpieBridgeAPI(this.nettyClientConfig, this.magpieBridgeAddress,
+            this.magpieBridgeConfig);
+        this.magpieBridgeRegisterService = Executors
+            .newSingleThreadScheduledExecutor(new NamedThreadFactory("MagpieBridgeRegisterServiceThread"));
+        afterInit();
+    }
 
+    @Override
+    public void afterInit() {
+        //upate register service address
+        List<String> rgtAddress = Arrays.asList(this.getMagpieBridgeConfig().getRegisterAddress().split(Symbol.COMMA));
+        this.magpieBridgeAPI.updateRegisterAddressList(rgtAddress);
+
+        // register request processor
         registerProcessor();
 
-        //magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
+        //schedule config
+        this.magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void beforeStart() {
+
+    }
+
+    @Override
+    public void start() {
+
+        this.beforeStart();
+        this.magpieBridgeServer.start();
+        this.magpieBridgeAPI.start();
+        this.afterStart();
+
+    }
+
+    @Override
+    public void afterStart() {
+        boolean registerSuccess = this.registerMagpieBridgeAll();
+        if (!registerSuccess) {
+            System.exit(-1);
+        }
+    }
+
+    @Override
+    public void beforeShutdown() {
+
+    }
+
+    public void shutdown() {
+
+        this.unRegisterMagpieBridgeAll();
+        this.magpieBridgeAPI.shutdown();
+        this.magpieBridgeServer.shutdown();
+
+
+    }
+
+    @Override
+    public void afterShutdown() {
+
     }
 
     private void checkConfig() {
@@ -155,26 +216,6 @@ public class MagpieBridgeController {
         mbInfo.setMagpieBridgeClusterName(this.magpieBridgeConfig.getMagpieBridgeClusterName());
         mbInfo.setMagpieBridgeRole(this.getMagpieBridgeConfig().getMagpieBridgeRole());
         return mbInfo;
-    }
-
-    public void startup() {
-
-        this.magpieBridgeServer.start();
-        this.magpieBridgeAPI.start();
-
-        boolean registerSuccess = this.registerMagpieBridgeAll();
-        if (!registerSuccess) {
-            System.exit(-1);
-        }
-    }
-
-    public void shutdown() {
-
-        this.unRegisterMagpieBridgeAll();
-        this.magpieBridgeAPI.shutdown();
-        this.magpieBridgeServer.shutdown();
-
-
     }
 
     public NettyServerConfig getNettyServerConfig() {

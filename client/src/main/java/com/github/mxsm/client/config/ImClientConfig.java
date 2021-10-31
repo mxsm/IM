@@ -1,5 +1,7 @@
 package com.github.mxsm.client.config;
 
+import com.github.mxsm.common.annotation.NotNull;
+
 /**
  * @author mxsm
  * @date 2021/10/10 16:26
@@ -7,6 +9,7 @@ package com.github.mxsm.client.config;
  */
 public class ImClientConfig {
 
+    @NotNull
     private String magpieBridgeAddress;
 
     private int magpiebridgePort;
@@ -28,7 +31,6 @@ public class ImClientConfig {
     }
 
     public String getMagpieBridgeAddressWithPort(){
-
         StringBuilder addressWithPort = new StringBuilder();
         addressWithPort.append(this.magpieBridgeAddress).append(":").append(this.magpiebridgePort);
         return addressWithPort.toString();

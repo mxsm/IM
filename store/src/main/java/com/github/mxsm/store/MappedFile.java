@@ -63,27 +63,27 @@ public class MappedFile {
 
         try {
             this.fileChannel = new RandomAccessFile(file, "rw").getChannel();
-            this.mappedByteBuffer = this.fileChannel.map(MapMode.READ_WRITE,0,this.fileSize);
+            this.mappedByteBuffer = this.fileChannel.map(MapMode.READ_WRITE, 0, this.fileSize);
             ok = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if(!ok && this.fileChannel != null){
+        } finally {
+            if (!ok && this.fileChannel != null) {
                 this.fileChannel.close();
             }
         }
     }
 
-    public AppendMessageResult appendMessage(RemotingCommand command, AppendMessageCallback callback){
+    public AppendMessageResult appendMessage(RemotingCommand command, AppendMessageCallback callback) {
 
         assert command != null;
         assert callback != null;
 
         int currentPosition = this.wrotePosition.get();
 
-        if(currentPosition < this.fileSize){
+        if (currentPosition < this.fileSize) {
             ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
             byteBuffer.position(currentPosition);
             AppendMessageResult result = callback.appendMessage(0, command);
@@ -94,7 +94,7 @@ public class MappedFile {
         return new AppendMessageResult(AppendMessageStatus.UNKNOWN_ERROR);
     }
 
-    public boolean appendMessage(final byte[] data, final int offset, final int length){
+    public boolean appendMessage(final byte[] data, final int offset, final int length) {
         int currentPos = this.wrotePosition.get();
 
         if ((currentPos + length) <= this.fileSize) {
@@ -111,4 +111,90 @@ public class MappedFile {
         return false;
     }
 
+    public int flush() {
+
+        if(!this.isAbleToFlush()){
+            return this.getFlushedPosition();
+        }
+
+        try {
+            if(this.fileChannel.position() != 0){
+                this.fileChannel.force(false);
+            }else{
+                this.mappedByteBuffer.force();
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error occurred when force data to disk.", e);
+        }
+
+        return this.getFlushedPosition();
+    }
+
+    private boolean isAbleToFlush() {
+
+        int flush = this.flushedPosition.get();
+        int write = this.wrotePosition.get();
+
+        if (this.isFull()) {
+            return true;
+        }
+
+        return write > flush;
+    }
+
+    public boolean isFull() {
+        return this.fileSize == this.wrotePosition.get();
+    }
+
+    public int getWrotePosition() {
+        return wrotePosition.get();
+    }
+
+    public int getCommittedPosition() {
+        return committedPosition.get();
+    }
+
+    public int getFlushedPosition() {
+        return flushedPosition.get();
+    }
+
+    public int getFileSize() {
+        return fileSize;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public FileChannel getFileChannel() {
+        return fileChannel;
+    }
+
+    public MappedByteBuffer getMappedByteBuffer() {
+        return mappedByteBuffer;
+    }
+
+    public long getFileFromOffset() {
+        return fileFromOffset;
+    }
+
+    public long getStoreTimestamp() {
+        return storeTimestamp;
+    }
+
+    public void setWrotePosition(int pos) {
+        this.wrotePosition.set(pos);
+    }
+
+    public void setFlushedPosition(int pos) {
+        this.flushedPosition.set(pos);
+    }
+
+    public void setCommittedPosition(int pos) {
+        this.committedPosition.set(pos);
+    }
 }

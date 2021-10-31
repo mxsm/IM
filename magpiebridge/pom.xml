@@ -33,6 +33,11 @@
       <artifactId>remoting</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>store</artifactId>
+    </dependency>
+
   </dependencies>
 
 

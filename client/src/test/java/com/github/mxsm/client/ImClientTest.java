@@ -21,7 +21,7 @@ class ImClientTest {
     @Test
     void invokeSync() {
 
-        ImClient client = ClientBuilder.newBuilder().setMagpiebridgePort(9998).setMagpieBridgeAddress("192.168.242.1")
+       /* ImClient client = ClientBuilder.newBuilder().setMagpiebridgePort(9998).setMagpieBridgeAddress("192.168.242.1")
             .build();
         try {
             client.invokeSync(RemotingCommandBuilder.buildRequestCommand().setCode(1).build(), 2000);
@@ -38,6 +38,6 @@ class ImClientTest {
             TimeUnit.SECONDS.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
