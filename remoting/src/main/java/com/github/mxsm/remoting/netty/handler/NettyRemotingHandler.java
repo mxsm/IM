@@ -54,7 +54,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
         if (pair == null) {
             String error = " request type " + cmd.getCode() + " not supported";
-            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+            final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().setCommandId(commandId)
                     .setCode(ResponseCode.REQUEST_CODE_NOT_SUPPORTED).setResultMessage(error).build();
             ctx.writeAndFlush(response);
             LOGGER.error(NetUtils.parseChannelRemoteAddress(ctx.channel()) + error);
