@@ -54,7 +54,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
 
         if (pair == null) {
             String error = " request type " + cmd.getCode() + " not supported";
-            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+            final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().setCommandId(commandId)
                     .setCode(ResponseCode.REQUEST_CODE_NOT_SUPPORTED).setResultMessage(error).build();
             ctx.writeAndFlush(response);
             LOGGER.error(NetUtils.parseChannelRemoteAddress(ctx.channel()) + error);
@@ -90,7 +90,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
                 LOGGER.error("process request exception", e);
                 //handle return data
                 if (!ProtobufUtils.isOnewayRequest(cmd)) {
-                    final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand()
+                    final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand()
                             .setCommandId(commandId)
                             .setCode(ResponseCode.SYSTEM_ERROR).setResultMessage(e.getMessage()).build();
                     ctx.writeAndFlush(response);
@@ -99,7 +99,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
         };
 
         if (pair.getLeft().rejectRequest()) {
-            final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+            final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().setCommandId(commandId)
                     .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("request was rejected").build();
             ctx.writeAndFlush(response);
             return;
@@ -110,7 +110,7 @@ public abstract class NettyRemotingHandler extends AbstractNettyRemoting impleme
             pair.getRight().submit(requestTaskWrapper);
         } catch (Exception e) {
             if (!ProtobufUtils.isOnewayRequest(cmd)) {
-                final RemotingCommand response = RemotingCommandBuilder.buildRequestCommand().setCommandId(commandId)
+                final RemotingCommand response = RemotingCommandBuilder.buildResponseCommand().setCommandId(commandId)
                         .setCode(ResponseCode.SYSTEM_BUSY).setResultMessage("submit RequestTaskWrapper to exe error")
                         .build();
                 ctx.writeAndFlush(response);
