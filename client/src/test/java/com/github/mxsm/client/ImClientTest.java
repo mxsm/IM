@@ -1,5 +1,10 @@
 package com.github.mxsm.client;
 
+import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
+import com.github.mxsm.remoting.exception.RemotingConnectException;
+import com.github.mxsm.remoting.exception.RemotingSendRequestException;
+import com.github.mxsm.remoting.exception.RemotingTimeoutException;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,7 +19,7 @@ class ImClientTest {
     @Test
     void invokeSync() {
 
-       /* ImClient client = ClientBuilder.newBuilder().setMagpiebridgePort(9998).setMagpieBridgeAddress("192.168.242.1")
+/*        ImClient client = ClientBuilder.newBuilder().setMagpiebridgePort(9998).setMagpieBridgeAddress("127.0.0.1")
             .build();
         try {
             client.invokeSync(RemotingCommandBuilder.buildRequestCommand().setCode(1).build(), 2000);

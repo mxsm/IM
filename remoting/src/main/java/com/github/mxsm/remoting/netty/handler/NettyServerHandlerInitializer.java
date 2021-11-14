@@ -71,6 +71,6 @@ public class NettyServerHandlerInitializer extends ChannelInitializer {
         pipeline.addLast(eventExecutorGroup, protobufEncoder);
         pipeline.addLast(eventExecutorGroup, nettyServerConnectManageHandler);
         pipeline.addLast(eventExecutorGroup, nettyServerHandler);
-
+        
     }
 }

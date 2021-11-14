@@ -1,5 +1,6 @@
 package com.github.mxsm.magpiebridge.client.manager;
 
+import com.github.mxsm.remoting.connection.ConnectionPool;
 import com.github.mxsm.remoting.connection.DefaultConnectionManager;
 import com.github.mxsm.remoting.connection.ServerConnectionManager;
 
@@ -10,4 +11,11 @@ import com.github.mxsm.remoting.connection.ServerConnectionManager;
  */
 public class DefaultServerConnectionManager extends DefaultConnectionManager implements ServerConnectionManager {
 
+    public DefaultServerConnectionManager(ConnectionPool connectionPool) {
+        super(connectionPool);
+    }
+
+    public DefaultServerConnectionManager() {
+
+    }
 }

@@ -20,6 +20,8 @@ public class Connection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Connection.class);
 
+    private static final int DEFAULT_CONNECTION_TIMEOUT = 0;
+
     private Channel channel;
 
     private ConnectionMetaData connMetaData;
@@ -42,6 +44,18 @@ public class Connection {
 
     public Connection(final Channel channel) {
         this.channel = channel;
+        this.connMetaData = new ConnectionMetaData(NetUtils.parseChannelRemoteAddress(channel), 0,
+            DEFAULT_CONNECTION_TIMEOUT);
+    }
+
+    public Connection(final Channel channel, ConnectionMetaData connMetaData) {
+        this.channel = channel;
+        this.connMetaData = connMetaData;
+    }
+
+    public Connection(final String ip, final int port, final Channel channel) {
+        this.channel = channel;
+        this.connMetaData = new ConnectionMetaData(ip, port, DEFAULT_CONNECTION_TIMEOUT);
     }
 
     /**

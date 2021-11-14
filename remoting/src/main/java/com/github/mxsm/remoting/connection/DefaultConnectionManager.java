@@ -17,6 +17,18 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultConnectionManager.class);
 
+    private static final String DEFAULT_CONN_POOL_KEY = "pool_default";
+
+    private ConnectionPool connectionPool;
+
+    public DefaultConnectionManager(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+    }
+
+    public DefaultConnectionManager() {
+        connectionPool = new ConnectionPool(null);
+    }
+
     /**
      * before start execute
      */

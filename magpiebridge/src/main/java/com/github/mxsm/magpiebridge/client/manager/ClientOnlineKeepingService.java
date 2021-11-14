@@ -1,6 +1,7 @@
 package com.github.mxsm.magpiebridge.client.manager;
 
 import com.github.mxsm.remoting.ChannelEventListener;
+import com.github.mxsm.remoting.connection.Connection;
 import com.github.mxsm.remoting.connection.ServerConnectionManager;
 import io.netty.channel.Channel;
 
@@ -12,7 +13,6 @@ import io.netty.channel.Channel;
 public class ClientOnlineKeepingService implements ChannelEventListener {
 
     private ServerConnectionManager connectionManager;
-
 
     public ClientOnlineKeepingService(final ServerConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -26,7 +26,7 @@ public class ClientOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelConnect(String remoteAddress, Channel channel) {
-
+        this.connectionManager.addConnection(new Connection(channel), remoteAddress);
      }
 
     /**
