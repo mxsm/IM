@@ -43,4 +43,4 @@ export IM_HOME
 
 echo "IM_HOME=$IM_HOME"
 
-sh ${$IM_HOME}/bin/runregister.sh com.github.mxsm.register.RegisterBootstrap $@
+sh ${IM_HOME}/bin/runregister.sh com.github.mxsm.register.RegisterBootstrap $@
