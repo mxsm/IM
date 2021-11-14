@@ -7,13 +7,12 @@ import com.github.mxsm.register.mananger.MagpieBridgeOnlineKeepingService;
 import com.github.mxsm.register.processor.DefaultRegisterRequestProcessor;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mxsm

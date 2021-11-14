@@ -27,6 +27,8 @@ public class NettyServerConfig implements Cloneable {
 
     private int serverCallbackExecutorThreads = 0;
 
+    private int messageProcessorThreads = Runtime.getRuntime().availableProcessors() * 2;
+
     public boolean isUseEpollNativeSelector() {
         return useEpollNativeSelector;
     }
@@ -101,5 +103,13 @@ public class NettyServerConfig implements Cloneable {
 
     public void setServerCallbackExecutorThreads(int serverCallbackExecutorThreads) {
         this.serverCallbackExecutorThreads = serverCallbackExecutorThreads;
+    }
+
+    public int getMessageProcessorThreads() {
+        return messageProcessorThreads;
+    }
+
+    public void setMessageProcessorThreads(int messageProcessorThreads) {
+        this.messageProcessorThreads = messageProcessorThreads;
     }
 }

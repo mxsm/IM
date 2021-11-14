@@ -2,12 +2,11 @@ package com.github.mxsm.common;
 
 import com.github.mxsm.common.annotation.NotNull;
 import com.github.mxsm.common.exception.NotNullException;
+import java.lang.reflect.Field;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.reflections.ReflectionUtils;
-
-import java.lang.reflect.Field;
-import java.util.Set;
 
 /**
  * @author mxsm

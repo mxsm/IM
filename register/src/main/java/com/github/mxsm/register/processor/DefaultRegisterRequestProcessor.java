@@ -5,7 +5,6 @@ import com.github.mxsm.common.GeneralUtils;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
-import com.github.mxsm.protocol.protobuf.constant.RemotingCommandType;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.register.mananger.MagpieBridgeManager;
 import com.github.mxsm.remoting.common.NetUtils;

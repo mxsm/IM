@@ -5,13 +5,15 @@ import com.github.mxsm.remoting.common.NettyUtils;
 import com.github.mxsm.remoting.event.NettyEvent;
 import com.github.mxsm.remoting.event.NettyEventPublisher;
 import com.github.mxsm.remoting.event.NettyEventType;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import java.net.SocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.SocketAddress;
 
 /**
  * 客户端连接管理

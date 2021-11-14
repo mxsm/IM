@@ -32,51 +32,30 @@ public class ImClientImpl implements ImClient {
     }
 
     @Override
-    public void beforeInit() {
+    public void init() {
         AnnotationUtils.validatorNotNull(this.nettyClientConfig,this.imClientConfig);
     }
 
     @Override
-    public void init() {
-        beforeInit();
-        afterInit();
-    }
-
-    @Override
-    public void afterInit() {
-
-    }
-
-    @Override
-    public void beforeStart() {
-        init();
-    }
-
-    @Override
     public void start() {
-        beforeStart();
         this.remotingClient.start();
-        afterStart();
     }
 
-    @Override
-    public void afterStart() {
 
-    }
-
-    @Override
-    public void beforeShutdown() {
-
-    }
 
     @Override
     public void shutdown() {
 
     }
 
+    /**
+     * Check whether it is started
+     *
+     * @return
+     */
     @Override
-    public void afterShutdown() {
-
+    public boolean isStarted() {
+        return false;
     }
 
     /**

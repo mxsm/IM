@@ -25,12 +25,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mxsm
@@ -57,7 +56,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     private NettyServerHandler nettyServerHandler;
 
-    private final ExecutorService publicExecutor;
+    private final ExecutorService callbackExecutor;
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
@@ -72,14 +71,13 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
         this.serverBootstrap = new ServerBootstrap();
 
-        //new publicExecutor
-        int publicThreadNums = nettyServerConfig.getServerCallbackExecutorThreads();
-        if (publicThreadNums <= 0) {
-            publicThreadNums = 4;
+        //new call back Executor
+        int callbackExecutorNums = nettyServerConfig.getServerCallbackExecutorThreads();
+        if (callbackExecutorNums <= 0) {
+            callbackExecutorNums = 4;
         }
-        this.publicExecutor = Executors
-            .newFixedThreadPool(publicThreadNums, new NamedThreadFactory("NettyServerPublicExecutor"));
-
+        this.callbackExecutor = Executors.newFixedThreadPool(callbackExecutorNums,
+            new NamedThreadFactory("NettyServerCallbackExecutor"));
 
         if (useEpoll()) {
             this.bossEventLoopGroup = new EpollEventLoopGroup(1, new NamedThreadFactory("NettyEPOLLBoss"));
@@ -152,6 +150,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     /**
      * 注册请求处理器
+     *
      * @param requestCode
      * @param processor
      * @param executor
@@ -165,11 +164,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
     @Override
     public ChannelEventListener getChannelEventListener() {
         return this.channelEventListener;
-    }
-
-    @Override
-    public void beforeInit() {
-        // nothing to do
     }
 
     @Override
@@ -189,25 +183,13 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
                 nettyServerHandler));
     }
 
-    @Override
-    public void afterInit() {
-
-    }
-
-    @Override
-    public void beforeStart() {
-        this.beforeInit();
-        this.init();
-        this.afterInit();
-    }
 
     /**
      * start service
      */
     @Override
     public void start() {
-
-        this.beforeStart();
+        this.init();
         try {
             ChannelFuture sync = this.serverBootstrap.bind().sync();
             InetSocketAddress address = (InetSocketAddress) sync.channel().localAddress();
@@ -218,20 +200,10 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        this.afterStart();
-    }
-
-    @Override
-    public void afterStart() {
         if (this.channelEventListener != null) {
             this.nettyEventWorker.start();
             LOGGER.info("-----------------NettyEventWork started-------------------");
         }
-    }
-
-    @Override
-    public void beforeShutdown() {
-
     }
 
     /**
@@ -239,8 +211,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
      */
     @Override
     public void shutdown() {
-
-        this.beforeShutdown();
 
         if (this.nettyEventWorker != null) {
             this.nettyEventWorker.shutdown(false);
@@ -252,16 +222,19 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             this.eventExecutorGroup.shutdownGracefully();
         }
 
-        if(this.publicExecutor != null){
-            this.publicExecutor.shutdown();
+        if (this.callbackExecutor != null) {
+            this.callbackExecutor.shutdown();
         }
-
-        this.afterShutdown();
     }
 
+    /**
+     * Check whether it is started
+     *
+     * @return
+     */
     @Override
-    public void afterShutdown() {
-
+    public boolean isStarted() {
+        return false;
     }
 
     private boolean useEpoll() {
@@ -270,7 +243,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     @Override
     public ExecutorService getCallbackExecutor() {
-        return this.publicExecutor;
+        return this.callbackExecutor;
     }
 
     @Override

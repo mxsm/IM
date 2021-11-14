@@ -24,18 +24,21 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author mxsm
@@ -262,10 +265,6 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
         super.registerProcessor(requestCode, processor, executor);
     }
 
-    @Override
-    public void beforeInit() {
-
-    }
 
     @Override
     public void init() {
@@ -273,23 +272,12 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             new NamedThreadFactory("NettyClientWorkerThread"));
     }
 
-    @Override
-    public void afterInit() {
-
-    }
-
-    @Override
-    public void beforeStart() {
-
-    }
 
     /**
      * start service
      */
     @Override
     public void start() {
-
-        beforeStart();
         this.nettyBootstrap.group(this.eventLoopGroupWorker).channel(NioSocketChannel.class)
             .option(ChannelOption.TCP_NODELAY, true)
             .option(ChannelOption.SO_KEEPALIVE, false)
@@ -297,20 +285,11 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
             .handler(new NettyClientHandlerInitializer(eventExecutorGroup, nettyClientConfig, this));
-        afterStart();
-    }
-
-    @Override
-    public void afterStart() {
         if(this.channelEventListener != null){
             this.nettyEventWorker.start();
         }
     }
 
-    @Override
-    public void beforeShutdown() {
-
-    }
 
     /**
      * shutdown service
@@ -318,18 +297,15 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     @Override
     public void shutdown() {
 
-        beforeShutdown();
-
         if (this.nettyEventWorker != null) {
             this.nettyEventWorker.shutdown(false);
         }
-
-        afterShutdown();
     }
 
-    @Override
-    public void afterShutdown() {
 
+    @Override
+    public boolean isStarted() {
+        return false;
     }
 
     /**

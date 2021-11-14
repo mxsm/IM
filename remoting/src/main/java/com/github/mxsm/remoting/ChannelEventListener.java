@@ -1,6 +1,6 @@
 package com.github.mxsm.remoting;
 
-import io.netty.channel.*;
+import io.netty.channel.Channel;
 
 /**
  * @author mxsm

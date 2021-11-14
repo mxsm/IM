@@ -1,7 +1,6 @@
 package com.github.mxsm.remoting.event;
 
 import io.netty.channel.Channel;
-
 import java.util.EventObject;
 
 /**

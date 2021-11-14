@@ -2,7 +2,7 @@ package com.github.mxsm.client;
 
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.InvokeCallback;
-import com.github.mxsm.remoting.Lifecycle;
+import com.github.mxsm.remoting.LifeCycle;
 import com.github.mxsm.remoting.exception.RemotingConnectException;
 import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
@@ -13,7 +13,7 @@ import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
  * @date 2021/10/10 16:16
  * @Since 1.0.0
  */
-public interface ImClient extends Lifecycle {
+public interface ImClient extends LifeCycle {
 
     /**
      * 同步执行
