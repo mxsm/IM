@@ -5,6 +5,8 @@ import com.github.mxsm.remoting.exception.RemotingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,16 +19,13 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultConnectionManager.class);
 
-    private static final String DEFAULT_CONN_POOL_KEY = "pool_default";
+    private Map<String /*client ip:port*/,Connection> connectionPoolTable = new ConcurrentHashMap<>();
 
-    private ConnectionPool connectionPool;
-
-    public DefaultConnectionManager(ConnectionPool connectionPool) {
-        this.connectionPool = connectionPool;
-    }
+    //connection  num
+    private final AtomicLong connectionNumbers = new AtomicLong(0);
 
     public DefaultConnectionManager() {
-        connectionPool = new ConnectionPool(null);
+
     }
 
     /**
@@ -70,10 +69,17 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
      */
     @Override
     public void addConnection(Connection connection) {
-        Set<String> poolKeys = connection.getPoolKeys();
+        /*Set<String> poolKeys = connection.getPoolKeys();
         for (String poolKey : poolKeys) {
             this.addConnection(connection, poolKey);
+        }*/
+        Connection originConn = this.connectionPoolTable.get(connection.getUniqueKey());
+        if(originConn == null){
+            this.connectionPoolTable.put(connection.getUniqueKey(),connection);
+        }else {
+            originConn.increaseRef();
         }
+
     }
 
     /**
@@ -85,7 +91,7 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
     @Override
     public void addConnection(Connection connection, String poolKey) {
 
-        ConnectionPool pool = null;
+        /*ConnectionPool pool = null;
         try {
             // get or create an empty connection pool
             //pool = this.getConnectionPoolAndCreateIfAbsent(poolKey, new ConnectionPoolCall());
@@ -98,7 +104,7 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
         } else {
             // should not reach here.
             LOGGER.error("[NOTIFYME] Connection pool NULL!");
-        }
+        }*/
 
     }
 

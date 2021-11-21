@@ -26,7 +26,7 @@ public class ClientOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelConnect(String remoteAddress, Channel channel) {
-        this.connectionManager.addConnection(new Connection(channel), remoteAddress);
+        this.connectionManager.addConnection(new Connection(channel));
      }
 
     /**
@@ -37,7 +37,7 @@ public class ClientOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelClose(String remoteAddress, Channel channel) {
-
+        this.connectionManager.remove(new Connection(channel));
     }
 
     /**

@@ -29,4 +29,12 @@ public abstract class RequestCode {
     /*register code 201-400*/
 
     public static final int MAGPIE_BRIDGE_MASTER_CHANGE = 201;
+
+
+    /*business code 401 - */
+
+    /**
+     * client connection mb
+     */
+    public static final int CLIENT_CONNECT = 401;
 }

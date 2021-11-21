@@ -10,10 +10,12 @@ import com.github.mxsm.magpiebridge.client.manager.ClientOnlineKeepingService;
 import com.github.mxsm.magpiebridge.client.manager.DefaultServerConnectionManager;
 import com.github.mxsm.magpiebridge.cluster.ClusterMetaData;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
+import com.github.mxsm.magpiebridge.processor.CtrlCommandProcessor;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.LifeCycle;
 import com.github.mxsm.remoting.common.NetUtils;
+import com.github.mxsm.remoting.common.RequestCode;
 import com.github.mxsm.remoting.common.ResponseCode;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
@@ -207,6 +209,8 @@ public class MagpieBridgeController implements LifeCycle {
     }
 
     private void registerProcessor() {
+        CtrlCommandProcessor ctrlCp = new CtrlCommandProcessor();
+        magpieBridgeServer.registerProcessor(RequestCode.CLIENT_CONNECT, ctrlCp, this.messageProcessExecutor);
 
     }
 }

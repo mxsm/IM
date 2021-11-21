@@ -33,7 +33,7 @@ public class Connection {
     /**
      * the reference count used for this connection. If equals 2, it means this connection has been referenced 2 times
      */
-    private final AtomicInteger referenceCount = new AtomicInteger();
+    private final AtomicInteger referenceCount = new AtomicInteger(1);
 
     private Set<String> poolKeys = new ConcurrentHashSet<>();
 
@@ -44,8 +44,9 @@ public class Connection {
 
     public Connection(final Channel channel) {
         this.channel = channel;
-        this.connMetaData = new ConnectionMetaData(NetUtils.parseChannelRemoteAddress(channel), 0,
-            DEFAULT_CONNECTION_TIMEOUT);
+        String addressWithPort = NetUtils.parseChannelRemoteAddress(channel);
+        String[] split = addressWithPort.split(":");
+        this.connMetaData = new ConnectionMetaData(split[0], Integer.parseInt(split[1]), DEFAULT_CONNECTION_TIMEOUT);
     }
 
     public Connection(final Channel channel, ConnectionMetaData connMetaData) {
@@ -110,5 +111,10 @@ public class Connection {
      */
     public Set<String> getPoolKeys() {
         return new HashSet<>(poolKeys);
+    }
+
+    public String getUniqueKey() {
+        StringBuilder sb = new StringBuilder();
+        return sb.append(this.connMetaData.getIp()).append(":").append(this.connMetaData.getPort()).toString();
     }
 }

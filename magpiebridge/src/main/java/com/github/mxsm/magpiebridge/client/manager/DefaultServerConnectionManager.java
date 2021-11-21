@@ -12,7 +12,7 @@ import com.github.mxsm.remoting.connection.ServerConnectionManager;
 public class DefaultServerConnectionManager extends DefaultConnectionManager implements ServerConnectionManager {
 
     public DefaultServerConnectionManager(ConnectionPool connectionPool) {
-        super(connectionPool);
+        super();
     }
 
     public DefaultServerConnectionManager() {
