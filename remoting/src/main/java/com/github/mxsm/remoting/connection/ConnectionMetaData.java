@@ -7,6 +7,8 @@ package com.github.mxsm.remoting.connection;
  */
 public class ConnectionMetaData {
 
+    public static final int DEFAULT_CONNECT_TIMEOUT = 0;
+
     private String ip;
 
     private int port;
@@ -17,6 +19,14 @@ public class ConnectionMetaData {
         this.ip = ip;
         this.port = port;
         this.connectTimeout = connectTimeout;
+    }
+
+    public ConnectionMetaData(String ip, int port) {
+        this(ip, port, DEFAULT_CONNECT_TIMEOUT);
+    }
+
+    public ConnectionMetaData() {
+
     }
 
     public String getIp() {

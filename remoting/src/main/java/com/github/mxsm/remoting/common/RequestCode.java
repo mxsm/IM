@@ -37,4 +37,6 @@ public abstract class RequestCode {
      * client connection mb
      */
     public static final int CLIENT_CONNECT = 401;
+
+    public static final int GET_MAGPIE_BRIDGE_ADDRESS = 402;
 }

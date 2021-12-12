@@ -4,7 +4,9 @@ import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.register.config.RegisterConfig;
 import com.github.mxsm.register.mananger.MagpieBridgeManager;
 import com.github.mxsm.register.mananger.MagpieBridgeOnlineKeepingService;
+import com.github.mxsm.register.processor.ClientCommandProcessor;
 import com.github.mxsm.register.processor.DefaultRegisterRequestProcessor;
+import com.github.mxsm.remoting.common.RequestCode;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
 import java.util.concurrent.ExecutorService;
@@ -72,7 +74,9 @@ public class RegisterController {
     private void registerProcessor() {
         this.registerServer.registerDefaultProcessor(new DefaultRegisterRequestProcessor(this.magpieBridgeManager),
             this.executorService);
-        LOGGER.debug("DefaultRegisterRequestProcessor register complete");
+        LOGGER.debug("DefaultRegisterRequestProcessor register completed");
+        this.registerServer.registerProcessor(RequestCode.GET_MAGPIE_BRIDGE_ADDRESS, new ClientCommandProcessor(this.magpieBridgeManager), this.executorService);
+        LOGGER.debug("ClientCommandProcessor register completed");
     }
 
 }

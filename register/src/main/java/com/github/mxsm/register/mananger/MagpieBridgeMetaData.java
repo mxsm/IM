@@ -1,11 +1,13 @@
 package com.github.mxsm.register.mananger;
 
+import com.github.mxsm.remoting.connection.ConnectionMetaData;
+
 /**
  * @author mxsm
  * @Date 2021/7/29
  * @Since 0.1
  */
-public class MagpieBridgeMetaData {
+public class MagpieBridgeMetaData extends ConnectionMetaData {
 
     private final String magpieBridgeName;
 
