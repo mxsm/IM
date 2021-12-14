@@ -10,26 +10,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedThreadFactory implements ThreadFactory {
 
-    private  AtomicInteger threadIndex = new AtomicInteger(0);
+    private AtomicInteger threadIndex;
 
     private final String threadNamePrefix;
 
-    private boolean isDemoThread = false;
+    private boolean isDemoThread;
 
 
     public NamedThreadFactory(final String threadNamePrefix, boolean isDemoThread) {
-        this.threadNamePrefix = threadNamePrefix;
-        this.isDemoThread = isDemoThread;
+        this(new AtomicInteger(0), threadNamePrefix, isDemoThread);
     }
 
-    public NamedThreadFactory( AtomicInteger threadIndex, final String threadNamePrefix, boolean isDemoThread) {
-        this.threadIndex = threadIndex;
+    public NamedThreadFactory(AtomicInteger threadIndex, final String threadNamePrefix, boolean isDemoThread) {
+        this.threadIndex = threadIndex == null ? new AtomicInteger(0) : threadIndex;
         this.threadNamePrefix = threadNamePrefix;
         this.isDemoThread = isDemoThread;
     }
 
     public NamedThreadFactory(final String threadNamePrefix) {
-        this.threadNamePrefix = threadNamePrefix;
+        this(threadNamePrefix, true);
     }
 
     /**
@@ -42,8 +41,8 @@ public class NamedThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable r) {
 
-        Thread thread = new Thread(r, threadNamePrefix+"_"+ threadIndex.incrementAndGet());
-        if(isDemoThread){
+        Thread thread = new Thread(r, threadNamePrefix + "_" + threadIndex.incrementAndGet());
+        if (isDemoThread) {
             thread.setDaemon(true);
         }
         return thread;

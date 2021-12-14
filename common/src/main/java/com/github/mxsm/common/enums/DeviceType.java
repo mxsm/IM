@@ -1,4 +1,4 @@
-package com.github.mxsm.common;
+package com.github.mxsm.common.enums;
 
 /**
  * @author mxsm

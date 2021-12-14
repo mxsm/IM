@@ -1,4 +1,4 @@
-package com.github.mxsm.common;
+package com.github.mxsm.common.utils;
 
 import com.github.mxsm.common.annotation.NotNull;
 import com.github.mxsm.common.exception.NotNullException;

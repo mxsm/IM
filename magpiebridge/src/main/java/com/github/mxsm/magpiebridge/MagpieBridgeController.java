@@ -2,7 +2,7 @@ package com.github.mxsm.magpiebridge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.mxsm.common.Symbol;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
+import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
 import com.github.mxsm.common.thread.NamedThreadFactory;
@@ -131,7 +131,7 @@ public class MagpieBridgeController implements LifeCycle {
 
     private boolean registerMagpieBridgeAll() {
 
-        MagpieBridgeInfo mbInfo = buildMagpieBridgeInfo();
+        MagpieBridgeMetadata mbInfo = buildMagpieBridgeInfo();
         boolean isRegisterSuccess = false;
         long magpieBridgeRegisterTimeoutMills = this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills();
         List<RemotingCommand> responseCommands = this.magpieBridgeAPI
@@ -179,14 +179,14 @@ public class MagpieBridgeController implements LifeCycle {
 
     private void unRegisterMagpieBridgeAll() {
 
-        MagpieBridgeInfo mbInfo = buildMagpieBridgeInfo();
+        MagpieBridgeMetadata mbInfo = buildMagpieBridgeInfo();
 
         long magpieBridgeRegisterTimeoutMills = this.magpieBridgeConfig.getMagpieBridgeRegisterTimeoutMills();
         this.magpieBridgeAPI.unRegisterMagpieBridgeAll(mbInfo, magpieBridgeRegisterTimeoutMills);
     }
 
-    private MagpieBridgeInfo buildMagpieBridgeInfo() {
-        MagpieBridgeInfo mbInfo = new MagpieBridgeInfo();
+    private MagpieBridgeMetadata buildMagpieBridgeInfo() {
+        MagpieBridgeMetadata mbInfo = new MagpieBridgeMetadata();
         mbInfo.setMagpieBridgeId(this.magpieBridgeConfig.getMagpieBridgeId());
         mbInfo.setMagpieBridgeAddress(this.magpieBridgeAddress);
         mbInfo.setMagpieBridgeName(this.magpieBridgeConfig.getMagpieBridgeName());

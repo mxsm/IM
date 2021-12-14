@@ -1,8 +1,8 @@
 package com.github.mxsm.magpiebridge.service;
 
 import com.alibaba.fastjson.JSON;
-import com.github.mxsm.common.GeneralUtils;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
+import com.github.mxsm.common.utils.GeneralUtils;
+import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.exception.RegisterRequestException;
@@ -82,7 +82,7 @@ public class MagpieBridgeAPI {
      *
      * @param mbInfo
      */
-    public List<RemotingCommand> registerMagpieBridgeAll(final MagpieBridgeInfo mbInfo, final long timeout) {
+    public List<RemotingCommand> registerMagpieBridgeAll(final MagpieBridgeMetadata mbInfo, final long timeout) {
 
         final List<String> registerAddressList = this.remotingClient.getRegisterAddressList();
         if (CollectionUtils.isEmpty(registerAddressList)) {
@@ -128,7 +128,7 @@ public class MagpieBridgeAPI {
      * @param timeout
      * @return
      */
-    public List<RemotingCommand> unRegisterMagpieBridgeAll(final MagpieBridgeInfo mbInfo, final long timeout) {
+    public List<RemotingCommand> unRegisterMagpieBridgeAll(final MagpieBridgeMetadata mbInfo, final long timeout) {
 
         final List<String> registerAddressList = this.remotingClient.getRegisterAddressList();
         if (CollectionUtils.isEmpty(registerAddressList)) {

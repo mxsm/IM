@@ -1,6 +1,6 @@
 package com.github.mxsm.magpiebridge.processor;
 
-import com.github.mxsm.common.GeneralUtils;
+import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.common.NetUtils;

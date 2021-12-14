@@ -1,7 +1,7 @@
 package com.github.mxsm.client;
 
 import com.github.mxsm.client.config.ImClientConfig;
-import com.github.mxsm.common.AnnotationUtils;
+import com.github.mxsm.common.utils.AnnotationUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.RemotingClient;

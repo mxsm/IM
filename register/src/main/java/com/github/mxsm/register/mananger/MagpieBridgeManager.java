@@ -1,8 +1,8 @@
 package com.github.mxsm.register.mananger;
 
 import com.alibaba.fastjson.JSON;
-import com.github.mxsm.common.GeneralUtils;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeInfo;
+import com.github.mxsm.common.utils.GeneralUtils;
+import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
@@ -42,7 +42,7 @@ public class MagpieBridgeManager {
 
     private final Map<String /*MagpieBridge address*/, MagpieBridgeLiveInfo> magpieBridgeLiveTable = new HashMap<>(128);
 
-    public RegisterMagpieBridgeResult registerMagpieBridge(final Channel channel, final MagpieBridgeInfo mbInfo) {
+    public RegisterMagpieBridgeResult registerMagpieBridge(final Channel channel, final MagpieBridgeMetadata mbInfo) {
         try {
             try {
                 readWriteLock.writeLock().lockInterruptibly();
@@ -104,7 +104,7 @@ public class MagpieBridgeManager {
     }
 
 
-    public void unRegisterMagpieBridge(final Channel channel, final MagpieBridgeInfo mbInfo) {
+    public void unRegisterMagpieBridge(final Channel channel, final MagpieBridgeMetadata mbInfo) {
 
         try {
             try {
@@ -306,6 +306,12 @@ public class MagpieBridgeManager {
         } catch (Exception e) {
             LOGGER.error("closeChannelOnException error", e);
         }
+    }
+
+    public MagpieBridgeMetadata getMagpieBridge(){
+
+
+        return null;
     }
 
 }

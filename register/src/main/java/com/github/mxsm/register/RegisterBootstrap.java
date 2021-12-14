@@ -1,6 +1,6 @@
 package com.github.mxsm.register;
 
-import com.github.mxsm.common.MixAll;
+import com.github.mxsm.common.utils.MixAll;
 import com.github.mxsm.common.commandline.CommandlineUtils;
 import com.github.mxsm.register.config.RegisterConfig;
 import com.github.mxsm.remoting.common.NetUtils;

@@ -1,9 +1,9 @@
-package com.github.mxsm.common;
+package com.github.mxsm.common.utils;
 
 import java.util.zip.CRC32;
 
 /**
- * 通用的工具类
+ * General utils
  * @author mxsm
  * @Date 2021/7/1
  * @Since 0.1

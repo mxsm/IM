@@ -5,15 +5,18 @@ package com.github.mxsm.common.magpiebridge;
  * @Date 2021/7/3
  * @Since 0.1
  */
-public class MagpieBridgeInfo {
+public class MagpieBridgeMetadata {
 
-    //名称
+    //name
     private String magpieBridgeName;
 
+    //adress: ip:port
     private String magpieBridgeAddress;
 
+    //id
     private long magpieBridgeId;
 
+    //createTime
     private long magpieBridgeCreateTimestamp;
 
     private String magpieBridgeClusterName;

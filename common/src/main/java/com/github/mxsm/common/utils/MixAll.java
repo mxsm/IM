@@ -1,4 +1,4 @@
-package com.github.mxsm.common;
+package com.github.mxsm.common.utils;
 
 import java.lang.reflect.Method;
 import java.util.Properties;
