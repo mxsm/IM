@@ -117,4 +117,12 @@ public class Connection {
         StringBuilder sb = new StringBuilder();
         return sb.append(this.connMetaData.getIp()).append(":").append(this.connMetaData.getPort()).toString();
     }
+
+    public ConnectionMetaData getConnMetaData() {
+        return connMetaData;
+    }
+
+    public void setConnMetaData(ConnectionMetaData connMetaData) {
+        this.connMetaData = connMetaData;
+    }
 }

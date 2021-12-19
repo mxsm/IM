@@ -54,7 +54,7 @@ public class RegisterController {
             new NamedThreadFactory("RegisterWorkThread"));
         registerProcessor();
 
-        scheduledExecutorService.scheduleAtFixedRate(() -> magpieBridgeManager.scanInactiveMagpieBridge(), 10, 10,
+        scheduledExecutorService.scheduleAtFixedRate(() -> magpieBridgeManager.scanInactiveMagpieBridge(), 10, 30,
             TimeUnit.SECONDS);
 
     }

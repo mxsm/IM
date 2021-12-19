@@ -1,11 +1,17 @@
 package com.github.mxsm.common.magpiebridge;
 
+import com.github.mxsm.common.Address;
+import com.github.mxsm.common.client.ClientMetadata;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author mxsm
  * @Date 2021/7/3
  * @Since 0.1
  */
-public class MagpieBridgeMetadata {
+public class MagpieBridgeMetadata extends Address {
 
     //name
     private String magpieBridgeName;
@@ -22,6 +28,13 @@ public class MagpieBridgeMetadata {
     private String magpieBridgeClusterName;
 
     private MagpieBridgeRole magpieBridgeRole;
+
+    private Set<ClientMetadata> clientMetadataSet = new HashSet<>();
+
+    /**
+     * connection the mb server clients numbers
+     */
+    private long clientNums;
 
     public String getMagpieBridgeName() {
         return magpieBridgeName;
@@ -69,5 +82,21 @@ public class MagpieBridgeMetadata {
 
     public void setMagpieBridgeRole(MagpieBridgeRole magpieBridgeRole) {
         this.magpieBridgeRole = magpieBridgeRole;
+    }
+
+    public long getClientNums() {
+        return clientNums;
+    }
+
+    public void setClientNums(long clientNums) {
+        this.clientNums = clientNums;
+    }
+
+    public Set<ClientMetadata> getClientMetadataSet() {
+        return clientMetadataSet;
+    }
+
+    public void setClientMetadataSet(Set<ClientMetadata> clientMetadataSet) {
+        this.clientMetadataSet = clientMetadataSet;
     }
 }

@@ -1,7 +1,7 @@
 package com.github.mxsm.register.strategy;
 
 import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author mxsm
@@ -12,9 +12,9 @@ public interface SelectMagpieBridgeStrategy {
 
     /**
      * select MagpieBridgeInfo
-     * @param list
+     * @param mbCollections
      * @return
      */
-    MagpieBridgeMetadata select(List<MagpieBridgeMetadata> list);
+    MagpieBridgeMetadata select(Collection<? extends MagpieBridgeMetadata> mbCollections);
 
 }

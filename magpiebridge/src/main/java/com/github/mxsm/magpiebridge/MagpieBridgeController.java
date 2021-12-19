@@ -1,5 +1,6 @@
 package com.github.mxsm.magpiebridge;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.mxsm.common.Symbol;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
@@ -17,6 +18,7 @@ import com.github.mxsm.remoting.LifeCycle;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.common.RequestCode;
 import com.github.mxsm.remoting.common.ResponseCode;
+import com.github.mxsm.remoting.connection.ServerConnectionManager;
 import com.github.mxsm.remoting.netty.NettyClientConfig;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
@@ -62,13 +64,16 @@ public class MagpieBridgeController implements LifeCycle {
 
     private volatile boolean started = false;
 
+    private ServerConnectionManager serverConnectionManager;
+
     public MagpieBridgeController(final NettyServerConfig nettyServerConfig,
         final MagpieBridgeConfig magpieBridgeConfig, final NettyClientConfig nettyClientConfig) {
 
         this.nettyServerConfig = nettyServerConfig;
         this.magpieBridgeConfig = magpieBridgeConfig;
         this.nettyClientConfig = nettyClientConfig;
-        this.clientOnlineKeepingService = new ClientOnlineKeepingService(new DefaultServerConnectionManager());
+        this.serverConnectionManager = new DefaultServerConnectionManager();
+        this.clientOnlineKeepingService = new ClientOnlineKeepingService(this.serverConnectionManager);
         this.clusterMetaData = new ClusterMetaData();
         this.magpieBridgeAddress = getMagpieBridgeAddress();
     }
@@ -89,9 +94,6 @@ public class MagpieBridgeController implements LifeCycle {
 
         // register request processor
         registerProcessor();
-
-        //schedule config
-        this.magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 10, TimeUnit.SECONDS);
     }
 
 
@@ -104,6 +106,9 @@ public class MagpieBridgeController implements LifeCycle {
             System.exit(-1);
         }
         this.started = true;
+
+        //schedule config
+        this.magpieBridgeRegisterService.scheduleAtFixedRate(() -> registerMagpieBridgeAll(), 10, 20, TimeUnit.SECONDS);
     }
 
     public void shutdown() {
@@ -193,6 +198,10 @@ public class MagpieBridgeController implements LifeCycle {
         mbInfo.setMagpieBridgeCreateTimestamp(System.currentTimeMillis());
         mbInfo.setMagpieBridgeClusterName(this.magpieBridgeConfig.getMagpieBridgeClusterName());
         mbInfo.setMagpieBridgeRole(this.getMagpieBridgeConfig().getMagpieBridgeRole());
+        mbInfo.setClientMetadataSet(this.serverConnectionManager.getClientMetadataCollection());
+        mbInfo.setClientNums(this.serverConnectionManager.getClientConnectionNums());
+
+        LOGGER.info("MagpieBridgeMetadata:"+ JSON.toJSONString(mbInfo));
         return mbInfo;
     }
 

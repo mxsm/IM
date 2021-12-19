@@ -1,11 +1,12 @@
 package com.github.mxsm.register.mananger;
 
 import com.alibaba.fastjson.JSON;
-import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.common.register.RegisterMagpieBridgeResult;
+import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
+import com.github.mxsm.register.strategy.SelectMagpieBridgeStrategy;
 import com.github.mxsm.remoting.common.NettyUtils;
 import com.github.mxsm.remoting.common.RequestCode;
 import com.google.protobuf.ByteString;
@@ -59,10 +60,20 @@ public class MagpieBridgeManager {
                     liveInfo.setOnline(true);
                     long lastUpdateTimestamp = System.currentTimeMillis();
                     liveInfo.setLastUpdateTimestamp(lastUpdateTimestamp);
+                    liveInfo.setClientNums(mbInfo.getClientNums());
+                    liveInfo.addClientMetadata(mbInfo.getClientMetadataSet());
                     LOGGER.info("update magpie bridge Live[name={},address={}]", magpieBridgeName, remoteAddress);
                 } else {
                     liveInfo = new MagpieBridgeLiveInfo(System.currentTimeMillis(), System.currentTimeMillis(), channel,
                         true);
+                    liveInfo.setClientNums(mbInfo.getClientNums());
+                    liveInfo.addClientMetadata(mbInfo.getClientMetadataSet());
+                    liveInfo.setMagpieBridgeAddress(remoteAddress);
+                    liveInfo.setMagpieBridgeName(magpieBridgeName);
+                    liveInfo.setMagpieBridgeId(magpieBridgeId);
+                    liveInfo.setMagpieBridgeClusterName(clusterName);
+                    liveInfo.setPort(mbInfo.getPort());
+                    liveInfo.setIp(mbInfo.getIp());
                     magpieBridgeLiveTable.put(remoteAddress, liveInfo);
                     LOGGER.info("register magpie bridge Live[name={},address={}] SUCCESS", magpieBridgeName,
                         remoteAddress);
@@ -308,10 +319,9 @@ public class MagpieBridgeManager {
         }
     }
 
-    public MagpieBridgeMetadata getMagpieBridge(){
-
-
-        return null;
+    public MagpieBridgeMetadata getMagpieBridge(SelectMagpieBridgeStrategy strategy){
+        MagpieBridgeMetadata selectMb = strategy.select(this.magpieBridgeLiveTable.values());
+        return selectMb;
     }
 
 }

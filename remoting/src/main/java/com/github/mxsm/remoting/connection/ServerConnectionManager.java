@@ -1,6 +1,8 @@
 package com.github.mxsm.remoting.connection;
 
+import com.github.mxsm.common.client.ClientMetadata;
 import com.github.mxsm.remoting.LifeCycle;
+import java.util.Set;
 
 /**
  * @author mxsm
@@ -9,4 +11,12 @@ import com.github.mxsm.remoting.LifeCycle;
  */
 public interface ServerConnectionManager extends ConnectionManager, LifeCycle {
 
+    /**
+     * get client number
+     * @return
+     */
+    long getClientConnectionNums();
+
+
+    Set<ClientMetadata> getClientMetadataCollection();
 }

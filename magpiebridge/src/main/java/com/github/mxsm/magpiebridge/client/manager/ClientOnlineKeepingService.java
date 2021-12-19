@@ -48,7 +48,7 @@ public class ClientOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelException(String remoteAddress, Channel channel) {
-
+        this.connectionManager.remove(new Connection(channel));
     }
 
     /**

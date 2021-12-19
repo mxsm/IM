@@ -1,11 +1,14 @@
 package com.github.mxsm.remoting.connection;
 
+import com.github.mxsm.common.client.ClientMetadata;
 import com.github.mxsm.remoting.LifeCycle;
 import com.github.mxsm.remoting.exception.RemotingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,13 +71,10 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
      */
     @Override
     public void addConnection(Connection connection) {
-        /*Set<String> poolKeys = connection.getPoolKeys();
-        for (String poolKey : poolKeys) {
-            this.addConnection(connection, poolKey);
-        }*/
         Connection originConn = this.connectionPoolTable.get(connection.getUniqueKey());
         if(originConn == null){
             this.connectionPoolTable.put(connection.getUniqueKey(),connection);
+            connectionNumbers.incrementAndGet();
         }else {
             originConn.increaseRef();
         }
@@ -149,7 +149,11 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
      */
     @Override
     public void remove(Connection connection) {
-
+        Connection removeConn = this.connectionPoolTable.remove(connection.getUniqueKey());
+        if(removeConn == null){
+            return;
+        }
+        connectionNumbers.decrementAndGet();
     }
 
     /**
@@ -160,7 +164,11 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
      */
     @Override
     public void remove(Connection connection, String poolKey) {
-
+        Connection removeConn = this.connectionPoolTable.remove(connection.getUniqueKey());
+        if(removeConn == null){
+            return;
+        }
+        connectionNumbers.decrementAndGet();
     }
 
     /**
@@ -218,5 +226,19 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
     @Override
     public Connection create(String ip, int port, int connectTimeout) throws RemotingException {
         return null;
+    }
+
+    protected AtomicLong getConnectionNumbers() {
+        return connectionNumbers;
+    }
+
+    protected Set<ClientMetadata> getClientMetadatas(){
+        return connectionPoolTable.values().stream().filter(item->item.getConnMetaData() != null).map(item->{
+            ConnectionMetaData connMetaData = item.getConnMetaData();
+            ClientMetadata clientMetadata = new ClientMetadata();
+            clientMetadata.setIp(connMetaData.getIp());
+            clientMetadata.setPort(connMetaData.getPort());
+            return clientMetadata;
+        }).collect(Collectors.toSet());
     }
 }

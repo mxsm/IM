@@ -35,7 +35,10 @@ public class ClientBuilder {
     }
 
     public static ImClient build() {
-        return new ImClientImpl(DEFAULT_INSTANCE.getNettyClientConfig(), DEFAULT_INSTANCE.getImClientConfig());
+        ImClientImpl imClient = new ImClientImpl(DEFAULT_INSTANCE.getNettyClientConfig(),
+            DEFAULT_INSTANCE.getImClientConfig());
+        imClient.start();
+        return imClient;
     }
 
 
