@@ -54,6 +54,8 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     private int bindPort;
 
+    private InetSocketAddress localAddress;
+
     private final ExecutorService callbackExecutor;
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
@@ -191,8 +193,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             InetSocketAddress address = (InetSocketAddress) sync.channel().localAddress();
             bindPort = address.getPort();
             LOGGER.info("---------------NettyRemotingServer-[{}:{}] started finish----------------",
-                address.getAddress().getHostAddress(),
-                bindPort);
+                address.getAddress().getHostAddress(), bindPort);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,7 @@
 package com.github.mxsm.remoting;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author mxsm
  * @Date 2021/6/18
@@ -16,5 +18,4 @@ public interface RemotingService extends LifeCycle {
      * shutdown service
      */
     void shutdown();
-
 }

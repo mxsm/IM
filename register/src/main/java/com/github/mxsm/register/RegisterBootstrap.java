@@ -1,5 +1,6 @@
 package com.github.mxsm.register;
 
+import com.github.mxsm.common.utils.AnnotationUtils;
 import com.github.mxsm.common.utils.MixAll;
 import com.github.mxsm.common.commandline.CommandlineUtils;
 import com.github.mxsm.register.config.RegisterConfig;
@@ -36,15 +37,37 @@ public class RegisterBootstrap {
 
         RegisterController registerController = createRegisterController(args);
 
+        String registerName = registerController.getRegisterConfig().getRegisterName();
+        String localAddress = NetUtils.getLocalAddress();
+        int bindPort = registerController.getRegisterServerConfig().getBindPort();
+
         LOGGER.info("----------------registration center is starting [centerName={},IP={},Port={}]-------------------",
-            registerController.getRegisterConfig().getRegisterName(), NetUtils.getLocalAddress(),
-            registerController.getRegisterServerConfig().getBindPort());
+            registerName, localAddress, bindPort);
+
         registerController.initialize();
         registerController.startup();
 
         LOGGER.info("----------------registration center started [centerName={},IP={},Port={}]-------------------",
-            registerController.getRegisterConfig().getRegisterName(), NetUtils.getLocalAddress(),
-            registerController.getRegisterServerConfig().getBindPort());
+            registerName, localAddress, bindPort);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            private volatile boolean hasShutDown = false;
+
+            @Override
+            public void run() {
+                synchronized (this) {
+                    LOGGER.info("Register ShutdownHook was invoked");
+                    if (!this.hasShutDown) {
+                        this.hasShutDown = true;
+                        long startTime = System.currentTimeMillis();
+                        registerController.shutdown();
+                        long endTime = System.currentTimeMillis();
+                        LOGGER.info("Register ShutdownHook Spend time:{}ms", endTime - startTime);
+                    }
+                }
+
+            }
+        }, "RegisterShutdownHook-Thread"));
     }
 
     private static RegisterController createRegisterController(String[] args) {
@@ -79,6 +102,9 @@ public class RegisterBootstrap {
             int port = CommandlineUtils.getOptionValue2Int(cmdLine, "p");
             serverConfig.setBindPort(port);
         }
+
+        AnnotationUtils.validatorNotNull(serverConfig, registerConfig);
+
         RegisterController controller = new RegisterController(serverConfig, registerConfig);
 
         return controller;

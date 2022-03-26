@@ -58,7 +58,7 @@ public class MagpieBridgeBootstrap {
                 }
 
             }
-        }, "MagpieBridge_ShutdownHook"));
+        }, "MagpieBridgeShutdownHook-Thread"));
 
         LOGGER.info("----------------MagpieBridge started [IP={},Port={}]-------------------",
                 NetUtils.getLocalAddress(), magpieBridgeController.getNettyServerConfig().getBindPort());

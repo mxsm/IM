@@ -21,6 +21,7 @@
         <module>distribution</module>
         <module>client</module>
         <module>store</module>
+        <module>etcd</module>
     </modules>
 
     <properties>
@@ -55,6 +56,12 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>etcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
