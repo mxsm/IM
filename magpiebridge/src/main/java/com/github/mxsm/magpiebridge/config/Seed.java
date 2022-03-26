@@ -3,7 +3,7 @@ package com.github.mxsm.magpiebridge.config;
 /**
  * @author mxsm
  * @Date 2021/7/22
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class Seed {
 

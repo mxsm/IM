@@ -3,7 +3,7 @@ package com.github.mxsm.remoting.common;
 /**
  * @author mxsm
  * @Date 2021/7/1
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class RequestCode {
 

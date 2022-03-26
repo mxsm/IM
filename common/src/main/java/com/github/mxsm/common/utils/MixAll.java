@@ -6,7 +6,7 @@ import java.util.Properties;
 /**
  * @author mxsm
  * @Date 2021/6/27
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class MixAll {
 

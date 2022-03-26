@@ -3,7 +3,7 @@ package com.github.mxsm.remoting;
 /**
  * @author mxsm
  * @Date 2021/6/18
- * @Since 0.1
+ * @Since 1.0.0
  */
 public interface RemotingService extends LifeCycle {
 

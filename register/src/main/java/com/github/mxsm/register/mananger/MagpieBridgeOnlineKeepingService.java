@@ -6,7 +6,7 @@ import io.netty.channel.Channel;
 /**
  * @author mxsm
  * @Date 2021/6/20
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
 

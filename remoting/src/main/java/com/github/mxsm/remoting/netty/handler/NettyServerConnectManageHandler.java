@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author mxsm
  * @Date 2021/6/20
- * @Since 0.1
+ * @Since 1.0.0
  */
 @Sharable
 public class NettyServerConnectManageHandler extends ChannelDuplexHandler {

@@ -3,7 +3,7 @@ package com.github.mxsm.common;
 /**
  * @author mxsm
  * @Date 2021/7/22
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class Symbol {
 

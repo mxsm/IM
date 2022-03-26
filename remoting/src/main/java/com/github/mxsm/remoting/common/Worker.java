@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mxsm
  * @Date 2021/7/7
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class Worker implements Runnable{
 

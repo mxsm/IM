@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mxsm
  * @Date 2021/6/18
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class NettyRemotingServer extends NettyRemotingHandler implements RemotingServer {
 
@@ -54,8 +54,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     private int bindPort;
 
-    private NettyServerHandler nettyServerHandler;
-
     private final ExecutorService callbackExecutor;
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
@@ -64,6 +62,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig,
         final ChannelEventListener channelEventListener) {
+
         super(nettyServerConfig.getServerOnewaySemaphoreValue(), nettyServerConfig.getServerAsyncSemaphoreValue());
 
         this.nettyServerConfig = nettyServerConfig;
@@ -80,13 +79,13 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             new NamedThreadFactory("NettyServerCallbackExecutor"));
 
         if (useEpoll()) {
-            this.bossEventLoopGroup = new EpollEventLoopGroup(1, new NamedThreadFactory("NettyEPOLLBoss"));
+            this.bossEventLoopGroup = new EpollEventLoopGroup(1, new NamedThreadFactory("NettyEpollBoss"));
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
-                new NamedThreadFactory("NettyEPOLLSelector"));
+                new NamedThreadFactory("NettyEpollSelector"));
         } else {
-            this.bossEventLoopGroup = new NioEventLoopGroup(1, new NamedThreadFactory("NettyNIOBoss"));
+            this.bossEventLoopGroup = new NioEventLoopGroup(1, new NamedThreadFactory("NettyNioBoss"));
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
-                new NamedThreadFactory("NettyNIOSelector"));
+                new NamedThreadFactory("NettyNioSelector"));
         }
 
         eventExecutorGroup = new DefaultEventExecutorGroup(nettyServerConfig.getServerWorkerThreads(),
@@ -168,7 +167,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
 
     @Override
     public void init() {
-        nettyServerHandler = new NettyServerHandler(this);
         this.serverBootstrap.group(this.bossEventLoopGroup, this.selectorEventLoopGroup)
             .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 1024)
@@ -178,9 +176,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
             .localAddress(new InetSocketAddress(nettyServerConfig.getBindPort()))
-            .childHandler(new NettyServerHandlerInitializer(this, eventExecutorGroup,
-                nettyServerConfig,
-                nettyServerHandler));
+            .childHandler(new NettyServerHandlerInitializer(this, eventExecutorGroup, nettyServerConfig));
     }
 
 

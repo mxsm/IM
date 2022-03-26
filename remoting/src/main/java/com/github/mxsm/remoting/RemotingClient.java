@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * @author mxsm
  * @Date 2021/6/18
- * @Since 0.1
+ * @Since 1.0.0
  */
 public interface RemotingClient extends RemotingService {
 

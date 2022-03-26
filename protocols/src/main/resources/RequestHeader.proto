@@ -8,7 +8,7 @@ option java_package = "com.github.mxsm.protocol.protobuf";
 
 option java_multiple_files = true;
 
-message RequestHeaders{
+message RequestHeader{
 
   //协议
   string protocol = 1;
@@ -17,10 +17,10 @@ message RequestHeaders{
   string version = 2;
 
   //源IP
-  int64 sourceAddress = 3;
+  uint32 sourceAddress = 3;
 
   //请求的远程IP地址
-  int64 remoteAddress = 4;
+  uint32 remoteAddress = 4;
 
   //内容类型
   string contentType = 6;
@@ -28,12 +28,12 @@ message RequestHeaders{
   //发送消息的终端
   TerminalType terminalType = 7;
 
-  //发送消息的终端设备号
+  //send message device token
   string deviceToken = 8;
 
-  //消息发送者
+  //message sender
   string sender = 9;
 
-  //消息接收者
+  //message receiver
   string receiver = 10;
 }

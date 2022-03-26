@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mxsm
  * @Date 2021/7/1
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, AsyncNettyRequestProcessor {
 

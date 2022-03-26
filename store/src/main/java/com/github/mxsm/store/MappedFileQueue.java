@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mxsm
  * @Date 2021/10/29
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class MappedFileQueue {
 

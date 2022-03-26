@@ -21,12 +21,12 @@ class ImClientTest {
     @Test
     void invokeSync() throws Exception {
 
-        /*ImClient client = ClientBuilder.newBuilder().setMagpiebridgePort(9999).setMagpieBridgeAddress("127.0.0.1")
-            .build();*/
+        ImClient client = ClientBuilder.newBuilder().setMagpiebridgePort(9999).setMagpieBridgeAddress("127.0.0.1")
+            .build();
 
-/*        RemotingCommand remotingCommand = client.invokeSync(
+        RemotingCommand remotingCommand = client.invokeSync(
             RemotingCommandBuilder.buildRequestCommand().setCode(RequestCode.CLIENT_CONNECT).build(),
-            2000);*/
+            2000);
 
 /*        MagpieBridgeMetadata connectMagpieBridge = client.getConnectMagpieBridge("127.0.0.1:8888");
 

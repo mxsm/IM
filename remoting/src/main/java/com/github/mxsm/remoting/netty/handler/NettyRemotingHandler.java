@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mxsm
  * @Date 2021/6/25
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class NettyRemotingHandler extends AbstractNettyRemoting implements RemotingHandler,
         NettyEventPublisher {

@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author mxsm
  * @Date 2021/6/26
- * @Since 0.1
+ * @Since 1.0.0
  */
 public abstract class RemotingCommandBuilder {
 

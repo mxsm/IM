@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mxsm
  * @Date 2021/7/2
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class MagpieBridgeController implements LifeCycle {
 

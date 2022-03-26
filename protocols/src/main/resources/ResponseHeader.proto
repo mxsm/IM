@@ -6,7 +6,7 @@ option java_package = "com.github.mxsm.protocol.protobuf";
 
 option java_multiple_files = true;
 
-message ResponseHeaders{
+message ResponseHeader{
 
   //协议
   string protocol = 1;

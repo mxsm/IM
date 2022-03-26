@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author mxsm
  * @Date 2021/7/8
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class MagpieBridgeClusterMetaData implements Comparable<MagpieBridgeClusterMetaData>{
 

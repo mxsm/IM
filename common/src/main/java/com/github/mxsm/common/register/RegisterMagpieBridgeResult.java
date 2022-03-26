@@ -3,7 +3,7 @@ package com.github.mxsm.common.register;
 /**
  * @author mxsm
  * @Date 2021/7/15
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class RegisterMagpieBridgeResult {
 

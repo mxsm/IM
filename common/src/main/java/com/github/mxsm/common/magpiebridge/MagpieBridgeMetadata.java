@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * @author mxsm
  * @Date 2021/7/3
- * @Since 0.1
+ * @Since 1.0.0
  */
 public class MagpieBridgeMetadata extends Address {
 
