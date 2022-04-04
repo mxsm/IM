@@ -1,9 +1,5 @@
 package com.github.mxsm.etcd;
 
-import io.etcd.jetcd.Watch;
-import io.etcd.jetcd.options.WatchOption;
-import io.etcd.jetcd.watch.WatchResponse;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -23,7 +19,7 @@ class EtcdTest {
     @Test
     void watch() {
 
-        
+
     }
 
     @Test

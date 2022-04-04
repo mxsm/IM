@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "ServerType.proto";
+import "ClientMetadata.proto";
+
+package com.github.mxsm.protocol.protobuf;
+
+option java_package = "com.github.mxsm.protocol.protobuf";
+
+option java_multiple_files = true;
+
+message ServerMetadata{
+
+  //server ip
+  uint32 serverIp = 1;
+
+  //server bind port
+  uint32 serverPort = 2;
+
+  //server name
+  string name = 3;
+
+  ServerType serverType = 4;
+
+  //connect server client nums
+  uint32 clientNums = 5;
+
+  repeated ClientMetadata clientMetadata= 6;
+}

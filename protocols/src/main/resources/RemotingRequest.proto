@@ -12,35 +12,30 @@ option java_multiple_files = true;
 
 message RemotingCommand{
 
-    //request header
     RequestHeader requestHeaders = 1;
 
-    //返回头部
     ResponseHeader responseHeaders = 2;
 
-    //命令类型
     RemotingCommandType commandType = 3;
 
     /**
-     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
-     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+     * when commandType is RemotingCommandType.REQUEST，code is request code ,
+     * when commandType is RemotingCommandType.RESPONSE，code is response code
      */
     int32 code = 4;
 
     int32 payloadCrc32 = 5;
 
-    //是否单向
     bool oneway = 6;
 
-    //命令ID
+
     uint64 commandId = 7;
 
-    //创建时间
     uint64 createTimestamp = 8;
 
-    //消息体
+
     bytes payload = 9;
 
-    //消息处理后的结果消息--一般为错误消息
+    //A result message after a message is processed - typically an error message
     string resultMessage = 10;
 }

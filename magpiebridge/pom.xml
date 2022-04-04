@@ -38,6 +38,11 @@
       <artifactId>store</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>protocols</artifactId>
+    </dependency>
+
   </dependencies>
 
 

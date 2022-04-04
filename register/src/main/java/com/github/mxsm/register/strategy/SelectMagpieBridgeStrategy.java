@@ -1,6 +1,7 @@
 package com.github.mxsm.register.strategy;
 
-import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
+
+import com.github.mxsm.protocol.protobuf.ServerMetadata;
 import java.util.Collection;
 
 /**
@@ -15,6 +16,6 @@ public interface SelectMagpieBridgeStrategy {
      * @param mbCollections
      * @return
      */
-    MagpieBridgeMetadata select(Collection<? extends MagpieBridgeMetadata> mbCollections);
+    ServerMetadata select(Collection<? extends ServerMetadata> mbCollections);
 
 }

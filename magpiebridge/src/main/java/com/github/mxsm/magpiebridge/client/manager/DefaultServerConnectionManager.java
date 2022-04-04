@@ -1,6 +1,7 @@
 package com.github.mxsm.magpiebridge.client.manager;
 
-import com.github.mxsm.common.client.ClientMetadata;
+
+import com.github.mxsm.protocol.protobuf.ClientMetadata;
 import com.github.mxsm.remoting.connection.ConnectionPool;
 import com.github.mxsm.remoting.connection.DefaultConnectionManager;
 import com.github.mxsm.remoting.connection.ServerConnectionManager;

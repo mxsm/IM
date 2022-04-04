@@ -52,11 +52,11 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            com.github.mxsm.protocol.protobuf.RequestHeaders.Builder subBuilder = null;
+            com.github.mxsm.protocol.protobuf.RequestHeader.Builder subBuilder = null;
             if (requestHeaders_ != null) {
               subBuilder = requestHeaders_.toBuilder();
             }
-            requestHeaders_ = input.readMessage(com.github.mxsm.protocol.protobuf.RequestHeaders.parser(), extensionRegistry);
+            requestHeaders_ = input.readMessage(com.github.mxsm.protocol.protobuf.RequestHeader.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(requestHeaders_);
               requestHeaders_ = subBuilder.buildPartial();
@@ -65,11 +65,11 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 18: {
-            com.github.mxsm.protocol.protobuf.ResponseHeaders.Builder subBuilder = null;
+            com.github.mxsm.protocol.protobuf.ResponseHeader.Builder subBuilder = null;
             if (responseHeaders_ != null) {
               subBuilder = responseHeaders_.toBuilder();
             }
-            responseHeaders_ = input.readMessage(com.github.mxsm.protocol.protobuf.ResponseHeaders.parser(), extensionRegistry);
+            responseHeaders_ = input.readMessage(com.github.mxsm.protocol.protobuf.ResponseHeader.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(responseHeaders_);
               responseHeaders_ = subBuilder.buildPartial();
@@ -152,13 +152,9 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int REQUESTHEADERS_FIELD_NUMBER = 1;
-  private com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders_;
+  private com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders_;
   /**
-   * <pre>
-   *请求头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
    * @return Whether the requestHeaders field is set.
    */
   @java.lang.Override
@@ -166,37 +162,25 @@ private static final long serialVersionUID = 0L;
     return requestHeaders_ != null;
   }
   /**
-   * <pre>
-   *请求头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
    * @return The requestHeaders.
    */
   @java.lang.Override
-  public com.github.mxsm.protocol.protobuf.RequestHeaders getRequestHeaders() {
-    return requestHeaders_ == null ? com.github.mxsm.protocol.protobuf.RequestHeaders.getDefaultInstance() : requestHeaders_;
+  public com.github.mxsm.protocol.protobuf.RequestHeader getRequestHeaders() {
+    return requestHeaders_ == null ? com.github.mxsm.protocol.protobuf.RequestHeader.getDefaultInstance() : requestHeaders_;
   }
   /**
-   * <pre>
-   *请求头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
    */
   @java.lang.Override
-  public com.github.mxsm.protocol.protobuf.RequestHeadersOrBuilder getRequestHeadersOrBuilder() {
+  public com.github.mxsm.protocol.protobuf.RequestHeaderOrBuilder getRequestHeadersOrBuilder() {
     return getRequestHeaders();
   }
 
   public static final int RESPONSEHEADERS_FIELD_NUMBER = 2;
-  private com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders_;
+  private com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders_;
   /**
-   * <pre>
-   *返回头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
    * @return Whether the responseHeaders field is set.
    */
   @java.lang.Override
@@ -204,36 +188,24 @@ private static final long serialVersionUID = 0L;
     return responseHeaders_ != null;
   }
   /**
-   * <pre>
-   *返回头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
    * @return The responseHeaders.
    */
   @java.lang.Override
-  public com.github.mxsm.protocol.protobuf.ResponseHeaders getResponseHeaders() {
-    return responseHeaders_ == null ? com.github.mxsm.protocol.protobuf.ResponseHeaders.getDefaultInstance() : responseHeaders_;
+  public com.github.mxsm.protocol.protobuf.ResponseHeader getResponseHeaders() {
+    return responseHeaders_ == null ? com.github.mxsm.protocol.protobuf.ResponseHeader.getDefaultInstance() : responseHeaders_;
   }
   /**
-   * <pre>
-   *返回头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
    */
   @java.lang.Override
-  public com.github.mxsm.protocol.protobuf.ResponseHeadersOrBuilder getResponseHeadersOrBuilder() {
+  public com.github.mxsm.protocol.protobuf.ResponseHeaderOrBuilder getResponseHeadersOrBuilder() {
     return getResponseHeaders();
   }
 
   public static final int COMMANDTYPE_FIELD_NUMBER = 3;
   private int commandType_;
   /**
-   * <pre>
-   *命令类型
-   * </pre>
-   *
    * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
    * @return The enum numeric value on the wire for commandType.
    */
@@ -241,10 +213,6 @@ private static final long serialVersionUID = 0L;
     return commandType_;
   }
   /**
-   * <pre>
-   *命令类型
-   * </pre>
-   *
    * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
    * @return The commandType.
    */
@@ -259,8 +227,8 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    **
-   * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
-   * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+   * when commandType is RemotingCommandType.REQUEST，code is request code ,
+   * when commandType is RemotingCommandType.RESPONSE，code is response code
    * </pre>
    *
    * <code>int32 code = 4;</code>
@@ -285,10 +253,6 @@ private static final long serialVersionUID = 0L;
   public static final int ONEWAY_FIELD_NUMBER = 6;
   private boolean oneway_;
   /**
-   * <pre>
-   *是否单向
-   * </pre>
-   *
    * <code>bool oneway = 6;</code>
    * @return The oneway.
    */
@@ -300,10 +264,6 @@ private static final long serialVersionUID = 0L;
   public static final int COMMANDID_FIELD_NUMBER = 7;
   private long commandId_;
   /**
-   * <pre>
-   *命令ID
-   * </pre>
-   *
    * <code>uint64 commandId = 7;</code>
    * @return The commandId.
    */
@@ -315,10 +275,6 @@ private static final long serialVersionUID = 0L;
   public static final int CREATETIMESTAMP_FIELD_NUMBER = 8;
   private long createTimestamp_;
   /**
-   * <pre>
-   *创建时间
-   * </pre>
-   *
    * <code>uint64 createTimestamp = 8;</code>
    * @return The createTimestamp.
    */
@@ -330,10 +286,6 @@ private static final long serialVersionUID = 0L;
   public static final int PAYLOAD_FIELD_NUMBER = 9;
   private com.google.protobuf.ByteString payload_;
   /**
-   * <pre>
-   *消息体
-   * </pre>
-   *
    * <code>bytes payload = 9;</code>
    * @return The payload.
    */
@@ -346,7 +298,7 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object resultMessage_;
   /**
    * <pre>
-   *消息处理后的结果消息--一般为错误消息
+   *A result message after a message is processed - typically an error message
    * </pre>
    *
    * <code>string resultMessage = 10;</code>
@@ -367,7 +319,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   *消息处理后的结果消息--一般为错误消息
+   *A result message after a message is processed - typically an error message
    * </pre>
    *
    * <code>string resultMessage = 10;</code>
@@ -871,43 +823,31 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders_;
+    private com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.github.mxsm.protocol.protobuf.RequestHeaders, com.github.mxsm.protocol.protobuf.RequestHeaders.Builder, com.github.mxsm.protocol.protobuf.RequestHeadersOrBuilder> requestHeadersBuilder_;
+        com.github.mxsm.protocol.protobuf.RequestHeader, com.github.mxsm.protocol.protobuf.RequestHeader.Builder, com.github.mxsm.protocol.protobuf.RequestHeaderOrBuilder> requestHeadersBuilder_;
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      * @return Whether the requestHeaders field is set.
      */
     public boolean hasRequestHeaders() {
       return requestHeadersBuilder_ != null || requestHeaders_ != null;
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      * @return The requestHeaders.
      */
-    public com.github.mxsm.protocol.protobuf.RequestHeaders getRequestHeaders() {
+    public com.github.mxsm.protocol.protobuf.RequestHeader getRequestHeaders() {
       if (requestHeadersBuilder_ == null) {
-        return requestHeaders_ == null ? com.github.mxsm.protocol.protobuf.RequestHeaders.getDefaultInstance() : requestHeaders_;
+        return requestHeaders_ == null ? com.github.mxsm.protocol.protobuf.RequestHeader.getDefaultInstance() : requestHeaders_;
       } else {
         return requestHeadersBuilder_.getMessage();
       }
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
-    public Builder setRequestHeaders(com.github.mxsm.protocol.protobuf.RequestHeaders value) {
+    public Builder setRequestHeaders(com.github.mxsm.protocol.protobuf.RequestHeader value) {
       if (requestHeadersBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -921,14 +861,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
     public Builder setRequestHeaders(
-        com.github.mxsm.protocol.protobuf.RequestHeaders.Builder builderForValue) {
+        com.github.mxsm.protocol.protobuf.RequestHeader.Builder builderForValue) {
       if (requestHeadersBuilder_ == null) {
         requestHeaders_ = builderForValue.build();
         onChanged();
@@ -939,17 +875,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
-    public Builder mergeRequestHeaders(com.github.mxsm.protocol.protobuf.RequestHeaders value) {
+    public Builder mergeRequestHeaders(com.github.mxsm.protocol.protobuf.RequestHeader value) {
       if (requestHeadersBuilder_ == null) {
         if (requestHeaders_ != null) {
           requestHeaders_ =
-            com.github.mxsm.protocol.protobuf.RequestHeaders.newBuilder(requestHeaders_).mergeFrom(value).buildPartial();
+            com.github.mxsm.protocol.protobuf.RequestHeader.newBuilder(requestHeaders_).mergeFrom(value).buildPartial();
         } else {
           requestHeaders_ = value;
         }
@@ -961,11 +893,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
     public Builder clearRequestHeaders() {
       if (requestHeadersBuilder_ == null) {
@@ -979,45 +907,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
-    public com.github.mxsm.protocol.protobuf.RequestHeaders.Builder getRequestHeadersBuilder() {
+    public com.github.mxsm.protocol.protobuf.RequestHeader.Builder getRequestHeadersBuilder() {
       
       onChanged();
       return getRequestHeadersFieldBuilder().getBuilder();
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
-    public com.github.mxsm.protocol.protobuf.RequestHeadersOrBuilder getRequestHeadersOrBuilder() {
+    public com.github.mxsm.protocol.protobuf.RequestHeaderOrBuilder getRequestHeadersOrBuilder() {
       if (requestHeadersBuilder_ != null) {
         return requestHeadersBuilder_.getMessageOrBuilder();
       } else {
         return requestHeaders_ == null ?
-            com.github.mxsm.protocol.protobuf.RequestHeaders.getDefaultInstance() : requestHeaders_;
+            com.github.mxsm.protocol.protobuf.RequestHeader.getDefaultInstance() : requestHeaders_;
       }
     }
     /**
-     * <pre>
-     *请求头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.github.mxsm.protocol.protobuf.RequestHeaders, com.github.mxsm.protocol.protobuf.RequestHeaders.Builder, com.github.mxsm.protocol.protobuf.RequestHeadersOrBuilder> 
+        com.github.mxsm.protocol.protobuf.RequestHeader, com.github.mxsm.protocol.protobuf.RequestHeader.Builder, com.github.mxsm.protocol.protobuf.RequestHeaderOrBuilder> 
         getRequestHeadersFieldBuilder() {
       if (requestHeadersBuilder_ == null) {
         requestHeadersBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.github.mxsm.protocol.protobuf.RequestHeaders, com.github.mxsm.protocol.protobuf.RequestHeaders.Builder, com.github.mxsm.protocol.protobuf.RequestHeadersOrBuilder>(
+            com.github.mxsm.protocol.protobuf.RequestHeader, com.github.mxsm.protocol.protobuf.RequestHeader.Builder, com.github.mxsm.protocol.protobuf.RequestHeaderOrBuilder>(
                 getRequestHeaders(),
                 getParentForChildren(),
                 isClean());
@@ -1026,43 +942,31 @@ private static final long serialVersionUID = 0L;
       return requestHeadersBuilder_;
     }
 
-    private com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders_;
+    private com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.github.mxsm.protocol.protobuf.ResponseHeaders, com.github.mxsm.protocol.protobuf.ResponseHeaders.Builder, com.github.mxsm.protocol.protobuf.ResponseHeadersOrBuilder> responseHeadersBuilder_;
+        com.github.mxsm.protocol.protobuf.ResponseHeader, com.github.mxsm.protocol.protobuf.ResponseHeader.Builder, com.github.mxsm.protocol.protobuf.ResponseHeaderOrBuilder> responseHeadersBuilder_;
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      * @return Whether the responseHeaders field is set.
      */
     public boolean hasResponseHeaders() {
       return responseHeadersBuilder_ != null || responseHeaders_ != null;
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      * @return The responseHeaders.
      */
-    public com.github.mxsm.protocol.protobuf.ResponseHeaders getResponseHeaders() {
+    public com.github.mxsm.protocol.protobuf.ResponseHeader getResponseHeaders() {
       if (responseHeadersBuilder_ == null) {
-        return responseHeaders_ == null ? com.github.mxsm.protocol.protobuf.ResponseHeaders.getDefaultInstance() : responseHeaders_;
+        return responseHeaders_ == null ? com.github.mxsm.protocol.protobuf.ResponseHeader.getDefaultInstance() : responseHeaders_;
       } else {
         return responseHeadersBuilder_.getMessage();
       }
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
-    public Builder setResponseHeaders(com.github.mxsm.protocol.protobuf.ResponseHeaders value) {
+    public Builder setResponseHeaders(com.github.mxsm.protocol.protobuf.ResponseHeader value) {
       if (responseHeadersBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1076,14 +980,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
     public Builder setResponseHeaders(
-        com.github.mxsm.protocol.protobuf.ResponseHeaders.Builder builderForValue) {
+        com.github.mxsm.protocol.protobuf.ResponseHeader.Builder builderForValue) {
       if (responseHeadersBuilder_ == null) {
         responseHeaders_ = builderForValue.build();
         onChanged();
@@ -1094,17 +994,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
-    public Builder mergeResponseHeaders(com.github.mxsm.protocol.protobuf.ResponseHeaders value) {
+    public Builder mergeResponseHeaders(com.github.mxsm.protocol.protobuf.ResponseHeader value) {
       if (responseHeadersBuilder_ == null) {
         if (responseHeaders_ != null) {
           responseHeaders_ =
-            com.github.mxsm.protocol.protobuf.ResponseHeaders.newBuilder(responseHeaders_).mergeFrom(value).buildPartial();
+            com.github.mxsm.protocol.protobuf.ResponseHeader.newBuilder(responseHeaders_).mergeFrom(value).buildPartial();
         } else {
           responseHeaders_ = value;
         }
@@ -1116,11 +1012,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
     public Builder clearResponseHeaders() {
       if (responseHeadersBuilder_ == null) {
@@ -1134,45 +1026,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
-    public com.github.mxsm.protocol.protobuf.ResponseHeaders.Builder getResponseHeadersBuilder() {
+    public com.github.mxsm.protocol.protobuf.ResponseHeader.Builder getResponseHeadersBuilder() {
       
       onChanged();
       return getResponseHeadersFieldBuilder().getBuilder();
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
-    public com.github.mxsm.protocol.protobuf.ResponseHeadersOrBuilder getResponseHeadersOrBuilder() {
+    public com.github.mxsm.protocol.protobuf.ResponseHeaderOrBuilder getResponseHeadersOrBuilder() {
       if (responseHeadersBuilder_ != null) {
         return responseHeadersBuilder_.getMessageOrBuilder();
       } else {
         return responseHeaders_ == null ?
-            com.github.mxsm.protocol.protobuf.ResponseHeaders.getDefaultInstance() : responseHeaders_;
+            com.github.mxsm.protocol.protobuf.ResponseHeader.getDefaultInstance() : responseHeaders_;
       }
     }
     /**
-     * <pre>
-     *返回头部
-     * </pre>
-     *
-     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+     * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.github.mxsm.protocol.protobuf.ResponseHeaders, com.github.mxsm.protocol.protobuf.ResponseHeaders.Builder, com.github.mxsm.protocol.protobuf.ResponseHeadersOrBuilder> 
+        com.github.mxsm.protocol.protobuf.ResponseHeader, com.github.mxsm.protocol.protobuf.ResponseHeader.Builder, com.github.mxsm.protocol.protobuf.ResponseHeaderOrBuilder> 
         getResponseHeadersFieldBuilder() {
       if (responseHeadersBuilder_ == null) {
         responseHeadersBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.github.mxsm.protocol.protobuf.ResponseHeaders, com.github.mxsm.protocol.protobuf.ResponseHeaders.Builder, com.github.mxsm.protocol.protobuf.ResponseHeadersOrBuilder>(
+            com.github.mxsm.protocol.protobuf.ResponseHeader, com.github.mxsm.protocol.protobuf.ResponseHeader.Builder, com.github.mxsm.protocol.protobuf.ResponseHeaderOrBuilder>(
                 getResponseHeaders(),
                 getParentForChildren(),
                 isClean());
@@ -1183,10 +1063,6 @@ private static final long serialVersionUID = 0L;
 
     private int commandType_ = 0;
     /**
-     * <pre>
-     *命令类型
-     * </pre>
-     *
      * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
      * @return The enum numeric value on the wire for commandType.
      */
@@ -1194,10 +1070,6 @@ private static final long serialVersionUID = 0L;
       return commandType_;
     }
     /**
-     * <pre>
-     *命令类型
-     * </pre>
-     *
      * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
      * @param value The enum numeric value on the wire for commandType to set.
      * @return This builder for chaining.
@@ -1209,10 +1081,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *命令类型
-     * </pre>
-     *
      * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
      * @return The commandType.
      */
@@ -1223,10 +1091,6 @@ private static final long serialVersionUID = 0L;
       return result == null ? com.github.mxsm.protocol.protobuf.constant.RemotingCommandType.UNRECOGNIZED : result;
     }
     /**
-     * <pre>
-     *命令类型
-     * </pre>
-     *
      * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
      * @param value The commandType to set.
      * @return This builder for chaining.
@@ -1241,10 +1105,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *命令类型
-     * </pre>
-     *
      * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
      * @return This builder for chaining.
      */
@@ -1259,8 +1119,8 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      **
-     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
-     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+     * when commandType is RemotingCommandType.REQUEST，code is request code ,
+     * when commandType is RemotingCommandType.RESPONSE，code is response code
      * </pre>
      *
      * <code>int32 code = 4;</code>
@@ -1273,8 +1133,8 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      **
-     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
-     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+     * when commandType is RemotingCommandType.REQUEST，code is request code ,
+     * when commandType is RemotingCommandType.RESPONSE，code is response code
      * </pre>
      *
      * <code>int32 code = 4;</code>
@@ -1290,8 +1150,8 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      **
-     * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
-     * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+     * when commandType is RemotingCommandType.REQUEST，code is request code ,
+     * when commandType is RemotingCommandType.RESPONSE，code is response code
      * </pre>
      *
      * <code>int32 code = 4;</code>
@@ -1337,10 +1197,6 @@ private static final long serialVersionUID = 0L;
 
     private boolean oneway_ ;
     /**
-     * <pre>
-     *是否单向
-     * </pre>
-     *
      * <code>bool oneway = 6;</code>
      * @return The oneway.
      */
@@ -1349,10 +1205,6 @@ private static final long serialVersionUID = 0L;
       return oneway_;
     }
     /**
-     * <pre>
-     *是否单向
-     * </pre>
-     *
      * <code>bool oneway = 6;</code>
      * @param value The oneway to set.
      * @return This builder for chaining.
@@ -1364,10 +1216,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *是否单向
-     * </pre>
-     *
      * <code>bool oneway = 6;</code>
      * @return This builder for chaining.
      */
@@ -1380,10 +1228,6 @@ private static final long serialVersionUID = 0L;
 
     private long commandId_ ;
     /**
-     * <pre>
-     *命令ID
-     * </pre>
-     *
      * <code>uint64 commandId = 7;</code>
      * @return The commandId.
      */
@@ -1392,10 +1236,6 @@ private static final long serialVersionUID = 0L;
       return commandId_;
     }
     /**
-     * <pre>
-     *命令ID
-     * </pre>
-     *
      * <code>uint64 commandId = 7;</code>
      * @param value The commandId to set.
      * @return This builder for chaining.
@@ -1407,10 +1247,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *命令ID
-     * </pre>
-     *
      * <code>uint64 commandId = 7;</code>
      * @return This builder for chaining.
      */
@@ -1423,10 +1259,6 @@ private static final long serialVersionUID = 0L;
 
     private long createTimestamp_ ;
     /**
-     * <pre>
-     *创建时间
-     * </pre>
-     *
      * <code>uint64 createTimestamp = 8;</code>
      * @return The createTimestamp.
      */
@@ -1435,10 +1267,6 @@ private static final long serialVersionUID = 0L;
       return createTimestamp_;
     }
     /**
-     * <pre>
-     *创建时间
-     * </pre>
-     *
      * <code>uint64 createTimestamp = 8;</code>
      * @param value The createTimestamp to set.
      * @return This builder for chaining.
@@ -1450,10 +1278,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *创建时间
-     * </pre>
-     *
      * <code>uint64 createTimestamp = 8;</code>
      * @return This builder for chaining.
      */
@@ -1466,10 +1290,6 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.ByteString payload_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <pre>
-     *消息体
-     * </pre>
-     *
      * <code>bytes payload = 9;</code>
      * @return The payload.
      */
@@ -1478,10 +1298,6 @@ private static final long serialVersionUID = 0L;
       return payload_;
     }
     /**
-     * <pre>
-     *消息体
-     * </pre>
-     *
      * <code>bytes payload = 9;</code>
      * @param value The payload to set.
      * @return This builder for chaining.
@@ -1496,10 +1312,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *消息体
-     * </pre>
-     *
      * <code>bytes payload = 9;</code>
      * @return This builder for chaining.
      */
@@ -1513,7 +1325,7 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object resultMessage_ = "";
     /**
      * <pre>
-     *消息处理后的结果消息--一般为错误消息
+     *A result message after a message is processed - typically an error message
      * </pre>
      *
      * <code>string resultMessage = 10;</code>
@@ -1533,7 +1345,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     *消息处理后的结果消息--一般为错误消息
+     *A result message after a message is processed - typically an error message
      * </pre>
      *
      * <code>string resultMessage = 10;</code>
@@ -1554,7 +1366,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     *消息处理后的结果消息--一般为错误消息
+     *A result message after a message is processed - typically an error message
      * </pre>
      *
      * <code>string resultMessage = 10;</code>
@@ -1573,7 +1385,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     *消息处理后的结果消息--一般为错误消息
+     *A result message after a message is processed - typically an error message
      * </pre>
      *
      * <code>string resultMessage = 10;</code>
@@ -1587,7 +1399,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     *消息处理后的结果消息--一般为错误消息
+     *A result message after a message is processed - typically an error message
      * </pre>
      *
      * <code>string resultMessage = 10;</code>

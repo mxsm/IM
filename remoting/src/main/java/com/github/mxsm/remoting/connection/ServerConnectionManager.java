@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.connection;
 
-import com.github.mxsm.common.client.ClientMetadata;
+
+import com.github.mxsm.protocol.protobuf.ClientMetadata;
 import com.github.mxsm.remoting.LifeCycle;
 import java.util.Set;
 

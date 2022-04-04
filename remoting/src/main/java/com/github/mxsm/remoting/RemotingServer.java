@@ -7,6 +7,7 @@ import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.NettyRequestProcessor;
 import io.netty.channel.Channel;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author mxsm
@@ -16,7 +17,8 @@ import java.util.concurrent.ExecutorService;
 public interface RemotingServer extends RemotingService {
 
     /**
-     * 同步执行
+     * invoke sync
+     *
      * @param channel
      * @param request
      * @param timeoutMillis
@@ -30,7 +32,26 @@ public interface RemotingServer extends RemotingService {
         RemotingTimeoutException;
 
     /**
-     * 异步执行
+     * invoke sync
+     *
+     * @param channel
+     * @param request
+     * @param timeout
+     * @param timeUnit
+     * @return
+     * @throws InterruptedException
+     * @throws RemotingSendRequestException
+     * @throws RemotingTimeoutException
+     */
+    default RemotingCommand invokeSync(final Channel channel, final RemotingCommand request,
+        final long timeout, final TimeUnit timeUnit) throws InterruptedException, RemotingSendRequestException,
+        RemotingTimeoutException {
+        return invokeSync(channel, request, timeUnit.toMillis(timeout));
+    }
+
+    /**
+     * invoke Async
+     *
      * @param channel
      * @param request
      * @param timeoutMillis
@@ -45,7 +66,27 @@ public interface RemotingServer extends RemotingService {
         RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException;
 
     /**
-     * 单项执行
+     * invoke Async
+     *
+     * @param channel
+     * @param request
+     * @param timeout
+     * @param timeUnit
+     * @param invokeCallback
+     * @throws InterruptedException
+     * @throws RemotingTooMuchRequestException
+     * @throws RemotingTimeoutException
+     * @throws RemotingSendRequestException
+     */
+    default void invokeAsync(final Channel channel, final RemotingCommand request, final long timeout,
+        final TimeUnit timeUnit, final InvokeCallback invokeCallback) throws InterruptedException,
+        RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
+        invokeAsync(channel, request, timeUnit.toMillis(timeout), invokeCallback);
+    }
+
+    /**
+     * invoke Oneway
+     *
      * @param channel
      * @param request
      * @param timeoutMillis
@@ -60,7 +101,27 @@ public interface RemotingServer extends RemotingService {
 
 
     /**
+     * invoke Oneway
+     *
+     * @param channel
+     * @param request
+     * @param timeout
+     * @param unit
+     * @throws InterruptedException
+     * @throws RemotingTooMuchRequestException
+     * @throws RemotingTimeoutException
+     * @throws RemotingSendRequestException
+     */
+    default void invokeOneway(final Channel channel, final RemotingCommand request, final long timeout,
+        final TimeUnit unit)
+        throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException,
+        RemotingSendRequestException {
+        invokeOneway(channel, request, unit.toMillis(timeout));
+    }
+
+    /**
      * 注册请求处理器
+     *
      * @param requestCode
      * @param processor
      * @param executor

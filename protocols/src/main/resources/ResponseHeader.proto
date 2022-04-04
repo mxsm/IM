@@ -8,21 +8,20 @@ option java_multiple_files = true;
 
 message ResponseHeader{
 
-  //协议
   string protocol = 1;
 
-  //协议版本号
+  //protocol version
   string version = 2;
 
-  //内容类型
+  //response content type
   string contentType = 3;
 
-  //状态
+  //response status
   uint32 status = 4;
 
-  //消息发送者
+  //sender
   string sender = 5;
 
-  //消息接收者
+  //receiver
   string receiver = 6;
 }

@@ -13,6 +13,8 @@ import io.etcd.jetcd.options.WatchOption;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +30,7 @@ public final class Etcd {
     private final Client client;
 
     public Etcd(String endpoints) {
-        this.client = Client.builder().endpoints(endpoints.split(Symbol.COMMA)).keepaliveWithoutCalls(true)
-            .keepaliveTimeout(Duration.ofSeconds(120)).keepaliveTime(Duration.ofSeconds(120)).build();
+        this.client = Client.builder().endpoints(endpoints.split(Symbol.COMMA)).build();
     }
 
     public Client getClient() {
@@ -44,8 +45,8 @@ public final class Etcd {
         CompletableFuture<PutResponse> respFuture = client.getKVClient()
             .put(ByteSequence.from(key, UTF_8), ByteSequence.from(value, UTF_8));
         try {
-            respFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
+            respFuture.get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             //e.printStackTrace();
             LOGGER.error("Put key=" + key + ",value=" + value + " to etcd error", e);
             return false;

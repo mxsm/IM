@@ -9,21 +9,21 @@ public class RegisterRequestException extends Exception {
 
     private final int responseCode;
     private final String errorMessage;
-    private final String magpieBridgeAddr;
+    private final String serverAddress;
 
     public RegisterRequestException(int responseCode, String errorMessage) {
         super(String.format("ResponseCode:%d", responseCode) + "  DESC: " + errorMessage);
         this.responseCode = responseCode;
         this.errorMessage = errorMessage;
-        this.magpieBridgeAddr = null;
+        this.serverAddress = null;
     }
 
-    public RegisterRequestException(int responseCode, String errorMessage, String magpieBridgeAddr) {
-        super(String.format("ResponseCode:%d,MagpieBridge address:%s", responseCode,
-            (magpieBridgeAddr != null ? " BROKER: " + magpieBridgeAddr : "")) + "  DESC: " + errorMessage);
+    public RegisterRequestException(int responseCode, String errorMessage, String serverAddress) {
+        super(String.format("ResponseCode:%d,Server address:%s", responseCode,
+            (serverAddress != null ? " BROKER: " + serverAddress : "")) + "  DESC: " + errorMessage);
         this.responseCode = responseCode;
         this.errorMessage = errorMessage;
-        this.magpieBridgeAddr = magpieBridgeAddr;
+        this.serverAddress = serverAddress;
     }
 
     public int getResponseCode() {
@@ -35,6 +35,6 @@ public class RegisterRequestException extends Exception {
     }
 
     public String getMagpieBridgeAddr() {
-        return magpieBridgeAddr;
+        return serverAddress;
     }
 }

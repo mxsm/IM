@@ -9,4 +9,5 @@ public abstract class MagpieBridgeConst {
 
     public static final String REGISTER_ADDRESS = "REGISTER_ADDRESS";
 
+    public static final String REGISTER_DOMAIN = "register_domain";
 }

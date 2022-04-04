@@ -1,13 +1,8 @@
 package com.github.mxsm.client;
 
-import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.common.RequestCode;
-import com.github.mxsm.remoting.exception.RemotingConnectException;
-import com.github.mxsm.remoting.exception.RemotingSendRequestException;
-import com.github.mxsm.remoting.exception.RemotingTimeoutException;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 /**

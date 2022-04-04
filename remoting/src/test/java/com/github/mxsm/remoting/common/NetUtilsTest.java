@@ -37,4 +37,12 @@ class NetUtilsTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void intIpAddress2String(){
+
+        String localAddress = NetUtils.getLocalAddress();
+        String parsed = NetUtils.intIpAddress2String(NetUtils.getLocalAddress4Int());
+        Assertions.assertTrue(localAddress.equals(parsed));
+    }
 }

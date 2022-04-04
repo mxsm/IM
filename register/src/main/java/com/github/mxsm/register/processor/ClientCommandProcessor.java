@@ -1,11 +1,10 @@
 package com.github.mxsm.register.processor;
 
 import com.alibaba.fastjson.JSON;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
-import com.github.mxsm.register.mananger.MagpieBridgeManager;
+import com.github.mxsm.register.mananger.ServerManager;
 import com.github.mxsm.register.strategy.RandomSelectMagpieBridgeStrategy;
 import com.github.mxsm.register.strategy.SelectMagpieBridgeStrategy;
 import com.github.mxsm.remoting.common.NetUtils;
@@ -27,12 +26,12 @@ public class ClientCommandProcessor implements NettyRequestProcessor, AsyncNetty
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientCommandProcessor.class);
 
-    private final MagpieBridgeManager magpieBridgeManager;
+    private final ServerManager serverManager;
 
     private SelectMagpieBridgeStrategy strategy = new RandomSelectMagpieBridgeStrategy();
 
-    public ClientCommandProcessor(final MagpieBridgeManager magpieBridgeManager) {
-        this.magpieBridgeManager = magpieBridgeManager;
+    public ClientCommandProcessor(final ServerManager serverManager) {
+        this.serverManager = serverManager;
     }
 
     @Override
@@ -57,9 +56,9 @@ public class ClientCommandProcessor implements NettyRequestProcessor, AsyncNetty
 
     private RemotingCommand  handleGetMagpieBridgeAddress(RemotingCommand request){
 
-        MagpieBridgeMetadata magpieBridge = this.magpieBridgeManager.getMagpieBridge(this.strategy);
+       // MagpieBridgeMetadata magpieBridge = this.serverManager.getMagpieBridge(this.strategy);
         RemotingCommand.Builder responseBuilder = RemotingCommandBuilder.buildResponseCommand(request.getCommandId());
-        byte[] bytes = JSON.toJSONBytes(magpieBridge);
+        byte[] bytes = JSON.toJSONBytes(null);
         int crc32 = GeneralUtils.crc32(bytes);
         responseBuilder.setPayloadCrc32(crc32);
         responseBuilder.setPayload(ByteString.copyFrom(bytes));

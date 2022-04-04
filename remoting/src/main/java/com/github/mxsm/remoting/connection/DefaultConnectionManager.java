@@ -1,6 +1,7 @@
 package com.github.mxsm.remoting.connection;
 
-import com.github.mxsm.common.client.ClientMetadata;
+
+import com.github.mxsm.protocol.protobuf.ClientMetadata;
 import com.github.mxsm.remoting.LifeCycle;
 import com.github.mxsm.remoting.exception.RemotingException;
 import java.util.List;
@@ -233,12 +234,13 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
     }
 
     protected Set<ClientMetadata> getClientMetadatas(){
-        return connectionPoolTable.values().stream().filter(item->item.getConnMetaData() != null).map(item->{
+/*        return connectionPoolTable.values().stream().filter(item->item.getConnMetaData() != null).map(item->{
             ConnectionMetaData connMetaData = item.getConnMetaData();
             ClientMetadata clientMetadata = new ClientMetadata();
             clientMetadata.setIp(connMetaData.getIp());
             clientMetadata.setPort(connMetaData.getPort());
             return clientMetadata;
-        }).collect(Collectors.toSet());
+        }).collect(Collectors.toSet());*/
+        return null;
     }
 }

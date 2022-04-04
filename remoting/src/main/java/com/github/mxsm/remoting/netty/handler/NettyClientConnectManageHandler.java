@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 客户端连接管理
+ * client connection management
  *
  * @author mxsm
  * @Date 2021/6/20

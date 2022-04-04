@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package com.github.mxsm.protocol.protobuf;
+
+option java_package = "com.github.mxsm.protocol.protobuf";
+
+option java_multiple_files = true;
+
+message ClientMetadata{
+
+  //client ip
+  uint32 serverIp = 1;
+
+  //client name
+  string name = 2;
+
+}

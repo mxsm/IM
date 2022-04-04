@@ -11,7 +11,6 @@ import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.github.mxsm.remoting.netty.handler.NettyRemotingHandler;
-import com.github.mxsm.remoting.netty.handler.NettyServerHandler;
 import com.github.mxsm.remoting.netty.handler.NettyServerHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -53,8 +52,6 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
     private final EventExecutorGroup eventExecutorGroup;
 
     private int bindPort;
-
-    private InetSocketAddress localAddress;
 
     private final ExecutorService callbackExecutor;
 

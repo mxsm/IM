@@ -1,18 +1,19 @@
 package com.github.mxsm.register.mananger;
 
 
-import com.github.mxsm.common.client.ClientMetadata;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
+import com.github.mxsm.common.enums.ServerType;
+import com.github.mxsm.protocol.protobuf.ClientMetadata;
 import io.netty.channel.Channel;
 import java.util.Collection;
-import org.apache.commons.collections4.CollectionUtils;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author mxsm
  * @Date 2021/6/20
  * @Since 1.0.0
  */
-public class MagpieBridgeLiveInfo extends MagpieBridgeMetadata {
+public class ServerLiveInfo {
 
     //最近一次更新时间
     private long lastUpdateTimestamp;
@@ -25,16 +26,20 @@ public class MagpieBridgeLiveInfo extends MagpieBridgeMetadata {
 
     private volatile long clientNums;
 
-    public MagpieBridgeLiveInfo(long lastUpdateTime, long connectionTime, final Channel channel) {
-        this(lastUpdateTime, connectionTime, channel, true);
+    private final  ServerType serverType;
+
+    private Set<ClientMetadata> serverMetadataSet = new HashSet<>(512);
+
+    public ServerLiveInfo(long lastUpdateTime, long connectionTime, final Channel channel, final ServerType serverType) {
+        this(lastUpdateTime, connectionTime, channel, true, serverType);
     }
 
-    public MagpieBridgeLiveInfo(long lastUpdateTimestamp, long connectionTimestamp, Channel channel, boolean online) {
+    public ServerLiveInfo(long lastUpdateTimestamp, long connectionTimestamp, Channel channel, boolean online, final ServerType serverType) {
         this.lastUpdateTimestamp = lastUpdateTimestamp;
         this.connectionTimestamp = connectionTimestamp;
         this.channel = channel;
         this.online = online;
-        this.online = online;
+        this.serverType = serverType;
     }
 
     public Channel getChannel() {
@@ -69,19 +74,11 @@ public class MagpieBridgeLiveInfo extends MagpieBridgeMetadata {
         this.clientNums = clientNums;
     }
 
-    public void addClientMetadata(ClientMetadata metadata) {
-        if(metadata == null){
-            return;
-        }
-        super.getClientMetadataSet().add(metadata);
+    public void addClientMetadatas(Collection<ClientMetadata> datas) {
+        this.serverMetadataSet.addAll(datas);
     }
 
-
-    public void addClientMetadata(Collection<ClientMetadata> metadatas) {
-        if(CollectionUtils.isEmpty(metadatas)){
-            return;
-        }
-        super.getClientMetadataSet().addAll(metadatas);
+    public ServerType getServerType() {
+        return serverType;
     }
-
 }

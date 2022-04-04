@@ -10,14 +10,14 @@ import io.netty.channel.Channel;
  */
 public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
 
-    private MagpieBridgeManager magpieBridgeManager;
+    private ServerManager serverManager;
 
-    public MagpieBridgeOnlineKeepingService(MagpieBridgeManager magpieBridgeManager) {
-        this.magpieBridgeManager = magpieBridgeManager;
+    public MagpieBridgeOnlineKeepingService(ServerManager serverManager) {
+        this.serverManager = serverManager;
     }
 
-    public MagpieBridgeManager getMagpieBridgeManager() {
-        return magpieBridgeManager;
+    public ServerManager getMagpieBridgeManager() {
+        return serverManager;
     }
 
     /**
@@ -39,7 +39,7 @@ public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelClose(String remoteAddress, Channel channel) {
-        this.magpieBridgeManager.closeChannelOnException(remoteAddress, channel);
+        this.serverManager.closeChannelOnException(remoteAddress, channel);
     }
 
     /**
@@ -50,7 +50,7 @@ public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelException(String remoteAddress, Channel channel) {
-        this.magpieBridgeManager.closeChannelOnException(remoteAddress, channel);
+        this.serverManager.closeChannelOnException(remoteAddress, channel);
     }
 
     /**
@@ -61,6 +61,6 @@ public class MagpieBridgeOnlineKeepingService implements ChannelEventListener {
      */
     @Override
     public void onChannelIdle(String remoteAddress, Channel channel) {
-        this.magpieBridgeManager.closeChannelOnException(remoteAddress, channel);
+        this.serverManager.closeChannelOnException(remoteAddress, channel);
     }
 }

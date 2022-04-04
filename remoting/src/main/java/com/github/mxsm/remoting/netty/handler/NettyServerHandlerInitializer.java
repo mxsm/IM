@@ -1,7 +1,7 @@
 package com.github.mxsm.remoting.netty.handler;
 
-import com.github.mxsm.common.utils.AnnotationUtils;
 import com.github.mxsm.common.annotation.NotNull;
+import com.github.mxsm.common.utils.AnnotationUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
 import com.google.protobuf.MessageLite;

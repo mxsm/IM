@@ -10,22 +10,22 @@ option java_multiple_files = true;
 
 message RequestHeader{
 
-  //协议
+  //protocol
   string protocol = 1;
 
-  //协议版本号
+  //protocol version
   string version = 2;
 
-  //源IP
+  //source ip
   uint32 sourceAddress = 3;
 
-  //请求的远程IP地址
+  //remote ip
   uint32 remoteAddress = 4;
 
-  //内容类型
+  //content type like http content type
   string contentType = 6;
 
-  //发送消息的终端
+  //Terminal Type
   TerminalType terminalType = 7;
 
   //send message device token

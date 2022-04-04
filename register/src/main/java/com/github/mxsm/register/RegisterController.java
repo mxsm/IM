@@ -5,15 +5,14 @@ import com.github.mxsm.common.Symbol;
 import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.etcd.Etcd;
 import com.github.mxsm.register.config.RegisterConfig;
-import com.github.mxsm.register.mananger.MagpieBridgeManager;
 import com.github.mxsm.register.mananger.MagpieBridgeOnlineKeepingService;
+import com.github.mxsm.register.mananger.ServerManager;
 import com.github.mxsm.register.processor.ClientCommandProcessor;
 import com.github.mxsm.register.processor.DefaultRegisterRequestProcessor;
 import com.github.mxsm.remoting.common.NetUtils;
 import com.github.mxsm.remoting.common.RequestCode;
 import com.github.mxsm.remoting.netty.NettyRemotingServer;
 import com.github.mxsm.remoting.netty.NettyServerConfig;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -44,7 +43,7 @@ public class RegisterController {
     private final ScheduledExecutorService scheduledExecutorService = Executors
         .newSingleThreadScheduledExecutor(new NamedThreadFactory("RegisterScheduledService-Thread"));
 
-    private final MagpieBridgeManager magpieBridgeManager;
+    private final ServerManager serverManager;
 
     private final MagpieBridgeOnlineKeepingService mbOnlineKeepingService;
 
@@ -53,8 +52,8 @@ public class RegisterController {
     public RegisterController(final NettyServerConfig registerServerConfig, final RegisterConfig registerConfig) {
         this.registerServerConfig = registerServerConfig;
         this.registerConfig = registerConfig;
-        this.magpieBridgeManager = new MagpieBridgeManager();
-        this.mbOnlineKeepingService = new MagpieBridgeOnlineKeepingService(this.magpieBridgeManager);
+        this.serverManager = new ServerManager();
+        this.mbOnlineKeepingService = new MagpieBridgeOnlineKeepingService(this.serverManager);
     }
 
     public void initialize() {
@@ -66,7 +65,7 @@ public class RegisterController {
             new NamedThreadFactory("RegisterWorkThread"));
         registerProcessor();
 
-        scheduledExecutorService.scheduleAtFixedRate(() -> magpieBridgeManager.scanInactiveMagpieBridge(), 10, 30,
+        scheduledExecutorService.scheduleAtFixedRate(() -> serverManager.scanInactiveServer(), 10, 30,
             TimeUnit.SECONDS);
 
     }
@@ -78,10 +77,11 @@ public class RegisterController {
         boolean registrySuccess = registry2CoreDNS();
         if (!registrySuccess) {
             registerServer.shutdown();
+            System.exit(1);
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
 
         unRegistry2CoreDNS();
 
@@ -99,11 +99,11 @@ public class RegisterController {
     }
 
     private void registerProcessor() {
-        this.registerServer.registerDefaultProcessor(new DefaultRegisterRequestProcessor(this.magpieBridgeManager),
+        this.registerServer.registerDefaultProcessor(new DefaultRegisterRequestProcessor(this.serverManager),
             this.executorService);
         LOGGER.debug("DefaultRegisterRequestProcessor register completed");
         this.registerServer.registerProcessor(RequestCode.GET_MAGPIE_BRIDGE_ADDRESS,
-            new ClientCommandProcessor(this.magpieBridgeManager), this.executorService);
+            new ClientCommandProcessor(this.serverManager), this.executorService);
         LOGGER.debug("ClientCommandProcessor register completed");
     }
 
@@ -112,7 +112,7 @@ public class RegisterController {
         StringBuilder key = createRegisterCoreDNSKey();
         String host = NetUtils.getLocalAddress();
         StringBuilder value = new StringBuilder();
-        value.append(JSON.toJSONString(new CoreNDSValue(host, 60)));
+        value.append(JSON.toJSONString(new CoreNDSValue("192.168.3.21", 60)));
 
         boolean registrySuccess = this.etcd.put(key.toString(), value.toString());
         if (registrySuccess) {
@@ -122,17 +122,16 @@ public class RegisterController {
         return registrySuccess;
     }
 
-    private StringBuilder createRegisterCoreDNSKey(){
+    private StringBuilder createRegisterCoreDNSKey() {
         StringBuilder key = new StringBuilder(this.registerConfig.getCoreDNSEtcdPath());
         String host = NetUtils.getLocalAddress();
         int port = this.registerServerConfig.getBindPort();
-        key.append("/").append(
-            Lists.reverse(Arrays.asList(this.registerConfig.getDomainName().split(Symbol.DOT))).stream()
-                .collect(Collectors.joining("/"))).append("/").append(host).append(":").append(port);
+        key.append("/").append(Lists.reverse(Arrays.asList(this.registerConfig.getDomainName().split(Symbol.DOT)))
+            .stream().collect(Collectors.joining("/"))).append("/").append(host).append(":").append(port);
         return key;
     }
 
-    private void unRegistry2CoreDNS(){
+    private void unRegistry2CoreDNS() {
         String key = createRegisterCoreDNSKey().toString();
         boolean delete = etcd.delete(key);
         if (delete) {

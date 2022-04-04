@@ -8,73 +8,41 @@ public interface RemotingCommandOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   *请求头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
    * @return Whether the requestHeaders field is set.
    */
   boolean hasRequestHeaders();
   /**
-   * <pre>
-   *请求头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
    * @return The requestHeaders.
    */
-  com.github.mxsm.protocol.protobuf.RequestHeaders getRequestHeaders();
+  com.github.mxsm.protocol.protobuf.RequestHeader getRequestHeaders();
   /**
-   * <pre>
-   *请求头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.RequestHeaders requestHeaders = 1;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.RequestHeader requestHeaders = 1;</code>
    */
-  com.github.mxsm.protocol.protobuf.RequestHeadersOrBuilder getRequestHeadersOrBuilder();
+  com.github.mxsm.protocol.protobuf.RequestHeaderOrBuilder getRequestHeadersOrBuilder();
 
   /**
-   * <pre>
-   *返回头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
    * @return Whether the responseHeaders field is set.
    */
   boolean hasResponseHeaders();
   /**
-   * <pre>
-   *返回头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
    * @return The responseHeaders.
    */
-  com.github.mxsm.protocol.protobuf.ResponseHeaders getResponseHeaders();
+  com.github.mxsm.protocol.protobuf.ResponseHeader getResponseHeaders();
   /**
-   * <pre>
-   *返回头部
-   * </pre>
-   *
-   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeaders responseHeaders = 2;</code>
+   * <code>.com.github.mxsm.protocol.protobuf.ResponseHeader responseHeaders = 2;</code>
    */
-  com.github.mxsm.protocol.protobuf.ResponseHeadersOrBuilder getResponseHeadersOrBuilder();
+  com.github.mxsm.protocol.protobuf.ResponseHeaderOrBuilder getResponseHeadersOrBuilder();
 
   /**
-   * <pre>
-   *命令类型
-   * </pre>
-   *
    * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
    * @return The enum numeric value on the wire for commandType.
    */
   int getCommandTypeValue();
   /**
-   * <pre>
-   *命令类型
-   * </pre>
-   *
    * <code>.com.github.mxsm.protocol.protobuf.RemotingCommandType commandType = 3;</code>
    * @return The commandType.
    */
@@ -83,8 +51,8 @@ public interface RemotingCommandOrBuilder extends
   /**
    * <pre>
    **
-   * 当commandType为RemotingCommandType.REQUEST，code表示请求码,
-   * 当commandType为RemotingCommandType.RESPONSE，code表示返回码
+   * when commandType is RemotingCommandType.REQUEST，code is request code ,
+   * when commandType is RemotingCommandType.RESPONSE，code is response code
    * </pre>
    *
    * <code>int32 code = 4;</code>
@@ -99,40 +67,24 @@ public interface RemotingCommandOrBuilder extends
   int getPayloadCrc32();
 
   /**
-   * <pre>
-   *是否单向
-   * </pre>
-   *
    * <code>bool oneway = 6;</code>
    * @return The oneway.
    */
   boolean getOneway();
 
   /**
-   * <pre>
-   *命令ID
-   * </pre>
-   *
    * <code>uint64 commandId = 7;</code>
    * @return The commandId.
    */
   long getCommandId();
 
   /**
-   * <pre>
-   *创建时间
-   * </pre>
-   *
    * <code>uint64 createTimestamp = 8;</code>
    * @return The createTimestamp.
    */
   long getCreateTimestamp();
 
   /**
-   * <pre>
-   *消息体
-   * </pre>
-   *
    * <code>bytes payload = 9;</code>
    * @return The payload.
    */
@@ -140,7 +92,7 @@ public interface RemotingCommandOrBuilder extends
 
   /**
    * <pre>
-   *消息处理后的结果消息--一般为错误消息
+   *A result message after a message is processed - typically an error message
    * </pre>
    *
    * <code>string resultMessage = 10;</code>
@@ -149,7 +101,7 @@ public interface RemotingCommandOrBuilder extends
   java.lang.String getResultMessage();
   /**
    * <pre>
-   *消息处理后的结果消息--一般为错误消息
+   *A result message after a message is processed - typically an error message
    * </pre>
    *
    * <code>string resultMessage = 10;</code>

@@ -1,7 +1,6 @@
 package com.github.mxsm.magpiebridge.config;
 
 import com.github.mxsm.common.annotation.NotNull;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeRole;
 import com.github.mxsm.magpiebridge.common.MagpieBridgeConst;
 import java.util.UUID;
 
@@ -24,9 +23,7 @@ public class MagpieBridgeConfig {
 
     private long magpieBridgeRegisterTimeoutMills = 300000;
 
-    private String magpieBridgeClusterName;
-
-    private volatile MagpieBridgeRole magpieBridgeRole;
+    private String registerDomain = System.getProperty(MagpieBridgeConst.REGISTER_ADDRESS, "register.im-mxsm.local");
 
     public String getRegisterAddress() {
         return registerAddress;
@@ -60,19 +57,11 @@ public class MagpieBridgeConfig {
         this.magpieBridgeRegisterTimeoutMills = magpieBridgeRegisterTimeoutMills;
     }
 
-    public String getMagpieBridgeClusterName() {
-        return magpieBridgeClusterName;
+    public String getRegisterDomain() {
+        return registerDomain;
     }
 
-    public void setMagpieBridgeClusterName(String magpieBridgeClusterName) {
-        this.magpieBridgeClusterName = magpieBridgeClusterName;
-    }
-
-    public MagpieBridgeRole getMagpieBridgeRole() {
-        return magpieBridgeRole;
-    }
-
-    public void setMagpieBridgeRole(String magpieBridgeRole) {
-        this.magpieBridgeRole = MagpieBridgeRole.valueOf(magpieBridgeRole);
+    public void setRegisterDomain(String registerDomain) {
+        this.registerDomain = registerDomain;
     }
 }

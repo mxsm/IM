@@ -1,13 +1,13 @@
 package com.github.mxsm.magpiebridge.service;
 
 import com.alibaba.fastjson.JSON;
-import com.github.mxsm.common.utils.GeneralUtils;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
 import com.github.mxsm.common.thread.NamedThreadFactory;
+import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
 import com.github.mxsm.magpiebridge.exception.RegisterRequestException;
 import com.github.mxsm.magpiebridge.processor.RegistrationCenterProcessor;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.protobuf.ServerMetadata;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.RemotingClient;
 import com.github.mxsm.remoting.common.RequestCode;
@@ -82,7 +82,7 @@ public class MagpieBridgeAPI {
      *
      * @param mbInfo
      */
-    public List<RemotingCommand> registerMagpieBridgeAll(final MagpieBridgeMetadata mbInfo, final long timeout) {
+    public List<RemotingCommand> registerMagpieBridgeAll(final ServerMetadata mbInfo, final long timeout) {
 
         final List<String> registerAddressList = this.remotingClient.getRegisterAddressList();
         if (CollectionUtils.isEmpty(registerAddressList)) {
@@ -92,19 +92,19 @@ public class MagpieBridgeAPI {
 
         CountDownLatch registerLatch = new CountDownLatch(registerAddressList.size());
         List<RemotingCommand> registerMbResultList = new ArrayList<>();
-        byte[] mbInfoBytes = JSON.toJSONBytes(mbInfo);
+        byte[] mbInfoBytes = mbInfo.toByteArray();
         final int crc32 = GeneralUtils.crc32(mbInfoBytes);
 
         for (String registerAddress : registerAddressList) {
             this.bmExecutorService.submit(() -> {
                 try {
                     RemotingCommand request = RemotingCommandBuilder.buildRequestCommand()
-                        .setCode(RequestCode.MAGPIE_BRIDGE_REGISTER).setPayloadCrc32(crc32)
+                        .setCode(RequestCode.SERVER_REGISTRY).setPayloadCrc32(crc32)
                         .setPayload(ByteString.copyFrom(mbInfoBytes)).build();
                     RemotingCommand registerMbResult = MagpieBridgeAPI.this
                         .registerMagpieBridge(registerAddress, request, timeout, false);
                     registerMbResultList.add(registerMbResult);
-                    LOGGER.info("Register MagpieBridge[{}] SUCCESS", mbInfo.getMagpieBridgeName());
+                    LOGGER.info("Register MagpieBridge[{}] SUCCESS", mbInfo.getName());
                 } catch (Exception e) {
                     LOGGER.error(String.format("Register MagpieBridge Error to Registration[%s]", registerAddress), e);
                 } finally {
@@ -128,26 +128,25 @@ public class MagpieBridgeAPI {
      * @param timeout
      * @return
      */
-    public List<RemotingCommand> unRegisterMagpieBridgeAll(final MagpieBridgeMetadata mbInfo, final long timeout) {
+    public List<RemotingCommand> unRegisterMagpieBridgeAll(final ServerMetadata mbInfo, final long timeout) {
 
         final List<String> registerAddressList = this.remotingClient.getRegisterAddressList();
         if (CollectionUtils.isEmpty(registerAddressList)) {
             LOGGER.warn("Registration center address is empty, not center to register MagpieBridge");
             return null;
         }
-        byte[] mbInfoBytes = JSON.toJSONBytes(mbInfo);
+        byte[] mbInfoBytes = mbInfo.toByteArray();
         final int crc32 = GeneralUtils.crc32(mbInfoBytes);
 
         for (String registerAddress : registerAddressList) {
             this.bmExecutorService.submit(() -> {
                 try {
-
                     RemotingCommand request = RemotingCommandBuilder.buildRequestCommand(true)
-                        .setCode(RequestCode.MAGPIE_BRIDGE_UNREGISTER).setPayloadCrc32(crc32)
+                        .setCode(RequestCode.SERVER_REGISTRY).setPayloadCrc32(crc32)
                         .setPayload(ByteString.copyFrom(mbInfoBytes)).build();
                     MagpieBridgeAPI.this.unRegisterMagpieBridge(registerAddress, request, timeout, true);
 
-                    LOGGER.info("Register MagpieBridge[{}] SUCCESS", mbInfo.getMagpieBridgeName());
+                    LOGGER.info("Register MagpieBridge[{}] SUCCESS", mbInfo.getName());
                 } catch (Exception e) {
                     LOGGER.error(String.format("Register MagpieBridge Error to Registration[%s]", registerAddress), e);
                 }
@@ -247,7 +246,7 @@ public class MagpieBridgeAPI {
     private void registerProcessor() {
         RegistrationCenterProcessor registrationCenterProcessor = new RegistrationCenterProcessor(
             this.magpieBridgeConfig, this.magpieBridgeAddress);
-        this.remotingClient.registerProcessor(RequestCode.MAGPIE_BRIDGE_MASTER_CHANGE, registrationCenterProcessor,
-            this.registerExecutor);
+        /*this.remotingClient.registerProcessor(RequestCode.MAGPIE_BRIDGE_MASTER_CHANGE, registrationCenterProcessor,
+            this.registerExecutor);*/
     }
 }

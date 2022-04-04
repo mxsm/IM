@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.github.mxsm.protocol.protobuf;
+
+option java_package = "com.github.mxsm.protocol.protobuf.constant";
+
+option java_multiple_files = true;
+
+enum ServerType{
+  MAGPIE_BRIDGE = 0;
+  REGISTER = 1;
+  GALAXY = 2;
+}

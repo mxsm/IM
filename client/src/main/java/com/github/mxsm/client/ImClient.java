@@ -1,9 +1,10 @@
 package com.github.mxsm.client;
 
 import com.alibaba.fastjson.JSON;
-import com.github.mxsm.common.magpiebridge.MagpieBridgeMetadata;
+
 import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.protobuf.ServerMetadata;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.remoting.InvokeCallback;
 import com.github.mxsm.remoting.LifeCycle;
@@ -118,7 +119,7 @@ public interface ImClient extends LifeCycle {
         RemotingTimeoutException, RemotingSendRequestException;
 
 
-    default MagpieBridgeMetadata getConnectMagpieBridge(final String registerAddress)
+    default ServerMetadata getConnectMagpieBridge(final String registerAddress)
         throws RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException, InterruptedException, Crc32ValidationException {
 
         RemotingCommand request = RemotingCommandBuilder.buildRequestCommand()
@@ -133,6 +134,6 @@ public interface ImClient extends LifeCycle {
         if (payloadCrc32 != 0 && payloadCrc32 != GeneralUtils.crc32(payload.toByteArray())) {
             throw new Crc32ValidationException("Payload CRC32 not Match");
         }
-        return JSON.parseObject(payload.toStringUtf8(), MagpieBridgeMetadata.class);
+        return JSON.parseObject(payload.toStringUtf8(), ServerMetadata.class);
     }
 }
