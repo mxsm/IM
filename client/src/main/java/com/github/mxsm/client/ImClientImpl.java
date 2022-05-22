@@ -37,7 +37,7 @@ public class ImClientImpl implements ImClient {
     }
 
     @Override
-    public void start() {
+    public void start() throws InterruptedException {
         this.remotingClient.start();
     }
 
@@ -48,15 +48,6 @@ public class ImClientImpl implements ImClient {
 
     }
 
-    /**
-     * Check whether it is started
-     *
-     * @return
-     */
-    @Override
-    public boolean isStarted() {
-        return false;
-    }
 
     /**
      * 同步执行

@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
  * @Date 2021/6/26
  * @Since 1.0.0
  */
-public abstract class AbstractNettyRemoting implements RemotingHandler{
+public abstract class AbstractRemotingHandler implements RemotingHandler{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNettyRemoting.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRemotingHandler.class);
 
     /**
      * 使用信号量来现在最大的单向发送的数据并发数(非公平锁提高并发)
@@ -44,7 +44,7 @@ public abstract class AbstractNettyRemoting implements RemotingHandler{
     protected Map<Long, ResponseFuture> responseTable = new ConcurrentHashMap<>(1024);
 
 
-    public AbstractNettyRemoting(final int permitsOneway, final int permitsAsync) {
+    public AbstractRemotingHandler(final int permitsOneway, final int permitsAsync) {
         this.semaphoreOneway = new Semaphore(permitsOneway);
         this.semaphoreAsync = new Semaphore(permitsAsync);
     }

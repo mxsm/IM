@@ -15,16 +15,11 @@ public interface LifeCycle {
     /**
      * start
      */
-    void start();
+    void start() throws InterruptedException;
 
     /**
      * shutdown
      */
     void shutdown();
 
-    /**
-     * Check whether it is started
-     * @return
-     */
-    boolean isStarted();
 }

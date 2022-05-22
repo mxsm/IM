@@ -64,7 +64,7 @@ public class MagpieBridgeAPI {
         this.remotingClient = new NettyRemotingClient(this.nettyClientConfig);
     }
 
-    public void start() {
+    public void start() throws InterruptedException {
         registerProcessor();
         this.remotingClient.start();
     }

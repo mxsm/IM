@@ -56,16 +56,17 @@ public class ServerManager {
             }
 
             liveInfo = new ServerLiveInfo(currentTimeMillis, currentTimeMillis, channel,
-                serverType);
+                serverType, serverMetadata.getServerIp(), port);
             liveInfo.setClientNums(serverMetadata.getClientNums());
             liveInfo.addClientMetadatas(serverMetadata.getClientMetadataList());
             serverLiveInfoTable.put(remoteAddress, liveInfo);
             LOGGER.info("register magpie bridge Live[name={},address={}] SUCCESS", serverName, remoteAddress);
 
-        } catch (Exception e){
-            String errorMsg = String.format("Register Server [Type=%s,Name=%s,Address=%s]Error", serverType.name(),serverName,addrWithPort);
+        } catch (Exception e) {
+            String errorMsg = String.format("Register Server [Type=%s,Name=%s,Address=%s]Error", serverType.name(),
+                serverName, addrWithPort);
             throw new ServerHandleException(errorMsg, addrWithPort);
-        }finally {
+        } finally {
             readWriteLock.writeLock().unlock();
         }
     }
@@ -74,19 +75,18 @@ public class ServerManager {
     public void unRegistryServer(final Channel channel, final ServerMetadata serverMetadata) {
 
         final String remoteAddress = NetUtils.intIpAddress2String(serverMetadata.getServerIp());
-        final int port = serverMetadata.getServerPort();        final String serverName = serverMetadata.getName();
+        final int port = serverMetadata.getServerPort();
         String addrWithPort = remoteAddress + Symbol.COLON + port;
-            try {
-                this.readWriteLock.writeLock().lockInterruptibly();
-                this.serverLiveInfoTable.remove(addrWithPort);
-                NettyUtils.closeChannel(channel);
-            }catch (Exception e) {
-                LOGGER.error("closeChannelOnException error", e);
-            } finally {
-                this.readWriteLock.writeLock().unlock();
-            }
+        try {
+            this.readWriteLock.writeLock().lockInterruptibly();
+            this.serverLiveInfoTable.remove(addrWithPort);
+            NettyUtils.closeChannel(channel);
+        } catch (Exception e) {
+            LOGGER.error("closeChannelOnException error", e);
+        } finally {
+            this.readWriteLock.writeLock().unlock();
+        }
     }
-
 
 
     public void scanInactiveServer() {
@@ -145,13 +145,23 @@ public class ServerManager {
                 this.readWriteLock.writeLock().lockInterruptibly();
                 //remove mb from live table
                 this.serverLiveInfoTable.remove(mbAddressFound);
-                LOGGER.info("server[{}] removed from serverLiveInfoTable",mbAddressFound);
+                LOGGER.info("server[{}] removed from serverLiveInfoTable", mbAddressFound);
             } finally {
                 this.readWriteLock.writeLock().unlock();
             }
         } catch (Exception e) {
             LOGGER.error("closeChannelOnException error", e);
         }
+    }
+
+    public ServerMetadata getServerMetadata() {
+
+        ServerLiveInfo serverLiveInfo = this.serverLiveInfoTable.values().stream()
+            .filter(it -> it.getServerType() == com.github.mxsm.common.enums.ServerType.MAGPIE_BRIDGE).findFirst()
+            .get();
+        return ServerMetadata.newBuilder().setServerType(ServerType.MAGPIE_BRIDGE).setServerIp(serverLiveInfo.getIp())
+            .setServerPort(serverLiveInfo.getPort()).build();
+
     }
 
 }

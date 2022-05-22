@@ -8,12 +8,15 @@ package com.github.mxsm.remoting;
 public interface RemotingService extends LifeCycle {
 
     /**
-     * start service
+     * Check whether it is started
+     * @return
      */
-    void start();
+    boolean isStarted();
 
     /**
-     * shutdown service
+     *
+     * @return
      */
-    void shutdown();
+    boolean isShutingDown();
+
 }

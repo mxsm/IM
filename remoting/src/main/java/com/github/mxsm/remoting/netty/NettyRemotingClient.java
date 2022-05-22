@@ -148,7 +148,7 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     /**
      * 同步执行
      *
-     * @param addr          发送地址
+     * @param requestHost          发送地址
      * @param request       请求命令
      * @param timeoutMillis 过期时间
      * @return
@@ -158,11 +158,11 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      * @throws RemotingTimeoutException
      */
     @Override
-    public RemotingCommand invokeSync(String addr, RemotingCommand request,
+    public RemotingCommand invokeSync(String requestHost, RemotingCommand request,
         long timeoutMillis)
         throws InterruptedException, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException {
         long beginStartTime = System.currentTimeMillis();
-        final Channel channel = this.getOrElseCreateChannel(addr);
+        final Channel channel = this.getOrElseCreateChannel(requestHost);
         if (channel != null && channel.isActive()) {
             try {
                 long costTime = System.currentTimeMillis() - beginStartTime;
@@ -172,20 +172,20 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
                 RemotingCommand response = this.invokeSyncImpl(channel, request, timeoutMillis - costTime);
                 return response;
             } catch (RemotingSendRequestException e) {
-                LOGGER.warn("invokeSync: send request exception, so close the channel[{}]", addr);
-                this.closeChannel(addr, channel);
+                LOGGER.warn("invokeSync: send request exception, so close the channel[{}]", requestHost);
+                this.closeChannel(requestHost, channel);
                 throw e;
             } catch (RemotingTimeoutException e) {
                 if (nettyClientConfig.isClientCloseSocketIfTimeout()) {
-                    this.closeChannel(addr, channel);
-                    LOGGER.warn("invokeSync: close socket because of timeout, {}ms, {}", timeoutMillis, addr);
+                    this.closeChannel(requestHost, channel);
+                    LOGGER.warn("invokeSync: close socket because of timeout, {}ms, {}", timeoutMillis, requestHost);
                 }
-                LOGGER.warn("invokeSync: wait response timeout exception, the channel[{}]", addr);
+                LOGGER.warn("invokeSync: wait response timeout exception, the channel[{}]", requestHost);
                 throw e;
             }
         } else {
-            this.closeChannel(addr, channel);
-            throw new RemotingConnectException(addr);
+            this.closeChannel(requestHost, channel);
+            throw new RemotingConnectException(requestHost);
         }
 
     }
@@ -193,7 +193,7 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
     /**
      * 异步执行
      *
-     * @param addr           发送地址
+     * @param requestHost           发送地址
      * @param request        请求命令
      * @param timeoutMillis  过期时间
      * @param invokeCallback 回调函数
@@ -204,11 +204,11 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      * @throws RemotingSendRequestException
      */
     @Override
-    public void invokeAsync(String addr, RemotingCommand request, long timeoutMillis,
+    public void invokeAsync(String requestHost, RemotingCommand request, long timeoutMillis,
         InvokeCallback invokeCallback)
         throws InterruptedException, RemotingConnectException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
         long beginStartTime = System.currentTimeMillis();
-        final Channel channel = this.getOrElseCreateChannel(addr);
+        final Channel channel = this.getOrElseCreateChannel(requestHost);
         if (channel != null && channel.isActive()) {
             try {
                 long costTime = System.currentTimeMillis() - beginStartTime;
@@ -217,20 +217,20 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
                 }
                 this.invokeAsyncImpl(channel, request, timeoutMillis - costTime, invokeCallback);
             } catch (RemotingSendRequestException e) {
-                LOGGER.warn("invokeAsync: send request exception, so close the channel[{}]", addr);
-                this.closeChannel(addr, channel);
+                LOGGER.warn("invokeAsync: send request exception, so close the channel[{}]", requestHost);
+                this.closeChannel(requestHost, channel);
                 throw e;
             }
         } else {
-            this.closeChannel(addr, channel);
-            throw new RemotingConnectException(addr);
+            this.closeChannel(requestHost, channel);
+            throw new RemotingConnectException(requestHost);
         }
     }
 
     /**
      * 单项执行
      *
-     * @param addr
+     * @param requestHost
      * @param request
      * @param timeoutMillis
      * @throws InterruptedException
@@ -240,21 +240,21 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
      * @throws RemotingSendRequestException
      */
     @Override
-    public void invokeOneway(String addr, RemotingCommand request, long timeoutMillis)
+    public void invokeOneway(String requestHost, RemotingCommand request, long timeoutMillis)
         throws InterruptedException, RemotingConnectException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
 
-        final Channel channel = getOrElseCreateChannel(addr);
+        final Channel channel = getOrElseCreateChannel(requestHost);
         if (channel != null && channel.isActive()) {
             try {
                 this.invokeOnewayImpl(channel, request, timeoutMillis);
             } catch (RemotingSendRequestException e) {
-                LOGGER.warn("invokeOneway: send request exception, so close the channel[{}]", addr);
-                this.closeChannel(addr, channel);
+                LOGGER.warn("invokeOneway: send request exception, so close the channel[{}]", requestHost);
+                this.closeChannel(requestHost, channel);
                 throw e;
             }
         } else {
-            closeChannel(addr, channel);
-            throw new RemotingConnectException(addr);
+            closeChannel(requestHost, channel);
+            throw new RemotingConnectException(requestHost);
         }
 
     }
@@ -304,6 +304,14 @@ public class NettyRemotingClient extends NettyRemotingHandler implements Remotin
 
     @Override
     public boolean isStarted() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isShutingDown() {
         return false;
     }
 

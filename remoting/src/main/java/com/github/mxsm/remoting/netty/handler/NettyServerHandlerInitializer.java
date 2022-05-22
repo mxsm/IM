@@ -41,8 +41,7 @@ public class NettyServerHandlerInitializer extends ChannelInitializer {
     private final ProtobufVarint32LengthFieldPrepender fieldPrepender = new ProtobufVarint32LengthFieldPrepender();
 
     public NettyServerHandlerInitializer(final NettyRemotingHandler nettyRemoting,
-        final EventExecutorGroup eventExecutorGroup,
-        final NettyServerConfig nettyServerConfig) {
+        final EventExecutorGroup eventExecutorGroup, final NettyServerConfig nettyServerConfig) {
         this.nettyServerConnectManageHandler = new NettyServerConnectManageHandler(nettyRemoting);
         this.eventExecutorGroup = eventExecutorGroup;
         this.nettyServerConfig = nettyServerConfig;

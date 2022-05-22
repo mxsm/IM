@@ -33,4 +33,9 @@ public abstract class RequestCode {
     public static final int CLIENT_CONNECT = 401;
 
     public static final int GET_MAGPIE_BRIDGE_ADDRESS = 402;
+
+    /**
+     * Single chat
+     */
+    public static final int SINGLE_CHAT = 500;
 }

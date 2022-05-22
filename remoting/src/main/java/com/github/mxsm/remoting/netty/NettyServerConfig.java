@@ -9,6 +9,8 @@ public class NettyServerConfig implements Cloneable {
 
     private int bindPort = 9998;
 
+    private String bindIp;
+
     private int serverWorkerThreads = Runtime.getRuntime().availableProcessors() * 2;
 
     private boolean useEpollNativeSelector = false;
@@ -111,5 +113,13 @@ public class NettyServerConfig implements Cloneable {
 
     public void setMessageProcessorThreads(int messageProcessorThreads) {
         this.messageProcessorThreads = messageProcessorThreads;
+    }
+
+    public String getBindIp() {
+        return bindIp;
+    }
+
+    public void setBindIp(String bindIp) {
+        this.bindIp = bindIp;
     }
 }

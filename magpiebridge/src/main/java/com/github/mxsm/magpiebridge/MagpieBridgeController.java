@@ -6,6 +6,7 @@ import com.github.mxsm.common.thread.NamedThreadFactory;
 import com.github.mxsm.magpiebridge.client.manager.ClientOnlineKeepingService;
 import com.github.mxsm.magpiebridge.client.manager.DefaultServerConnectionManager;
 import com.github.mxsm.magpiebridge.config.MagpieBridgeConfig;
+import com.github.mxsm.magpiebridge.processor.BusinessCommandProcessor;
 import com.github.mxsm.magpiebridge.processor.CtrlCommandProcessor;
 import com.github.mxsm.magpiebridge.service.MagpieBridgeAPI;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
@@ -27,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +94,7 @@ public class MagpieBridgeController implements LifeCycle {
 
 
     @Override
-    public void start() {
+    public void start() throws InterruptedException {
         this.magpieBridgeServer.start();
         this.magpieBridgeAPI.start();
         boolean registerSuccess = this.registerMagpieBridgeAll();
@@ -112,11 +114,6 @@ public class MagpieBridgeController implements LifeCycle {
         this.magpieBridgeServer.shutdown();
 
 
-    }
-
-    @Override
-    public boolean isStarted() {
-        return this.started;
     }
 
     private void checkConfig() {
@@ -159,7 +156,8 @@ public class MagpieBridgeController implements LifeCycle {
 
     private ServerMetadata buildMagpieBridgeInfo() {
         Builder mbInfoBuilder = ServerMetadata.newBuilder();
-        mbInfoBuilder.setServerIp(NetUtils.getLocalAddress4Int());
+        mbInfoBuilder.setServerIp(StringUtils.isEmpty(nettyServerConfig.getBindIp()) ? NetUtils.getLocalAddress4Int()
+            : NetUtils.address4Int(nettyServerConfig.getBindIp()));
         mbInfoBuilder.setServerPort(this.nettyServerConfig.getBindPort());
         mbInfoBuilder.setName(this.magpieBridgeConfig.getMagpieBridgeName());
         mbInfoBuilder.setServerType(ServerType.MAGPIE_BRIDGE);
@@ -181,6 +179,9 @@ public class MagpieBridgeController implements LifeCycle {
     private void registerProcessor() {
         CtrlCommandProcessor ctrlCp = new CtrlCommandProcessor();
         magpieBridgeServer.registerProcessor(RequestCode.CLIENT_CONNECT, ctrlCp, this.messageProcessExecutor);
+        magpieBridgeServer.registerProcessor(RequestCode.GET_MAGPIE_BRIDGE_ADDRESS, ctrlCp, this.messageProcessExecutor);
 
+        BusinessCommandProcessor businessCp = new BusinessCommandProcessor();
+        magpieBridgeServer.registerProcessor(RequestCode.SINGLE_CHAT,businessCp,this.messageProcessExecutor);
     }
 }

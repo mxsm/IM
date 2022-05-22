@@ -14,39 +14,30 @@ public class ClientBuilder {
 
     private NettyClientConfig nettyClientConfig = new NettyClientConfig();
 
-    private static ClientBuilder DEFAULT_INSTANCE = new ClientBuilder();
-
-    private ClientBuilder() {
-
-    }
 
     public static ClientBuilder newBuilder(){
-        return DEFAULT_INSTANCE;
+        return new ClientBuilder();
     }
 
     public  ClientBuilder setMagpieBridgeAddress(String address) {
-        DEFAULT_INSTANCE.getImClientConfig().setMagpieBridgeAddress(address);
-        return DEFAULT_INSTANCE;
+        this.imClientConfig.setMagpieBridgeAddress(address);
+        return this;
     }
 
     public ClientBuilder setMagpiebridgePort(int port) {
-        DEFAULT_INSTANCE.getImClientConfig().setMagpiebridgePort(port);
-        return DEFAULT_INSTANCE;
+        this.imClientConfig.setMagpiebridgePort(port);
+        return this;
     }
 
-    public static ImClient build() {
-        ImClientImpl imClient = new ImClientImpl(DEFAULT_INSTANCE.getNettyClientConfig(),
-            DEFAULT_INSTANCE.getImClientConfig());
-        imClient.start();
-        return imClient;
+    public ImClient build() {
+        try {
+            ImClientImpl imClient = new ImClientImpl(this.nettyClientConfig, this.imClientConfig);
+            imClient.start();
+            return imClient;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-
-    private ImClientConfig getImClientConfig() {
-        return imClientConfig;
-    }
-
-    private NettyClientConfig getNettyClientConfig() {
-        return nettyClientConfig;
-    }
 }

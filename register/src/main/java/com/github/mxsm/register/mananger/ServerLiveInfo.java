@@ -26,20 +26,28 @@ public class ServerLiveInfo {
 
     private volatile long clientNums;
 
-    private final  ServerType serverType;
+    private final ServerType serverType;
+
+    private int ip;
+
+    private int port;
 
     private Set<ClientMetadata> serverMetadataSet = new HashSet<>(512);
 
-    public ServerLiveInfo(long lastUpdateTime, long connectionTime, final Channel channel, final ServerType serverType) {
-        this(lastUpdateTime, connectionTime, channel, true, serverType);
+    public ServerLiveInfo(long lastUpdateTime, long connectionTime, final Channel channel, final ServerType serverType,
+        int ip, int port) {
+        this(lastUpdateTime, connectionTime, channel, true, serverType, ip, port);
     }
 
-    public ServerLiveInfo(long lastUpdateTimestamp, long connectionTimestamp, Channel channel, boolean online, final ServerType serverType) {
+    public ServerLiveInfo(long lastUpdateTimestamp, long connectionTimestamp, Channel channel, boolean online,
+        final ServerType serverType, int ip, int port) {
         this.lastUpdateTimestamp = lastUpdateTimestamp;
         this.connectionTimestamp = connectionTimestamp;
         this.channel = channel;
         this.online = online;
         this.serverType = serverType;
+        this.ip = ip;
+        this.port = port;
     }
 
     public Channel getChannel() {
@@ -80,5 +88,21 @@ public class ServerLiveInfo {
 
     public ServerType getServerType() {
         return serverType;
+    }
+
+    public int getIp() {
+        return ip;
+    }
+
+    public void setIp(int ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

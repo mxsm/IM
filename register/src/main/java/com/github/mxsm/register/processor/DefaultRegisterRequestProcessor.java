@@ -115,7 +115,7 @@ public class DefaultRegisterRequestProcessor implements NettyRequestProcessor, A
             return responseBuilder.build();
         }
 
-        ServerMetadata serverInfo = null;
+        ServerMetadata serverInfo;
         try {
             serverInfo = ServerMetadata.parseFrom(request.getPayload());
         } catch (InvalidProtocolBufferException e) {

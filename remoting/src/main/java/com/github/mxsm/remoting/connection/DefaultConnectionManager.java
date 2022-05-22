@@ -55,15 +55,7 @@ public class DefaultConnectionManager implements ConnectionManager, LifeCycle {
 
     }
 
-    /**
-     * Check whether it is started
-     *
-     * @return
-     */
-    @Override
-    public boolean isStarted() {
-        return false;
-    }
+
 
     /**
      * add connection to manager

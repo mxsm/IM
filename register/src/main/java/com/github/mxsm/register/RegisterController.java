@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,14 +66,18 @@ public class RegisterController {
             new NamedThreadFactory("RegisterWorkThread"));
         registerProcessor();
 
-        scheduledExecutorService.scheduleAtFixedRate(() -> serverManager.scanInactiveServer(), 10, 30,
-            TimeUnit.SECONDS);
+      //  scheduledExecutorService.scheduleAtFixedRate(() -> serverManager.scanInactiveServer(), 10, 30, TimeUnit.SECONDS);
 
     }
 
     public void startup() {
 
-        registerServer.start();
+        try {
+            registerServer.start();
+        } catch (InterruptedException e) {
+            LOGGER.error("RegisterServer start error", e);
+            System.exit(1);
+        }
         //registry register to CoreDNS
         boolean registrySuccess = registry2CoreDNS();
         if (!registrySuccess) {
@@ -110,9 +115,10 @@ public class RegisterController {
     private boolean registry2CoreDNS() {
 
         StringBuilder key = createRegisterCoreDNSKey();
-        String host = NetUtils.getLocalAddress();
+        String host = StringUtils.isEmpty(registerServerConfig.getBindIp()) ? NetUtils.getLocalAddress()
+            : registerServerConfig.getBindIp();
         StringBuilder value = new StringBuilder();
-        value.append(JSON.toJSONString(new CoreNDSValue("192.168.3.21", 60)));
+        value.append(JSON.toJSONString(new CoreNDSValue(host, 60)));
 
         boolean registrySuccess = this.etcd.put(key.toString(), value.toString());
         if (registrySuccess) {
@@ -124,7 +130,8 @@ public class RegisterController {
 
     private StringBuilder createRegisterCoreDNSKey() {
         StringBuilder key = new StringBuilder(this.registerConfig.getCoreDNSEtcdPath());
-        String host = NetUtils.getLocalAddress();
+        String host = StringUtils.isEmpty(registerServerConfig.getBindIp()) ? NetUtils.getLocalAddress()
+            : registerServerConfig.getBindIp();
         int port = this.registerServerConfig.getBindPort();
         key.append("/").append(Lists.reverse(Arrays.asList(this.registerConfig.getDomainName().split(Symbol.DOT)))
             .stream().collect(Collectors.joining("/"))).append("/").append(host).append(":").append(port);

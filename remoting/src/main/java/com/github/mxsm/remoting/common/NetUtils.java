@@ -77,7 +77,7 @@ public abstract class NetUtils {
             // prefer ipv4
             if (!ipv4Result.isEmpty()) {
                 for (String ip : ipv4Result) {
-                    if (ip.startsWith("127.0") || ip.startsWith("192.168")) {
+                    if (ip.startsWith("127.0") ) {
                         continue;
                     }
 
@@ -100,6 +100,15 @@ public abstract class NetUtils {
     public static int getLocalAddress4Int() {
         int[] ip = new int[4];
         String[] ipSec = Optional.ofNullable(getLocalAddress()).orElse("0.0.0.0").split(Symbol.DOT);
+        for (int k = 0; k < 4; k++) {
+            ip[k] = Integer.valueOf(ipSec[k]);
+        }
+        return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
+    }
+
+    public static int address4Int(String address) {
+        int[] ip = new int[4];
+        String[] ipSec = Optional.ofNullable(address).orElse("0.0.0.0").split(Symbol.DOT);
         for (int k = 0; k < 4; k++) {
             ip[k] = Integer.valueOf(ipSec[k]);
         }
@@ -138,10 +147,6 @@ public abstract class NetUtils {
             LOGGER.error("get domain ips error",e);
         }
         return new HashSet<>();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getIpAddressByName("register.im-mxsm.local"));
     }
 
 }

@@ -38,8 +38,11 @@ public class RegisterBootstrap {
         RegisterController registerController = createRegisterController(args);
 
         String registerName = registerController.getRegisterConfig().getRegisterName();
-        String localAddress = NetUtils.getLocalAddress();
-        int bindPort = registerController.getRegisterServerConfig().getBindPort();
+
+        NettyServerConfig registerServerConfig = registerController.getRegisterServerConfig();
+        String localAddress = StringUtils.isEmpty(registerServerConfig.getBindIp()) ? NetUtils.getLocalAddress()
+            : registerServerConfig.getBindIp();
+        int bindPort = registerServerConfig.getBindPort();
 
         LOGGER.info("----------------registration center is starting [centerName={},IP={},Port={}]-------------------",
             registerName, localAddress, bindPort);

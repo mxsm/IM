@@ -15,6 +15,7 @@ import com.github.mxsm.remoting.exception.RemotingSendRequestException;
 import com.github.mxsm.remoting.exception.RemotingTimeoutException;
 import com.github.mxsm.remoting.exception.RemotingTooMuchRequestException;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * @author mxsm
@@ -134,6 +135,15 @@ public interface ImClient extends LifeCycle {
         if (payloadCrc32 != 0 && payloadCrc32 != GeneralUtils.crc32(payload.toByteArray())) {
             throw new Crc32ValidationException("Payload CRC32 not Match");
         }
-        return JSON.parseObject(payload.toStringUtf8(), ServerMetadata.class);
+        try {
+            return ServerMetadata.parseFrom(payload);
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static ClientBuilder builder(){
+        return ClientBuilder.newBuilder();
     }
 }

@@ -3,6 +3,7 @@ package com.github.mxsm.register.processor;
 import com.alibaba.fastjson.JSON;
 import com.github.mxsm.common.utils.GeneralUtils;
 import com.github.mxsm.protocol.protobuf.RemotingCommand;
+import com.github.mxsm.protocol.protobuf.ServerMetadata;
 import com.github.mxsm.protocol.utils.RemotingCommandBuilder;
 import com.github.mxsm.register.mananger.ServerManager;
 import com.github.mxsm.register.strategy.RandomSelectMagpieBridgeStrategy;
@@ -56,9 +57,9 @@ public class ClientCommandProcessor implements NettyRequestProcessor, AsyncNetty
 
     private RemotingCommand  handleGetMagpieBridgeAddress(RemotingCommand request){
 
-       // MagpieBridgeMetadata magpieBridge = this.serverManager.getMagpieBridge(this.strategy);
+        ServerMetadata magpieBridge = this.serverManager.getServerMetadata();
         RemotingCommand.Builder responseBuilder = RemotingCommandBuilder.buildResponseCommand(request.getCommandId());
-        byte[] bytes = JSON.toJSONBytes(null);
+        byte[] bytes = magpieBridge.toByteArray();
         int crc32 = GeneralUtils.crc32(bytes);
         responseBuilder.setPayloadCrc32(crc32);
         responseBuilder.setPayload(ByteString.copyFrom(bytes));

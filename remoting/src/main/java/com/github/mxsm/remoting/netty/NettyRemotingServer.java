@@ -78,13 +78,17 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             new NamedThreadFactory("NettyServerCallbackExecutor"));
 
         if (useEpoll()) {
+
             this.bossEventLoopGroup = new EpollEventLoopGroup(1, new NamedThreadFactory("NettyEpollBoss"));
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
                 new NamedThreadFactory("NettyEpollSelector"));
+            LOGGER.info("----------------Using Epoll Event Loop------------------------");
         } else {
+
             this.bossEventLoopGroup = new NioEventLoopGroup(1, new NamedThreadFactory("NettyNioBoss"));
             this.selectorEventLoopGroup = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(),
                 new NamedThreadFactory("NettyNioSelector"));
+            LOGGER.info("------------------------Using Nio Event Loop------------------------");
         }
 
         eventExecutorGroup = new DefaultEventExecutorGroup(nettyServerConfig.getServerWorkerThreads(),
@@ -170,7 +174,7 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
             .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 1024)
             .option(ChannelOption.SO_REUSEADDR, true)
-            .childOption(ChannelOption.SO_KEEPALIVE, false)
+            .childOption(ChannelOption.SO_KEEPALIVE, true)
             .childOption(ChannelOption.TCP_NODELAY, true)
             .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
             .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
@@ -183,17 +187,15 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
      * start service
      */
     @Override
-    public void start() {
+    public void start() throws InterruptedException {
         this.init();
-        try {
+
             ChannelFuture sync = this.serverBootstrap.bind().sync();
             InetSocketAddress address = (InetSocketAddress) sync.channel().localAddress();
             bindPort = address.getPort();
             LOGGER.info("---------------NettyRemotingServer-[{}:{}] started finish----------------",
                 address.getAddress().getHostAddress(), bindPort);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         if (this.channelEventListener != null) {
             this.nettyEventWorker.start();
             LOGGER.info("-----------------NettyEventWork started-------------------");
@@ -228,6 +230,14 @@ public class NettyRemotingServer extends NettyRemotingHandler implements Remotin
      */
     @Override
     public boolean isStarted() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isShutingDown() {
         return false;
     }
 
